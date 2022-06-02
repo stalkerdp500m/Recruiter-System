@@ -41,4 +41,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // public function payments()
+    // {
+    //     return $this->belongsToMany(Payment::class, 'payment_users', 'user_id', 'payment_id');
+    // }
+    // public function payments()
+    // {
+    //     return $this->belongsToMany(Payment::class, 'user_recruiter', 'user_id',  'recruiter_id', 'id', 'recruiter_id')->using(UserRecruiter::class);
+    // }
+    public function recruiters()
+    {
+        return $this->belongsToMany(Recruiter::class)->orderBy('name');
+    }
+
+
+
+    //     public function payments()
+    //     {
+    //         // return $this->belongsToMany(Recruiter::class, 'user_recruiters', 'user_id', 'recruiter_id');
+    //         return $this->belongsToMany(Payment::class, 'user_recruiter', 'user_id',  'recruiter_id', 'id', 'recruiter_id')->using(UserRecruiter::class);
+    //         // return $this->hasManyThrough(Recruiter::class, Payment::class);
+    //     }
 }
