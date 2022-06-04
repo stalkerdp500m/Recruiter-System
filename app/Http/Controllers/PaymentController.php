@@ -22,7 +22,7 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
 
-        dd($request::user()->id);
+        //dd($request::user()->id);
 
         //РАБОЧИЙ
         // $payments = User::with(['recruiters.payments' => function ($query) {
@@ -32,7 +32,10 @@ class PaymentController extends Controller
 
         $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
             $query->filter(Request::only('month', 'year', 'recruiter'));
-        }])->get();
+        }])->first();
+        // $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
+        //     $query->filter(Request::only('month', 'year', 'recruiter'));
+        // }])->first();
 
         // $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
         //     $query->where('payments.month', '2');

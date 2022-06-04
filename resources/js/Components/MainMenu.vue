@@ -1,109 +1,53 @@
 <script setup>
 import { computed } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
+// const isUrl = computed((url) => {
+//     console.log(url);
+//     return url === route().current();
+// })
+
+function isUrl (url) {
+    return url === route().current();
+}
+
+
 const props = defineProps(["class", "active"]);
-const isUrl = (...urls) => {
-    console.log(urls);
-    // let currentUrl = page.url.substr(1);
-    // if (urls[0] === "") {
-    //     return currentUrl === "";
-    // }
-    return true;
-    return urls.filter((url) => currentUrl.startsWith(url)).length;
-};
+
+//console.log(route().current());
+// const isUrl = (...urls) => {
+//     // let currentUrl = page.url.substr(1);
+//     // if (urls[0] === "") {
+//     //     return currentUrl === "";
+//     // }
+//     return true;
+//     return urls.filter((url) => currentUrl.startsWith(url)).length;
+// };
 </script>
 
 <template>
-    <div
-        class="hidden md:block bg-indigo-800 flex-shrink-0 w-56 p-12 overflow-y-auto"
-    >
-        <div class="mb-4">
-            <Link class="group flex items-center py-3" href="/">
-                <!-- <icon
-                    name="dashboard"
-                    class="mr-2 w-4 h-4"
-                    :class="
-                        isUrl('')
-                            ? 'fill-white'
-                            : 'fill-indigo-400 group-hover:fill-white'
-                    "
-                /> -->
-                <div
-                    :class="
-                        isUrl('')
-                            ? 'text-white'
-                            : 'text-indigo-300 group-hover:text-white'
-                    "
-                >
-                    Dashboard
-                </div>
-            </Link>
+    <div class="">
+        <Link :href="route('dashboard')">
+        <div :class="isUrl('dashboard') ? 'opacity-100' : 'opacity-40'"
+            class="text-white flex justify-end hover:opacity-100  cursor-pointer mr-2 text-xl truncate text-clip  items-center mb-14 transition-all">
+            <span class="mx-2 px-9 font-semibold  fixed">Аналитика</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+            </svg>
         </div>
-        <div class="mb-4">
-            <Link class="group flex items-center py-3" href="/organizations">
-                <!-- <icon
-                    name="office"
-                    class="mr-2 w-4 h-4"
-                    :class="
-                        isUrl('organizations')
-                            ? 'fill-white'
-                            : 'fill-indigo-400 group-hover:fill-white'
-                    "
-                /> -->
-                <div
-                    :class="
-                        isUrl('organizations')
-                            ? 'text-white'
-                            : 'text-indigo-300 group-hover:text-white'
-                    "
-                >
-                    Organizations
-                </div>
-            </Link>
+        </Link>
+
+        <Link :href="route('payments')">
+        <div :class="isUrl('payments') ? 'opacity-100' : 'opacity-40'"
+            class="text-white flex justify-end hover:opacity-100   cursor-pointer mr-2 text-xl truncate text-clip  items-center transition-all">
+            <span class="mx-2 px-9 font-semibold  fixed">Выплаты</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
         </div>
-        <div class="mb-4">
-            <Link class="group flex items-center py-3" href="/contacts">
-                <icon
-                    name="users"
-                    class="mr-2 w-4 h-4"
-                    :class="
-                        isUrl('contacts')
-                            ? 'fill-white'
-                            : 'fill-indigo-400 group-hover:fill-white'
-                    "
-                />
-                <div
-                    :class="
-                        isUrl('contacts')
-                            ? 'text-white'
-                            : 'text-indigo-300 group-hover:text-white'
-                    "
-                >
-                    Contacts
-                </div>
-            </Link>
-        </div>
-        <div class="mb-4">
-            <Link class="group flex items-center py-3" href="/reports">
-                <!-- <icon
-                    name="printer"
-                    class="mr-2 w-4 h-4"
-                    :class="
-                        isUrl('reports')
-                            ? 'fill-white'
-                            : 'fill-indigo-400 group-hover:fill-white'
-                    "
-                /> -->
-                <div
-                    :class="
-                        isUrl('reports')
-                            ? 'text-white'
-                            : 'text-indigo-300 group-hover:text-white'
-                    "
-                >
-                    Reports
-                </div>
-            </Link>
-        </div>
+        </Link>
     </div>
 </template>

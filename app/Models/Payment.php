@@ -11,6 +11,7 @@ class Payment extends Model
 
     protected $table = 'payments';
     protected $guarded = [];
+    public $with = ['client'];
 
     public function client()
     {
