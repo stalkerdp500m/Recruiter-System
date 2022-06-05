@@ -13,15 +13,6 @@ function isUrl (url) {
 
 const props = defineProps(["class", "active"]);
 
-//console.log(route().current());
-// const isUrl = (...urls) => {
-//     // let currentUrl = page.url.substr(1);
-//     // if (urls[0] === "") {
-//     //     return currentUrl === "";
-//     // }
-//     return true;
-//     return urls.filter((url) => currentUrl.startsWith(url)).length;
-// };
 </script>
 
 <template>
@@ -38,9 +29,9 @@ const props = defineProps(["class", "active"]);
         </div>
         </Link>
 
-        <Link :href="route('payments')">
-        <div :class="isUrl('payments') ? 'opacity-100' : 'opacity-40'"
-            class="text-white flex justify-end hover:opacity-100   cursor-pointer mr-2 text-xl truncate text-clip  items-center transition-all">
+        <Link :href="route('payments.index')">
+        <div :class="isUrl('payments.index') ? 'opacity-100' : 'opacity-40'"
+            class="text-white flex justify-end hover:opacity-100  cursor-pointer mr-2 text-xl truncate text-clip  items-center mb-14 transition-all">
             <span class="mx-2 px-8 md:px-9   fixed">Выплаты</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -49,5 +40,17 @@ const props = defineProps(["class", "active"]);
             </svg>
         </div>
         </Link>
+        <Link :href="route('clients.index')">
+        <div :class="isUrl('clients.index') ? 'opacity-100' : 'opacity-40'"
+            class="text-white flex justify-end hover:opacity-100  cursor-pointer mr-2 text-xl truncate text-clip  items-center mb-14 transition-all">
+            <span class="mx-2 px-8 md:px-9   fixed">Клиенты</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        </Link>
     </div>
+
+
 </template>

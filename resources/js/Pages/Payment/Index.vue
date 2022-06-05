@@ -51,22 +51,23 @@ function paymentsSum (payments) {
         </template>
 
         <!-- Фильтры -->
-        <div class="pt-10 md:px-8 2xl:px-56 flex flex-row items-center">
-            <div class="bg-white flex items-baseline justify-start mr-1 pt-2 shadow-md rounded-md">
+        <div class="pt-10 md:px-8 2xl:px-56 grid grid-flow-col overflow-clip  items-center md:w-2/3  ">
+            <div class="bg-white  flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 ">
                 <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Год</label>
                 <div class="mb-3  ">
                     <select id="year" v-model="rangeModel.year" @change="selectedRange"
-                        class=" form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent " aria-label="year">
+                        class=" form-select cursor-pointer focus:ring-0 ring-0 border-0 mr-5 bg-transparent "
+                        aria-label="year">
                         <option v-for="month, year in props.ranges">{{ year }}</option>
 
                     </select>
                 </div>
             </div>
-            <div class="bg-white flex items-baseline justify-start mr-1 pt-2 shadow-md rounded-md">
+            <div class="bg-white flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12">
                 <label for="month" class="px-4 border-r border-systems-900/20">Месяц</label>
                 <div class="mb-3 ">
                     <select v-model="rangeModel.month" @change="selectedRange" id="month" name="month"
-                        class="form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
+                        class="cursor-pointer form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
                         <option v-for="month in props.ranges[rangeModel.year]">{{ month }}</option>
                     </select>
                 </div>
@@ -83,7 +84,7 @@ function paymentsSum (payments) {
                     администратору</div>
 
                 <div v-for="recruiter in props.payments.recruiters" :key="recruiter.id"
-                    class="bg-white overflow-hidden shadow-sm sm:rounded-lg my-5  transition-all">
+                    class="bg-white overflow-hidden shadow-sm rounded-lg my-5  transition-all">
 
                     <div @click="recruiter.show = !recruiter.show"
                         class="p-6  text-lg  bg-white  border-systems-200 overflow-hidden cursor-pointer">

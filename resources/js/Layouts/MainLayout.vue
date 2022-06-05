@@ -14,7 +14,7 @@ const showNaw = ref(false);
 </script>
 
 <template>
-    <div class="flex justify-items-stretch h-screen">
+    <div class="flex justify-items-stretch h-screen ">
         <!-- Левый сайтбар -->
         <div class="bg-systems-800 transition-all  z-20 " :class="showNaw ? 'w-64 md:w-12' : 'w-12 md:w-64'">
             <div class="bg-systems-900 h-16 shadow-md text-white flex justify-end overflow-hidden ">
@@ -41,7 +41,7 @@ const showNaw = ref(false);
                 <SettingDropdown />
             </div>
 
-            <div class=" px-2 bg-gray-200 min-h-screen">
+            <div class="px-2  bg-gray-200 min-h-screen ">
                 <slot />
             </div>
         </div>

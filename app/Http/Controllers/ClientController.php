@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Payment;
-use App\Models\Recruiter;
-use App\Models\User;
-//use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Auth;
-
 use Inertia\Inertia;
 
-//use Illuminate\Support\Facades\Request;
-
-class PaymentController extends Controller
+class ClientController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,21 +17,13 @@ class PaymentController extends Controller
      */
     public function index()
     {
+        $serhedPayments =   Client::with('payments')->where('pasport', '=', Request::only('pasport'))->first();
+        // Переделать фильтиры, убрать with из модоели выплат
 
-        $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
-            $query->filter(Request::only('month', 'year', 'recruiter'));
-        }])->first();
-
-        $monthAnYears = Payment::selectRaw('DISTINCT  year , month, CONCAT(year,"-",month) "yearMonth"')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->get()
-            ->mapToGroups(function ($item) {
-                return  [$item['year'] => $item['month']];
-            });
-
-
-        return Inertia::render('Payment/Index', [
-            'ranges' => $monthAnYears,
-            'filters' => Request::only('month', 'year', 'recruiter'),
-            'payments' => $payments
+        // $serhedPayments =   Client::where('pasport', Request::only('pasport'))->with('payments')->get();
+        // $serhedPayments = Payment::where('client_id', Client::find('pasport', Request::only('pasport')))->get();
+        return Inertia::render('Client/Index', [
+            'payments' => $serhedPayments
         ]);
     }
 
@@ -64,10 +51,10 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Payment  $payment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Payment $payment)
+    public function show($id)
     {
         //
     }
@@ -75,10 +62,10 @@ class PaymentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Payment  $payment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Payment $payment)
+    public function edit($id)
     {
         //
     }
@@ -87,10 +74,10 @@ class PaymentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Payment  $payment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Payment $payment)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -98,10 +85,10 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Payment  $payment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Payment $payment)
+    public function destroy($id)
     {
         //
     }
