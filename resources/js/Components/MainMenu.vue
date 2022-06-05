@@ -29,7 +29,7 @@ const props = defineProps(["class", "active"]);
         <Link :href="route('dashboard')">
         <div :class="isUrl('dashboard') ? 'opacity-100' : 'opacity-40'"
             class="text-white flex justify-end hover:opacity-100  cursor-pointer mr-2 text-xl truncate text-clip  items-center mb-14 transition-all">
-            <span class="mx-2 px-9 font-semibold  fixed">Аналитика</span>
+            <span class="mx-2 px-8 md:px-9   fixed">Аналитика</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -41,7 +41,7 @@ const props = defineProps(["class", "active"]);
         <Link :href="route('payments')">
         <div :class="isUrl('payments') ? 'opacity-100' : 'opacity-40'"
             class="text-white flex justify-end hover:opacity-100   cursor-pointer mr-2 text-xl truncate text-clip  items-center transition-all">
-            <span class="mx-2 px-9 font-semibold  fixed">Выплаты</span>
+            <span class="mx-2 px-8 md:px-9   fixed">Выплаты</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"

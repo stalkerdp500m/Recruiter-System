@@ -16,7 +16,7 @@ function paymentsSum (payments) {
     });
     return `всего ${sum} PLN за ${count} клиентов`;
 }
-//console.log(props.payments);
+console.log(props.payments);
 </script>
 
 <template>
@@ -32,7 +32,12 @@ function paymentsSum (payments) {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div v-for="recruiter in props.payments.recruiters" :key="payments.id"
+                <div class=" text-center p-10 font-bold bg-systems-600 rounded-sm my-10 shadow-xl"
+                    v-if="props.payments.recruiters.length == 0">
+                    Нет
+                    рекрутеров для отбражения, пожалуйста
+                    обратитесь к администратору</div>
+                <div v-for="recruiter in props.payments.recruiters" :key="recruiter.id"
                     class="bg-white overflow-hidden shadow-sm sm:rounded-lg my-5">
                     <div @click="recruiter.show = !recruiter.show"
                         class="p-6 mb-5 text-lg font-bold bg-white border-b border-systems-200 overflow-hidden cursor-pointer">
@@ -44,12 +49,19 @@ function paymentsSum (payments) {
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg> </span>
                     </div>
-                    <div :class="recruiter.show ? 'flex' : 'hidden'" class='overflow-x-auto  transition-all'>
+                    <div :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'hidden'"
+                        class=' transition-all overflow-auto'>
                         <table
-                            class='mx-auto max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-systems-300'>
-                            <thead class="bg-systems-900">
-                                <tr class="text-white text-left">
-                                    <th class="font-semibold text-sm uppercase px-6 py-4"> Клиент </th>
+                            class='mx-auto py-8 max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-systems-300'>
+                            <tr v-if="recruiter.payments.length === 0">
+                                <td class="px-6 py-6  font-bold text-lg text-systems-700/70" colspan="4">Нет
+                                    выплат
+                                    в этом месяце
+                                </td>
+                            </tr>
+                            <thead v-else class="bg-systems-900">
+                                <tr class="text-white text-center">
+                                    <th class="font-semibold text-sm uppercase px-6 py-4 text-left"> Клиент </th>
                                     <th class="font-semibold text-sm uppercase px-6 py-4"> Проект </th>
                                     <th class="font-semibold text-sm uppercase px-6 py-4 text-center"> Статус </th>
                                     <th class="font-semibold text-sm uppercase px-6 py-4 text-center"> Сумма </th>
@@ -62,7 +74,7 @@ function paymentsSum (payments) {
                                         <div class="flex items-center space-x-3">
                                             <div>
                                                 <p> {{ payment?.client?.name }}</p>
-                                                <p class="text-systems-500 text-sm font-semibold tracking-wide">
+                                                <p class="text-systems-800/70  text-sm font-bold tracking-wide">
                                                     {{ payment?.client?.pasport }}</p>
                                             </div>
                                         </div>
@@ -85,9 +97,7 @@ function paymentsSum (payments) {
                                             class="text-systems-800 hover:underline">Edit</a>
                                     </td>
                                 </tr>
-                                <tr v-if="recruiter.payments.length === 0">
-                                    <td class="px-6 py-4 border-t" colspan="4">Нет выплат в этом месяце</td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
