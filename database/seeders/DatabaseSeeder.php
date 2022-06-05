@@ -46,11 +46,11 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin'
             ]
         );
-        Client::factory(200)->create();
-        Recruiter::factory(20)->create();
-        Salary::factory(250)->create();
-        Payment::factory(220)->create();
+        Client::factory(1000)->create();
+        Recruiter::factory(15)->create();
+        Salary::factory(1300)->create();
+        Payment::factory(1100)->create();
         PaymentUser::factory(20)->create();
-        RecruiterUser::factory(5)->create();
+        RecruiterUser::factory(8)->create();
     }
 }

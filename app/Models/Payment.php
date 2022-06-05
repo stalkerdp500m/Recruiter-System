@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Payment extends Model
 {
     use HasFactory;
@@ -34,15 +35,18 @@ class Payment extends Model
     }
 
 
+
+
     public function scopeFilter($query, array $filters)
     {
-        $date = \Carbon\Carbon::now();
-        $filteredMonth = isset($filters['month']) ? $filters['month'] : $date->subMonth()->format('m');
-        $filteredYear = isset($filters['year']) ? $filters['year'] : $date->format('Y');
-        $query->where('payments.month', $filteredMonth);
-        $query->where('payments.year', $filteredYear);
-        if (isset($filters['recruiter'])) {
-            $query->where('payments.recruiter_id', $filters['recruiter']);
+        if (isset($filters['year']) && isset($filters['month'])) {
+            $query->where('payments.year', $filters['year']);
+            $query->where('payments.month', $filters['month']);
+        } else {
+            $query->whereRaw("month = (select max(`month`) from payments) AND year = (select max(`year`)  from payments) ");
         }
+        // if (isset($filters['recruiter'])) {
+        //     $query->where('payments.recruiter_id', $filters['recruiter']);
+        // }
     }
 }

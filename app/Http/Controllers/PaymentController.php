@@ -8,6 +8,7 @@ use App\Models\User;
 //use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
+
 use Inertia\Inertia;
 
 //use Illuminate\Support\Facades\Request;
@@ -19,30 +20,22 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        //dd($request::user()->id);
-
-        //РАБОЧИЙ
-        // $payments = User::with(['recruiters.payments' => function ($query) {
-        //     $query->where('payments.month', '9');
-        // }])->where('id', Auth::user()->id)->get();
-
 
         $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
             $query->filter(Request::only('month', 'year', 'recruiter'));
         }])->first();
-        // $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
-        //     $query->filter(Request::only('month', 'year', 'recruiter'));
-        // }])->first();
 
-        // $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
-        //     $query->where('payments.month', '2');
-        //     $query->where('payments.year', '2021');
-        // }])->get();
+        $monthAnYears = Payment::selectRaw('DISTINCT  year , month, CONCAT(year,"-",month) "yearMonth"')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->get()
+            ->mapToGroups(function ($item) {
+                return  [$item['year'] => $item['month']];
+            });
+
 
         return Inertia::render('Payments', [
+            'ranges' => $monthAnYears,
+            'filters' => Request::only('month', 'year', 'recruiter'),
             'payments' => $payments
         ]);
     }
