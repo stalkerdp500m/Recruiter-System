@@ -27,7 +27,7 @@ class PaymentFactory extends Factory
             'client_id' => Client::get()->random(),
             'recruiter_id' => Recruiter::get()->random(),
             'recommender_id' => User::get()->random(),
-            'month' => random_int(4, 6),
+            'month' => random_int(1, 12),
             //'year' => 2022,
             'year' => random_int(2021, 2022),
             'project' => $this->faker->company(),

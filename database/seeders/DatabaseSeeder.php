@@ -51,6 +51,6 @@ class DatabaseSeeder extends Seeder
         Salary::factory(1300)->create();
         Payment::factory(1100)->create();
         PaymentUser::factory(20)->create();
-        RecruiterUser::factory(8)->create();
+        RecruiterUser::factory(10)->create();
     }
 }

@@ -20,29 +20,28 @@ const rangeModel = reactive(
 )
 
 function selectedRange () {
-    console.log(rangeModel.value);
     Inertia.get('/payments', rangeModel)
 }
 
 console.log(props.ranges[currenYear][0]);
 
-// function paymentsSum (payments) {
-//     let sum = 0;
-//     let count = 0;
-//     payments.forEach(paym => {
-//         if (paym.bonus > 0) {
-//             sum += paym.bonus;
-//             count++
-//         }
-//     });
-//     return `всего ${sum} PLN за ${count} клиентов`;
-// }
-// console.log(props.payments);
+function paymentsSum (payments) {
+    let sum = 0;
+    let count = 0;
+    payments.forEach(paym => {
+        if (paym.bonus > 0) {
+            sum += paym.bonus;
+            count++
+        }
+    });
+    return `всего ${sum} PLN за ${count} клиентов`; // TODO " тут добавить склонения"
+}
+
 </script>
 
 <template>
 
-    <Head title="Dashboard" />
+    <Head title="Выплаты" />
 
     <MainLayout>
         <template #header>
@@ -51,9 +50,10 @@ console.log(props.ranges[currenYear][0]);
             </h2>
         </template>
 
+        <!-- Фильтры -->
         <div class="pt-10 md:px-8 2xl:px-56 flex flex-row items-center">
-            <div class="bg-white flex items-baseline justify-start mr-1 pt-2 shadow-md">
-                <label for="year" name="year" class="px-4">Год</label>
+            <div class="bg-white flex items-baseline justify-start mr-1 pt-2 shadow-md rounded-md">
+                <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Год</label>
                 <div class="mb-3  ">
                     <select id="year" v-model="rangeModel.year" @change="selectedRange"
                         class=" form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent " aria-label="year">
@@ -62,8 +62,8 @@ console.log(props.ranges[currenYear][0]);
                     </select>
                 </div>
             </div>
-            <div class="bg-white flex items-baseline justify-start mr-1 pt-2 shadow-md">
-                <label for="month" class="px-4">Месяц</label>
+            <div class="bg-white flex items-baseline justify-start mr-1 pt-2 shadow-md rounded-md">
+                <label for="month" class="px-4 border-r border-systems-900/20">Месяц</label>
                 <div class="mb-3 ">
                     <select v-model="rangeModel.month" @change="selectedRange" id="month" name="month"
                         class="form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
@@ -73,9 +73,36 @@ console.log(props.ranges[currenYear][0]);
             </div>
 
         </div>
+        <!-- /Фильтры -->
 
         <div class="py-2">
-            <PaymentsTable :payments="props.payments"></PaymentsTable>
+
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class=" text-center p-10 font-bold bg-systems-600 rounded-sm my-10 shadow-xl"
+                    v-if="props.payments.recruiters.length == 0">Нет рекрутеров для отбражения, пожалуйста обратитесь к
+                    администратору</div>
+
+                <div v-for="recruiter in props.payments.recruiters" :key="recruiter.id"
+                    class="bg-white overflow-hidden shadow-sm sm:rounded-lg my-5  transition-all">
+
+                    <div @click="recruiter.show = !recruiter.show"
+                        class="p-6  text-lg  bg-white  border-systems-200 overflow-hidden cursor-pointer">
+                        <span class="font-bold pr-2"> {{ recruiter.name }}</span>
+                        <span> {{ paymentsSum(recruiter.payments) }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 inline" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'opacity-0 hidden'"
+                        class=' transition-all overflow-auto px-2 md:px-10'>
+                        <PaymentsTable :payments="recruiter.payments"></PaymentsTable>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </MainLayout>
 </template>

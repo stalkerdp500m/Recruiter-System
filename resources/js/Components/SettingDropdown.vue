@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 </script>
 
 <template>
-    <div class="flex items-center ml-6 px-5">
+    <div class="flex items-center ml-6 px-5 transition-all">
         <div class="ml-3 relative">
             <BreezeDropdown align="right" width="48">
                 <template #trigger>
