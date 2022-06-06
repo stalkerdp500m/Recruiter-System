@@ -51,8 +51,9 @@ function paymentsSum (payments) {
         </template>
 
         <!-- Фильтры -->
-        <div class="pt-10 md:px-8 2xl:px-56 grid grid-flow-col overflow-clip  items-center md:w-2/3  ">
-            <div class="bg-white  flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 ">
+        <div
+            class="pt-10 md:px-8 2xl:px-56 grid  grid-flow-col overflow-clip justify-start md:gap-4   items-center md:w-2/3  ">
+            <div class="bg-white  flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit ">
                 <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Год</label>
                 <div class="mb-3  ">
                     <select id="year" v-model="rangeModel.year" @change="selectedRange"
@@ -63,7 +64,7 @@ function paymentsSum (payments) {
                     </select>
                 </div>
             </div>
-            <div class="bg-white flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12">
+            <div class="bg-white flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit">
                 <label for="month" class="px-4 border-r border-systems-900/20">Месяц</label>
                 <div class="mb-3 ">
                     <select v-model="rangeModel.month" @change="selectedRange" id="month" name="month"
@@ -98,8 +99,8 @@ function paymentsSum (payments) {
                     </div>
 
                     <div :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'opacity-0 hidden'"
-                        class=' transition-all overflow-auto px-2 md:px-10'>
-                        <PaymentsTable :payments="recruiter.payments"></PaymentsTable>
+                        class=' transition-all overflow-auto overflow-y-hidden h-fit px-2 md:px-10'>
+                        <PaymentsTable showBonus :payments="recruiter.payments"></PaymentsTable>
                     </div>
 
                 </div>

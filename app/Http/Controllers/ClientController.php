@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Payment;
-// use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -15,15 +15,15 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $serhedPayments =   Client::with('payments')->where('pasport', '=', Request::only('pasport'))->first();
-        // Переделать фильтиры, убрать with из модоели выплат
 
-        // $serhedPayments =   Client::where('pasport', Request::only('pasport'))->with('payments')->get();
-        // $serhedPayments = Payment::where('client_id', Client::find('pasport', Request::only('pasport')))->get();
+        $searchResults = Client::where('pasport', Request::input('pasport', ''))
+            ->with(['payments.recruiter:id,name', 'salaries'])->first();
+
         return Inertia::render('Client/Index', [
-            'payments' => $serhedPayments
+            'searchPasport' => Request::only('pasport'),
+            'searchResults' => $searchResults
         ]);
     }
 

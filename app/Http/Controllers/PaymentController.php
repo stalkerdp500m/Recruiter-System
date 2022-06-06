@@ -23,9 +23,13 @@ class PaymentController extends Controller
     public function index()
     {
 
+        // $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
+        //     $query->filter(Request::only('month', 'year', 'recruiter'));
+        // }])->first();
         $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
-            $query->filter(Request::only('month', 'year', 'recruiter'));
+            $query->filter(Request::only('month', 'year', 'recruiter'))->with('client');
         }])->first();
+        //dd($payments);
 
         $monthAnYears = Payment::selectRaw('DISTINCT  year , month, CONCAT(year,"-",month) "yearMonth"')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->get()
             ->mapToGroups(function ($item) {

@@ -12,7 +12,7 @@ class Payment extends Model
 
     protected $table = 'payments';
     protected $guarded = [];
-    public $with = ['client'];
+    // public $with = ['client'];
 
     public function client()
     {
@@ -39,12 +39,22 @@ class Payment extends Model
 
     public function scopeFilter($query, array $filters)
     {
+
+        // $query->when(isset($filters['year']), function ($q, $filters) {
+        //     return $q->where('payments.year', $filters['year'])->where('payments.month', $filters['month']);
+        // }, function ($q) {
+        //     $q->whereRaw("month = (select max(`month`) from payments) AND year = (select max(`year`)  from payments) ");
+        // });
+
+
         if (isset($filters['year']) && isset($filters['month'])) {
             $query->where('payments.year', $filters['year']);
             $query->where('payments.month', $filters['month']);
         } else {
             $query->whereRaw("month = (select max(`month`) from payments) AND year = (select max(`year`)  from payments) ");
         }
+
+
         // if (isset($filters['recruiter'])) {
         //     $query->where('payments.recruiter_id', $filters['recruiter']);
         // }
