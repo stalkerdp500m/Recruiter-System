@@ -12,20 +12,55 @@ const props = defineProps({
     filters: Object
 });
 
+function randColor () {
+    return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase();
+}
+
 console.log(props.paymentCouns)
 
+let recruitersData = [];
 for (const paymCount in props.paymentCouns) {
-    console.log(props.paymentCouns[paymCount]);
+    const dataRecruiter = {};
+    props.paymentCouns[paymCount].map(month => {
+        dataRecruiter[month.month] = month.countPaym
+    });
+    recruitersData.push({
+        label: props.paymentCouns[paymCount][0].rucruiterName,
+        borderColor: randColor(),
+        data: dataRecruiter,
+        backgroundColor: randColor(),
+    })
 }
+
+const chartData = {
+    datasets: recruitersData
+}
+console.log(recruitersData);
 
 Chart.register(...registerables);
 
 const options = {
+    layout: {
+        padding: {
+            x: 10
+        }
+    },
+    plugins: {
+        legend: {
+            'position': 'bottom',
+            'labels': {
+                font: {
+                    size: 14,
+                    color: 'black'
+                }
+            }
+        }
+    },
     scales: {
         y: {
             title: {
                 display: true,
-                text: 'Кол-во рерутаций'
+                text: 'Кол-во рекрутаций'
             }
         },
         x: {
@@ -38,25 +73,23 @@ const options = {
 }
 
 const paymentsData = {
-    labels: ['Paris', 'Nîmes', 'Toulon', 'Perpignan', 'Autre'],
     datasets: [
         {
             label: 'рекрутер 1',
             borderColor: '#FF0000',
-            data: [30, 40, 60, 70, 105],
+            data: {
+                '1-2022': 50, '3-2022': 40, '5-2022': 70,
+            },
             backgroundColor: '#77CEFF',
         },
         {
             label: 'рекрутер 2',
             borderColor: '#008080',
-            data: [10, 300, 60, 250, 95],
+            data: {
+                'Paris': 90, 'dgdd': 50,
+            },
             backgroundColor: '#77CEFF',
-        }, {
-            label: 'рекрутер 3',
-            borderColor: 'grean',
-            data: [15, 3, 60, 250, 95],
-            backgroundColor: '#77CEFF',
-        }
+        },
     ]
 }
 </script>
@@ -73,10 +106,11 @@ const paymentsData = {
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            <div class=" mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
-                        <LineChart :chartData="paymentsData" :options="options" />
+                    <div class="p-4 bg-white border-b border-gray-200">
+                        <LineChart class="h-full" :chartData="chartData" :options="options" />
                     </div>
                 </div>
             </div>

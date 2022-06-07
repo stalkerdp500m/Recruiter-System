@@ -73,7 +73,6 @@ function paymentsSum (payments) {
                     </select>
                 </div>
             </div>
-
         </div>
         <!-- /Фильтры -->
 
