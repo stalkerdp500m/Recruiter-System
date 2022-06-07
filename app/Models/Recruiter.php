@@ -17,6 +17,10 @@ class Recruiter extends Model
     {
         return $this->hasMany(Payment::class,  'recruiter_id', 'id');
     }
+    public function countPayments()
+    {
+        return $this->hasMany(Payment::class,  'recruiter_id', 'id')->where('recruiter_id', $this->recruiter_id)->count();
+    }
 
 
 
