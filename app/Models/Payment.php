@@ -37,36 +37,41 @@ class Payment extends Model
 
 
 
-    public function scopeDashboardFilter($query, array $filters,  $periodList)
+    public function scopeDashboardFilter($query, array $filters, object  $startPeriod, object $endPeriod)
     {
-        if (isset($filters['start']) && isset($filters['end'])) {
-            $query->where('payments.year', $filters['year']);
-            $query->where('payments.month', $filters['month']);
-        } else {
-            $endPeriod = $periodList->splice(0, 2)->first();
-            $startPeriod = $periodList->splice(0, 2)->last();
-            // echo $startPeriod;
-            // echo $endPeriod;
+        $startYear = isset($filters['start']) ? explode("-", $filters['start'])[1] : $startPeriod['year'];
+        $startMonth = isset($filters['start']) ? explode("-", $filters['start'])[0] : $startPeriod['month'];
+        $endYear = isset($filters['end']) ? explode("-", $filters['end'])[1] : $endPeriod['year'];
+        $endMonth = isset($filters['end']) ? explode("-", $filters['end'])[0] : $endPeriod['month'];
 
+        if ($endYear - $startYear >= 1) {
             $query->whereRaw(
-                '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
-                [$startPeriod['month'], $startPeriod['year'], $endPeriod['month'], $endPeriod['year']]
+                '(  ((month between ? and 12) and year >= ?) or ( (month between 1 and ?) and year <= ?) )',
+                [$startMonth, $startYear, $endMonth, $endYear]
             );
-            $query->orderBy('year', 'asc');
-            $query->orderBy('month', 'asc');
-
-            //  ->dd();
-
-            // $query->orWhere(function ($query, $startPeriod) {
-            //     $query->where('month', '>=', $startPeriod['month']);
-            //     $query->where('year', '>=', $startPeriod['year']);
-            // });
-            // $query->orWhere(function ($query, $endPeriod) {
-            //     $query->where('month', '<=', $endPeriod['month']);
-            //     $query->where('year', '<=', $endPeriod['year']);
-            // });
-            // $query->whereBetween('year', [$startPeriod['year'], $endPeriod['year']])->dd();
+        } else {
+            $query->whereRaw(
+                '(  ((month between ? and ?) and year = ?) )',
+                [$startMonth, $endMonth, $endYear]
+            );
         }
+
+
+        // $query->whereRaw(
+        //     '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
+        //     [$startMonth, $startYear, $endMonth, $endYear]
+        // );
+
+        $query->orderBy('year', 'asc');
+        $query->orderBy('month', 'asc');
+
+        // $query->whereRaw(
+        //     '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
+        //     [$startPeriod['month'], $startPeriod['year'], $endPeriod['month'], $endPeriod['year']]
+        // );
+        // $query->orderBy('year', 'asc');
+        // $query->orderBy('month', 'asc');
+
     }
 
 

@@ -52,7 +52,7 @@ function paymentsSum (payments) {
 
         <!-- Фильтры -->
         <div
-            class="pt-10 md:px-8 2xl:px-56 grid  grid-flow-col overflow-clip justify-start md:gap-4   items-center md:w-2/3  ">
+            class="pt-10 md:px-8 2xl:px-56 grid  grid-flow-col overflow-x-clip justify-start md:gap-4   items-center md:w-2/3  ">
             <div class="bg-white  flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit ">
                 <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Год</label>
                 <div class="mb-3  ">

@@ -18,6 +18,8 @@ class DashboardController extends Controller
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->distinct('period')->get();
+        $endPeriod = $periodList->take(6)->first();
+        $startPeriod = $periodList->take(6)->last();
         //->take(6)->get();
         //  dd($periodList->splice(0, 5)->last());
 
@@ -26,7 +28,7 @@ class DashboardController extends Controller
             ->groupBy('recruiter_id', 'month', 'year')
             // ->whereBetween('month', [1, 6])
             //   ->where('year', 2022)
-            ->dashboardFilter(Request::only('start', 'end'), $periodList)
+            ->dashboardFilter(Request::only('start', 'end'), $startPeriod, $endPeriod)
             ->with('recruiter:id,name')
             ->get();
 
@@ -44,8 +46,11 @@ class DashboardController extends Controller
         //dd($payments);
 
         return Inertia::render('Dashboard/Index', [
-            'filters' => Request::only('month', 'year', 'recruiter'),
-            'paymentCouns' => $paymentCouns
+            'filters' => Request::only('start', 'end'),
+            'paymentCouns' => $paymentCouns,
+            'periodList' => $periodList,
+            'autoStartPeriod' => $startPeriod,
+            'autoEndPeriod' => $endPeriod,
         ]);
     }
 }
