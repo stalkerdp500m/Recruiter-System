@@ -37,6 +37,40 @@ class Payment extends Model
 
 
 
+    public function scopeDashboardFilter($query, array $filters,  $periodList)
+    {
+        if (isset($filters['start']) && isset($filters['end'])) {
+            $query->where('payments.year', $filters['year']);
+            $query->where('payments.month', $filters['month']);
+        } else {
+            $endPeriod = $periodList->splice(0, 2)->first();
+            $startPeriod = $periodList->splice(0, 2)->last();
+            // echo $startPeriod;
+            // echo $endPeriod;
+
+            $query->whereRaw(
+                '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
+                [$startPeriod['month'], $startPeriod['year'], $endPeriod['month'], $endPeriod['year']]
+            );
+            $query->orderBy('year', 'asc');
+            $query->orderBy('month', 'asc');
+
+            //  ->dd();
+
+            // $query->orWhere(function ($query, $startPeriod) {
+            //     $query->where('month', '>=', $startPeriod['month']);
+            //     $query->where('year', '>=', $startPeriod['year']);
+            // });
+            // $query->orWhere(function ($query, $endPeriod) {
+            //     $query->where('month', '<=', $endPeriod['month']);
+            //     $query->where('year', '<=', $endPeriod['year']);
+            // });
+            // $query->whereBetween('year', [$startPeriod['year'], $endPeriod['year']])->dd();
+        }
+    }
+
+
+
     public function scopeFilter($query, array $filters)
     {
 
@@ -51,7 +85,11 @@ class Payment extends Model
             $query->where('payments.year', $filters['year']);
             $query->where('payments.month', $filters['month']);
         } else {
-            $query->whereRaw("month = (select max(`month`) from payments) AND year = (select max(`year`)  from payments) ");
+            // $query->whereRaw("month = (select max(`month`) from payments) AND year = (select max(`year`)  from payments ) ");
+            $query->whereRaw(
+                "month = (select max(`month`) from payments where year = (select max(`year`) from payments))
+                 AND year = (select max(`year`) from payments)"
+            );
         }
 
 

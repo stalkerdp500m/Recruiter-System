@@ -3,7 +3,7 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { defineComponent, defineProps } from 'vue';
 import { LineChart } from 'vue-chart-3';
-import { Chart, registerables } from "chart.js";
+import { Chart, registerables, _adapters } from "chart.js";
 
 
 const props = defineProps({
@@ -64,9 +64,14 @@ const options = {
             }
         },
         x: {
+            type: 'time',
             title: {
                 display: true,
                 text: 'Месяц'
+            }, time: {
+                unit: 'month'
+            }, displayFormats: {
+                quarter: 'MMM YYYY'
             }
         }
     }
