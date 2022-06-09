@@ -21,7 +21,13 @@ const props = defineProps({
 console.log(props.periodList)
 
 function randColor () {
-    return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase();
+    const randomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    let h = randomInt(0, 360);
+    let s = randomInt(42, 98);
+    let l = randomInt(40, 90);
+    return `hsl(${h},${s}%,${l}%)`;
 }
 
 const currenStart = props.filters.start ? props.filters.start : props.autoStartPeriod?.period// последний ключь-год
@@ -44,16 +50,19 @@ function selectedPeriod () {
 
 
 let recruitersData = [];
+let color = ''
 for (const paymCount in props.paymentCouns) {
+    console.log('paymCount', paymCount);
     const dataRecruiter = {};
     props.paymentCouns[paymCount].map(month => {
         dataRecruiter[month.month] = month.countPaym
     });
+    color = randColor()
     recruitersData.push({
         label: props.paymentCouns[paymCount][0].rucruiterName,
-        borderColor: randColor(),
+        borderColor: color,
         data: dataRecruiter,
-        backgroundColor: randColor(),
+        backgroundColor: color,
         tension: 0.1,
         borderWidth: 5
         //  тут добавить толщину линии в зависимости от кол-ва рекрутаций

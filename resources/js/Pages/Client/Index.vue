@@ -58,7 +58,7 @@ function serchClient () {
                 <span v-else>Результаты Поиска</span>
             </div>
             <!-- Поиск -->
-            <div class="py-5 md:px-8 2xl:px-56  items-center flex ">
+            <div class="py-5 md:px-8 2xl:px-56 mx-auto  justify-center flex ">
                 <form @submit.prevent="serchClient"
                     class="px-5  py-4 max-w-fit  grid grid-flow-col gap-2 justify-center   items-center w-full  bg-white shadow-sm rounded-md ">
                     <div>
