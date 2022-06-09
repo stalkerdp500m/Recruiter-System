@@ -46,8 +46,10 @@ class Payment extends Model
 
         if ($endYear - $startYear >= 1) {
             $query->whereRaw(
-                '(  ((month between ? and 12) and year >= ?) or ( (month between 1 and ?) and year <= ?) )',
-                [$startMonth, $startYear, $endMonth, $endYear]
+                '(  ((month between ? and 12) and (year = ?))
+                     or ( (month between 1 and ?) and (year =?))
+                     or ((month between 1 and 12) and year > ? and year < ? ) )',
+                [$startMonth, $startYear,  $endMonth,  $endYear, $startYear, $endYear]
             );
         } else {
             $query->whereRaw(

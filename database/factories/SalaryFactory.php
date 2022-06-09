@@ -19,8 +19,8 @@ class SalaryFactory extends Factory
     {
         return [
             'client_id' => Client::get()->random(),
-            'month' => random_int(1, 4),
-            'year' => 2022,
+            'month' => random_int(1, 12),
+            'year' => 2020,
             // 'year' => random_int(2021, 2022),
             'project' => $this->faker->company(),
             'hours' => random_int(30, 300),

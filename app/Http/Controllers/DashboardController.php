@@ -20,19 +20,15 @@ class DashboardController extends Controller
             ->distinct('period')->get();
         $endPeriod = $periodList->take(6)->first();
         $startPeriod = $periodList->take(6)->last();
-        //->take(6)->get();
-        //  dd($periodList->splice(0, 5)->last());
+
 
         $paymentData = Payment::whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'))
             ->selectRaw('count(id) as countRecrutation, month, recruiter_id, year')
             ->groupBy('recruiter_id', 'month', 'year')
-            // ->whereBetween('month', [1, 6])
-            //   ->where('year', 2022)
             ->dashboardFilter(Request::only('start', 'end'), $startPeriod, $endPeriod)
             ->with('recruiter:id,name')
             ->get();
 
-        //  dd($paymentData);
 
         $paymentCouns = $paymentData->mapToGroups(function ($item) {
             //echo $item;
