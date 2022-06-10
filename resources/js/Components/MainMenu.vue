@@ -50,6 +50,17 @@ const props = defineProps(["class", "active"]);
             </svg>
         </div>
         </Link>
+        <Link :href="route('payments.create')">
+        <div :class="isUrl('payments.create') ? 'opacity-100' : 'opacity-40'"
+            class="text-white flex justify-end hover:opacity-100  cursor-pointer mr-2 text-xl truncate text-clip  items-center mb-14 transition-all">
+            <span class="mx-2 px-8 md:px-9   fixed">Загрузить<br>Выплаты</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+        </div>
+        </Link>
     </div>
 
 

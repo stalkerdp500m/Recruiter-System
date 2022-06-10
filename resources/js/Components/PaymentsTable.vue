@@ -38,7 +38,7 @@ const props = defineProps({
                         </div>
                     </div>
                 </td>
-                <td v-if="props.showRecruiter" class="px-6 py-4">
+                <td v-if="props.showRecruiter" class="py-4 break-words">
                     <div class="flex items-center space-x-3">
                         <div>
                             <p> {{ payment?.recruiter.name }}</p>
@@ -67,7 +67,7 @@ const props = defineProps({
                         {{ payment?.status }}
                     </span>
                 </td>
-                <td v-if="props.showBonus" class="px-6 py-4 text-center"> {{ payment?.bonus }} PLN </td>
+                <td v-if="props.showBonus" class=" py-4 text-center"> {{ payment?.bonus }} PLN </td>
                 <!-- <td class="px-6 py-4 text-center"> <a href="#"
                                     class="text-systems-800 hover:underline">Edit</a>
                             </td> -->

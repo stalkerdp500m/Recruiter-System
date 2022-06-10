@@ -49,6 +49,7 @@ function serchClient () {
         </template>
 
         <div class=" py-5">
+            {{ $exemplData }}
             <div class="text-center text-2xl font-bold p-4   transition-all">
 
                 <span v-if="searchPasport.pasport.length < 6 || !searchPasport.pasport"> Введите паспорт клиента для

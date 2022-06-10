@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\GetHeadRow;
+use App\Imports\PaymentsImport;
+use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Recruiter;
 use App\Models\User;
-//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
-
 use Inertia\Inertia;
-
-//use Illuminate\Support\Facades\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
+use Symfony\Component\HttpKernel\HttpCache\Ssi;
 
 class PaymentController extends Controller
 {
@@ -51,7 +53,53 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Payment/Create');
+    }
+    public function import()
+    {
+        $tableSettings = [
+            'sheatName' => 'Lista',
+            'RowStart' => 6
+        ];
+
+
+        $data = Excel::toCollection(new PaymentsImport($tableSettings), Request::file('file'));
+        $month = Request::get('month');
+        $year = Request::get('year');
+
+        if ($month &&  $year) {
+            foreach ($data['Lista'] as $payment) {
+                if (isset($payment['prac_identyfikator']) && isset($payment['prac_nazwiskoimie']) && $payment['prac_nazwiskoimie'] != '') {
+                    // dd($payment);
+                    $client = Client::firstOrCreate(
+                        ['pasport' => trim($payment['prac_identyfikator'])],
+                        ['name' => trim($payment['prac_nazwiskoimie'])]
+                    );
+
+                    $recruiter = Recruiter::firstOrCreate(
+                        ['name' => trim($payment['prac_rekruternazwiskoimie'])]
+                    );
+                    $payment =  Payment::updateOrCreate(
+                        [
+                            'month' =>  $month,
+                            'year' => $year,
+                            'client_id' => $client->id,
+                            'project' => trim($payment['proj_nazwa']),
+                        ],
+                        [
+                            'recruiter_id' => $recruiter->id,
+                            'hours' => $payment['godziny_uop_enova'],
+                            'category' => trim($payment['projrek_kategoriaprojektudopremii']),
+                            'bonus' => $payment['premrek_kwotapremii_brutto'],
+                            'status' => trim($payment['status_wyplaty']),
+                            'syncroner_id' => trim($payment['prac_synchronerid']),
+                        ]
+                    );
+                }
+            }
+        }
+
+        return redirect()->route('payments.index');
     }
 
     /**
@@ -60,9 +108,18 @@ class PaymentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        $tableSettings = [
+            'sheatName' => 'Lista',
+            'RowStart' => 6
+        ];
+        $data = Excel::toCollection(new PaymentsImport($tableSettings), Request::file('file'));
+        return Inertia::render('Payment/Create', [
+            'exemplData' =>  $data['Lista']->take(10),
+            'year' => Request::get('year'),
+            'month' => Request::get('month')
+        ]);
     }
 
     /**
