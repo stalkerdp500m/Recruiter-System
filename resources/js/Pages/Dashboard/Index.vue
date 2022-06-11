@@ -44,7 +44,7 @@ console.log('paymentCouns', props.paymentCouns)
 
 
 function selectedPeriod () {
-    Inertia.get('/dashboard', periodModel)
+    Inertia.get('/', periodModel)
 }
 
 

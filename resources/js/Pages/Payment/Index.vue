@@ -76,9 +76,9 @@ function paymentsSum (payments) {
         </div>
         <!-- /Фильтры -->
 
-        <div class="py-2">
+        <div class="py-2 md:w-full  mx-auto">
 
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class=" mx-auto sm:px-6 lg:px-8 ">
                 <div class=" text-center p-10 font-bold bg-systems-600 rounded-sm my-10 shadow-xl"
                     v-if="props.payments.recruiters.length == 0">Нет рекрутеров для отбражения, пожалуйста обратитесь к
                     администратору</div>
@@ -98,7 +98,7 @@ function paymentsSum (payments) {
                     </div>
 
                     <div :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'opacity-0 hidden'"
-                        class=' transition-all overflow-auto overflow-y-hidden h-fit px-2 md:px-10'>
+                        class=' transition-all overflow-auto overflow-y-hidden h-fit px-2 md:px-10  '>
                         <PaymentsTable showBonus :payments="recruiter.payments"></PaymentsTable>
                     </div>
 

@@ -14,37 +14,32 @@ const showNaw = ref(false);
 </script>
 
 <template>
-    <div class="flex justify-items-stretch h-screen ">
-        <!-- Левый сайтбар -->
-        <div class="bg-systems-800 transition-all  z-20 " :class="showNaw ? 'w-64 md:w-12' : 'w-12 md:w-64'">
-            <div class="bg-systems-900 h-16 shadow-md text-white flex justify-end overflow-hidden ">
-                <div class="text-left flex  p-2 transition-all align-middle">
-                    <span class="my-auto  text-white  text-xs md:text-base font-bold  md:pr-5 ">
-                        Payout Partners System</span>
+    <div class="flex  h-full bg-systems-500 min-h-screen  md:max-w-fit md:min-w-full ">
+        <!-- <div class="flex flex-row h-full bg-systems-50 min-h-screen md:max-w-full w-sm "> -->
+
+        <div class="shrink bg-systems-800 transition-all" :class="showNaw ? 'w-64 md:w-12' : 'w-12 md:w-64'">
+            <div class="sticky top-0">
+                <div class=" bg-systems-900 text-white h-16 flex  items-center justify-between ">
+                    <div class="mx-1 overflow-clip md:truncate md:text-lg leading-tight text-clip tracking-tight">Payout
+                        Partners
+                        System</div>
+                    <div class="pr-2  "> <svg @click="showNaw = !showNaw" xmlns=" http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" class="fill-white w-8 h-12 cursor-pointer mr-2">
+                            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
+                        </svg></div>
                 </div>
-                <div>
-                    <svg @click="showNaw = !showNaw" xmlns=" http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                        class="fill-white w-8 h-12 cursor-pointer mr-2">
-                        <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class=" py-20 text-center " :class="showNaw ? '' : ' md:pr-10'">
+
                 <MainMenu />
             </div>
         </div>
-        <!-- /Левый сайтбар -->
-
-        <!-- Верхний сайтбар и контент -->
-        <div class="w-full overflow-y-scroll ">
-            <div class="h-16 bg-gray-300 shadow-xl flex justify-end ">
+        <div class="flex-auto w-4/12">
+            <div class="h-16 bg-systems-400 shadow-sm flex justify-end sticky top-0 ">
                 <SettingDropdown />
             </div>
-
-            <div class="px-2  bg-gray-200 min-h-screen ">
+            <div class="px-2 transition-all flex-none">
                 <slot />
             </div>
         </div>
-        <!-- /Верхний сайтбар и контент -->
+
     </div>
 </template>
