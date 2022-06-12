@@ -17,12 +17,11 @@ const showNaw = ref(false);
     <div class="flex  h-full bg-systems-500 min-h-screen  md:max-w-fit md:min-w-full ">
         <!-- <div class="flex flex-row h-full bg-systems-50 min-h-screen md:max-w-full w-sm "> -->
 
-        <div class="shrink bg-systems-800 transition-all" :class="showNaw ? 'w-64 md:w-12' : 'w-12 md:w-64'">
+        <div class="shrink bg-systems-800 transition-all " :class="showNaw ? 'w-44 md:w-12' : 'w-12 md:w-64'">
             <div class="sticky top-0">
                 <div class=" bg-systems-900 text-white h-16 flex  items-center justify-between ">
-                    <div class="mx-1 overflow-clip md:truncate md:text-lg leading-tight text-clip tracking-tight">Payout
-                        Partners
-                        System</div>
+                    <div class="mx-1 overflow-clip md:truncate md:text-lg leading-tight text-clip tracking-tight">
+                        Payout Partners System</div>
                     <div class="pr-2  "> <svg @click="showNaw = !showNaw" xmlns=" http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20" class="fill-white w-8 h-12 cursor-pointer mr-2">
                             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>

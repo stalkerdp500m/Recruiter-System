@@ -61,10 +61,10 @@ const submit = () => {
                     class="underline text-sm text-gray-600 hover:text-gray-900">
                 Forgot your password?
                 </Link>
-                <Link v-if="canResetPassword" :href="route('register')"
+                <!-- <Link v-if="canResetPassword" :href="route('register')"
                     class=" bg-slate-600 text-sm px-3 py-2 text-white mx-2 rounded-md hover:text-gray-900">
                 Registration
-                </Link>
+                </Link> -->
 
                 <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in

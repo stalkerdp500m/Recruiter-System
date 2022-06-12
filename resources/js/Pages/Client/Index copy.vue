@@ -48,8 +48,9 @@ function serchClient () {
             </h2>
         </template>
 
-        <div class=" py-5">
-            {{ $exemplData }}
+        <div class="py-2 md:w-full  mx-auto ">
+
+            <!-- Инструкция -->
             <div class="text-center text-2xl font-bold p-4   transition-all">
 
                 <span v-if="searchPasport.pasport.length < 6 || !searchPasport.pasport"> Введите паспорт клиента для
@@ -58,13 +59,15 @@ function serchClient () {
                 <span v-else-if="!beforeSearch">Нажмите кнопку поиск</span>
                 <span v-else>Результаты Поиска</span>
             </div>
+            <!-- /Инструкция -->
+
             <!-- Поиск -->
-            <div class="py-5 md:px-8 2xl:px-56 mx-auto  justify-center flex ">
+            <div class=" py-2 md:w-full  mx-auto ">
                 <form @submit.prevent="serchClient"
-                    class="px-5  py-4 max-w-fit  grid grid-flow-col gap-2 justify-center   items-center w-full  bg-white shadow-sm rounded-md ">
-                    <div>
+                    class="mx-auto  py-4 px-4 max-w-fit flex gap-2 justify-center items-center   bg-white shadow-sm rounded-md ">
+                    <div class="">
                         <input @input="beforeSearch = false" type="text" v-model="searchPasport.pasport"
-                            class="rounded-md" placeholder="Паспорт клиента">
+                            class="rounded-md " placeholder="Паспорт клиента">
                     </div>
                     <div>
                         <button :disabled="searchPasport.pasport.length < 6" type="submit"
@@ -78,26 +81,34 @@ function serchClient () {
                         </button>
                     </div>
                 </form>
-
             </div>
             <!-- /Поиск -->
 
             <!-- Результаты -->
-            <div v-if="beforeSearch && searchPasport.pasport && searchPasport.pasport != ''" class="pb-16 ">
-                <div v-if="payments" class=' px-2 md:px-10 my-10 overflow-x-auto overflow-y-hidden h-fit'>
-                    <div class="text-center text-2xl font-bold py-4 "> Выплаты по клиенту </div>
 
-                    <PaymentsTable showRecruiter :payments="payments"></PaymentsTable>
+
+            <div v-if="beforeSearch && searchPasport.pasport && searchPasport.pasport != ''" class="pb-16 md:mx-10 ">
+
+                <div class="mx-auto p-2 bg-white  shadow-sm sm:rounded-lg my-4">
+                    <div v-if="payments" class=" transition-all h-fit px-2 md:px-10 overflow-y-clip">
+                        <div class="text-center text-2xl font-bold py-4 "> Выплаты по клиенту </div>
+                        <div class=" overflow-x-auto overflow-y-clip">
+                            <PaymentsTable showRecruiter :payments="payments"></PaymentsTable>
+                        </div>
+                    </div>
+                    <div v-else class="font-bold text-2xl text-center ">Выплаты отсутсвуют</div>
                 </div>
-                <div v-else class="font-bold text-lg text-center">Выплаты отсутсвуют</div>
-
-
-                <div v-if="salaries" class='  px-2 md:px-10 overflow-x-auto overflow-y-hidden h-fit'>
-                    <div class="text-center text-2xl font-bold py-4"> Wynagrodzenia по клиенту </div>
-                    <SalariesTable showRecruiter :salaries="salaries"></SalariesTable>
+                <div class="mx-auto p-2 bg-white   shadow-sm sm:rounded-lg ">
+                    <div v-if="salaries" class=' transition-all h-fit px-2 md:px-10 '>
+                        <div class="text-center text-2xl font-bold py-4 "> Wynagrodzenia по клиенту </div>
+                        <div class=" overflow-x-auto overflow-y-clip">
+                            <SalariesTable showRecruiter :salaries="salaries"></SalariesTable>
+                        </div>
+                    </div>
+                    <div v-else class="font-bold text-2xl text-center ">Wynagrodzenia отсутсвуют</div>
                 </div>
-                <div v-else class="font-bold text-lg text-center">Wynagrodzenia отсутсвуют</div>
             </div>
+            <!-- Результаты -->
         </div>
     </MainLayout>
 

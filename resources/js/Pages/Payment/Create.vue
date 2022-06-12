@@ -76,7 +76,7 @@ function createExempl (rawData) {
         <div class="py-16">
             <!-- Фильтры -->
             <form @submit.prevent="getExampl" class="md:flex md:flex-col ">
-                <div class=" md:gap-4 md:flex grid grid-flow-row mx-auto justify-center ">
+                <div class=" md:gap-4 md:flex  mx-auto justify-center ">
                     <div
                         class="bg-white h-14 flex items-baseline   pt-2 shadow-md rounded-md  mx-auto w-1/2  md:w-1/4  ">
                         <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Год</label>
@@ -109,7 +109,8 @@ function createExempl (rawData) {
                     </progress>
                 </div>
 
-                <button v-if="!props.exemplData" class="bg-systems-400 rounded-md shadow-md px-4 py-2 w-1/3 mx-auto"
+                <button v-if="!props.exemplData"
+                    class="bg-systems-800 rounded-md text-white shadow-md px-4 py-2 w-1/3 mx-auto"
                     type="submit">Проверить</button>
 
                 <div v-if="props.exemplData && !processData" @click="storeData"

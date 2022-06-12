@@ -40,6 +40,8 @@ class DashboardController extends Controller
             )];
         });
 
+
+
         //dd($payments);
 
         return Inertia::render('Dashboard/Index', [
