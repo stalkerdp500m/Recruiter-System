@@ -32,7 +32,7 @@ const showNaw = ref(false);
             </div>
         </div>
         <div class="flex-auto w-4/12">
-            <div class="h-16 bg-systems-400 shadow-sm flex justify-end sticky top-0 ">
+            <div class="h-16 bg-systems-400 shadow-sm flex justify-end sticky top-0 z-50 ">
                 <SettingDropdown />
             </div>
             <div class="px-2 transition-all flex-none">

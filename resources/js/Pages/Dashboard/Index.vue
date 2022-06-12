@@ -1,9 +1,10 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { defineComponent, defineProps, ref, reactive, computed } from 'vue';
+import { defineComponent, defineProps, ref, reactive, computed, watch } from 'vue';
 import { Chart, registerables, _adapters } from "chart.js";
-import { LineChart, useDoughnutChart } from 'vue-chart-3';
+import { LineChart, useDoughnutChart, useLineChart } from 'vue-chart-3';
+import VueMultiselect from 'vue-multiselect'
 import 'chartjs-adapter-moment';
 import { Inertia } from '@inertiajs/inertia'
 import { number } from "tailwindcss/lib/util/dataTypes";
@@ -18,8 +19,45 @@ const props = defineProps({
 });
 
 const recruitersData = ref([]);
+const recruitersShortList = ref([]);
+const currenStart = props.filters.start ? props.filters.start : props.autoStartPeriod?.period// последний ключь-год
+const currenEnd = props.filters.end ? props.filters.end : props.autoEndPeriod?.period
+
+const periodModel = reactive(
+    {
+        'start': currenStart,
+        'end': currenEnd,
+    }
+)
 const recruitersList = [];
-const recruitersShortList = ref(recruitersList);
+
+
+
+
+
+function* generateColorFunc () {
+    const collorSet = [
+        "#003f5c",
+        "#665191",
+        "#a05195",
+        "#d45087",
+        "#f95d6a",
+        "#ff7c43",
+        "#ffa600",
+        "#2C5F2D",
+        "#101820FF"
+    ]
+
+        ;
+    for (let i = 0; i < collorSet.length; i++) {
+        if (i == collorSet.length - 1) {
+            i = 0
+        }
+        yield collorSet[i];
+    }
+}
+const generateColor = generateColorFunc();
+
 
 
 function randColor () {
@@ -32,16 +70,9 @@ function randColor () {
     return `hsl(${h},${s}%,${l}%)`;
 }
 
-const currenStart = props.filters.start ? props.filters.start : props.autoStartPeriod?.period// последний ключь-год
-const currenEnd = props.filters.end ? props.filters.end : props.autoEndPeriod?.period
 
-const periodModel = reactive(
-    {
-        'start': currenStart,
-        'end': currenEnd,
-        'recruiterList': recruitersList
-    }
-)
+
+
 
 
 
@@ -50,17 +81,26 @@ function selectedPeriod () {
     Inertia.get('/', periodModel)
 }
 
-function selectedRecruiter () {
-
-    console.log(recruitersData);
+function selectedRecruiter (list) {
     recruitersData.value.map((recrut) => {
-        if (recruitersShortList.value.indexOf(recrut.label) == -1) {
+        if (list.indexOf(recrut.label) == -1) {
             recrut.hidden = true
         } else {
             recrut.hidden = false
         }
     })
+}
 
+
+function deleteRecruiterFromLegends (e, item) {
+    if (recruitersShortList.value.length != 0) {
+        recruitersShortList.value = recruitersShortList.value.filter(recrut => {
+            return recrut != item.text
+        })
+    } else {
+        recruitersShortList.value.push(item.text)
+    }
+    selectedRecruiter(recruitersShortList.value)
 }
 
 
@@ -69,14 +109,14 @@ function selectedRecruiter () {
 
 let color = ''
 for (const paymCount in props.paymentCouns) {
-    console.log('paymCount', paymCount);
+
     const dataRecruiter = {};
     props.paymentCouns[paymCount].map(month => {
         //dataRecruiter.push(month.countPaym)
         dataRecruiter[month.month] = month.countPaym
     });
     recruitersList.push(props.paymentCouns[paymCount][0].rucruiterName);
-    color = randColor()
+    color = generateColor.next().value;
     recruitersData.value.push({
         label: props.paymentCouns[paymCount][0].rucruiterName,
         borderColor: color,
@@ -88,8 +128,11 @@ for (const paymCount in props.paymentCouns) {
     })
 }
 
+const chartData = computed(() => ({
+    'datasets': recruitersData.value
+}))
 
-//console.log(recruitersData);
+
 
 Chart.register(...registerables);
 
@@ -102,12 +145,18 @@ const options = {
     hoverRadius: 20,
     plugins: {
         legend: {
+
             'position': 'bottom',
             'labels': {
                 font: {
                     size: 14,
-                    color: 'black'
+                    color: '#000000'
+                },
+                filter: (item) => {
+                    return !item.hidden
                 }
+            }, onClick: (e, item) => {
+                deleteRecruiterFromLegends(e, item)
             }
         }
     },
@@ -139,31 +188,11 @@ const options = {
     }
 }
 
-// const paymentsData = {
-//     datasets: [
-//         {
-//             label: 'рекрутер 1',
-//             borderColor: '#FF0000',
-//             data: {
-//                 '1-2022': 50, '3-2022': 40, '5-2022': 70,
-//             },
-//             backgroundColor: '#77CEFF',
-//         },
-//         {
-//             label: 'рекрутер 2',
-//             borderColor: '#008080',
-//             data: {
-//                 'Paris': 90, 'dgdd': 50,
-//             },
-//             backgroundColor: '#77CEFF',
-//         },
-//     ]
-// }
 
 
-const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
+const { lineChartProps, linetChartRef } = useLineChart({
     'chartData': {
-        'datasets': recruitersData.value,
+        'datasets': recruitersData.value
     },
     "options": options,
 });
@@ -182,11 +211,10 @@ const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
             </h2>
         </template>
 
-        <div class="py-12 px-4 flex flex-col">
-            {{ recruitersShortList }}
+        <div class="py-12 px-4 flex flex-col r ">
             <!-- Фильтры -->
             <div class="py-4 flex  gap-2 flex-wrap ">
-                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1  ">
+                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1 h-14 ">
                     <label for=" start" name="start"
                         class="px-1 md:px-4 my-auto border-r border-systems-900/20 ">От</label>
                     <select id="start" v-model="periodModel.start" @change="selectedPeriod"
@@ -196,7 +224,7 @@ const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
                     </select>
                 </div>
 
-                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1">
+                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md h-14  py-1">
                     <label for="end" name="end" class="px-1 md:px-4 my-auto border-r border-systems-900/20 ">До</label>
 
                     <select v-model="periodModel.end" @change="selectedPeriod" id="end" name="end"
@@ -206,11 +234,15 @@ const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
                     </select>
                 </div>
 
-                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1  ">
-                    <label for=" year" name="year"
-                        class="px-1 md:px-4 my-auto border-r border-systems-900/20 ">Рекрутеры</label>
+                <div
+                    class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1 md:w-3/5 w-full ">
+                    <VueMultiselect @update:model-value="selectedRecruiter" :multiple="true"
+                        selectLabel="добавить на график" deselectLabel="убрать с графика" v-model="recruitersShortList"
+                        :options="recruitersList" placeholder="Выберите рекрутеров">
+                    </VueMultiselect>
 
-                    <select id="recruiter" v-model="recruitersShortList" @change="selectedRecruiter" multiple
+                    <!--  @update:model-value="selectedRecruiter"
+                         <select id="recruiter" v-model="recruitersShortList" @change="selectedRecruiter" multiple
                         class=" form-multiselect  text-clip cursor-pointer focus:ring-0 ring-0 border-0  bg-transparent "
                         aria-label="year">
 
@@ -219,7 +251,7 @@ const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
                                 {{ recruiter }}</div>
                         </option>
 
-                    </select>
+                    </select> -->
 
                 </div>
                 <!-- <div class="bg-white flex items-center justify-start   shadow-md rounded-md py-1 ">
@@ -261,10 +293,13 @@ const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
             <div class="  ">
                 <div class="bg-white overflow-hidden shadow-sm rounded-md">
                     <div class="p-4 bg-white border-b border-gray-200">
-                        <LineChart class="h-full" v-bind="doughnutChartProps" />
+                        <LineChart class="h-full" v-bind="lineChartProps" />
                     </div>
                 </div>
             </div>
         </div>
     </MainLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css">
+</style>
+
