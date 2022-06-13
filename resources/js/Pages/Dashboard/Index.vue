@@ -37,15 +37,16 @@ const recruitersList = [];
 
 function* generateColorFunc () {
     const collorSet = [
-        "#003f5c",
-        "#665191",
-        "#a05195",
-        "#d45087",
-        "#f95d6a",
-        "#ff7c43",
-        "#ffa600",
-        "#2C5F2D",
-        "#101820FF"
+        "rgba(33, 145, 81, 1)",
+        "rgba(0, 63, 92, 1)",
+        "rgba(102, 81, 145, 1)",
+        "rgba(160, 81, 149, 1)",
+        "rgba(212, 80, 135, 1)",
+        "rgba(249, 93, 106, 1)",
+        "rgba(255, 124, 67, 1)",
+        "rgba(255, 166, 0, 1)",
+        "rgba(44, 95, 45, 1)",
+        "rgba(16, 24, 32, 1)"
     ]
 
         ;
@@ -103,6 +104,28 @@ function deleteRecruiterFromLegends (e, item) {
     selectedRecruiter(recruitersShortList.value)
 }
 
+function hoverRecruiterLegends (e, item) {
+    console.log(item);
+    console.log(e);
+    // Доделать всплытие линни на первый слой
+    recruitersData.value.map((recrut) => {
+        if (recrut.label == item.text) {
+            recrut.borderWidth = 10
+            recrut.borderColor = recrut.backgroundColor = recrut.borderColor.replace(/[^,]+(?=\))/, '1')
+            recrut.drawActiveElementsOnTop = true
+        } else {
+            recrut.borderWidth = 5
+            recrut.drawActiveElementsOnTop = false
+            recrut.borderColor = recrut.backgroundColor = recrut.borderColor.replace(/[^,]+(?=\))/, '0.1')
+        }
+    })
+}
+function leavHoverRecruiterLegends () {
+    recruitersData.value.map((recrut) => {
+        recrut.borderWidth = 5
+        recrut.borderColor = recrut.backgroundColor = recrut.borderColor.replace(/[^,]+(?=\))/, '1')
+    })
+}
 
 
 
@@ -123,7 +146,7 @@ for (const paymCount in props.paymentCouns) {
         data: dataRecruiter,
         backgroundColor: color,
         tension: 0.1,
-        borderWidth: 5
+        borderWidth: 5,
         //  тут добавить толщину линии в зависимости от кол-ва рекрутаций
     })
 }
@@ -142,10 +165,13 @@ const options = {
             x: 10
         }
     },
-    hoverRadius: 20,
+    hover: {
+        mode: 'dataset',
+        intersect: false
+    },
+    hoverRadius: 7,
     plugins: {
         legend: {
-
             'position': 'bottom',
             'labels': {
                 font: {
@@ -157,6 +183,32 @@ const options = {
                 }
             }, onClick: (e, item) => {
                 deleteRecruiterFromLegends(e, item)
+            }, onHover (e, item) {
+                hoverRecruiterLegends(e, item)
+            }, onLeave () {
+                leavHoverRecruiterLegends()
+            }
+        },
+        tooltip: {
+            callbacks: {
+                label: function (context) {
+                    // console.log(context);
+                    let label = context.dataset.label || '';
+                    if (label) {
+                        label = `${label.split(' ')[0]}: `
+                    }
+                    if (context.parsed.y !== null) {
+                        label += ` ${context.parsed.y} рекрутаций`;
+                    }
+                    return label;
+                },
+                title: function (context) {
+                    let title = context[0]?.label
+                    if (title) {
+                        const dateOptions = { year: 'numeric', month: 'long' };
+                        return new Date(title).toLocaleDateString('ru-RU', dateOptions)
+                    }
+                }
             }
         }
     },
