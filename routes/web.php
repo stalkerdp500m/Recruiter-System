@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Import\ImportPaymentController;
+use App\Http\Controllers\Import\IndexController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +36,9 @@ Route::get('/payments', [PaymentController::class, 'index'])->middleware(['auth'
 Route::get('/payments/create', [PaymentController::class, 'create'])->middleware(['auth', 'verified'])->name('payments.create');
 Route::post('/payments/create', [PaymentController::class, 'store'])->middleware(['auth', 'verified'])->name('payments.store');
 Route::post('/payments/import', [PaymentController::class, 'import'])->middleware(['auth', 'verified'])->name('payments.import');
-//Route::post('/payments/store', [PaymentController::class, 'store'])->middleware(['auth', 'verified'])->name('payments.store');
 Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth', 'verified'])->name('clients.index');
+Route::get('/imports/payments/', [ImportPaymentController::class, 'index'])->middleware(['auth', 'verified'])->name('imports.payments.index');
+Route::post('/imports/payments/', [ImportPaymentController::class, 'create'])->middleware(['auth', 'verified'])->name('imports.payments.create');
+Route::post('/imports/payments/store/', [ImportPaymentController::class, 'store'])->middleware(['auth', 'verified'])->name('imports.payments.store');
 
 require __DIR__ . '/auth.php';

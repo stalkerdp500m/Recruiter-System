@@ -9,21 +9,35 @@ const props = defineProps({
     ranges: Object,
     filters: Object
 });
+
+// const currenYear = ref(2022);
+// const currenMonth = ref(2);
+
+// if (props.filters.length > 0) {
+//     currenYear = props.filters.year;
+//     currenMonth = props.filters.month;
+// } else if (props.ranges.length > 0) {
+//     currenYear = Object.keys(props.ranges).reverse()[0]// последний ключь-год
+//     currenMonth = props.ranges[currenYear][0];
+// }
+
+
 const currenYear = props.filters.year ? props.filters.year : Object.keys(props.ranges).reverse()[0]// последний ключь-год
 const currenMonth = props.filters.month ? props.filters.month : props.ranges[currenYear][0]
 
-const rangeModel = reactive(
-    {
-        'year': currenYear,
-        'month': currenMonth
-    }
-)
+
+
+
+const rangeModel = {
+    'year': currenYear,
+    'month': currenMonth
+}
+
 
 function selectedRange () {
     Inertia.get('/payments', rangeModel)
 }
 
-console.log(props.ranges[currenYear][0]);
 
 function paymentsSum (payments) {
     let sum = 0;

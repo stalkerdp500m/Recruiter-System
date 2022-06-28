@@ -97,7 +97,7 @@ function createExempl (rawData) {
                     <div class="bg-white flex items-center   h-14  shadow-md rounded-md w-full md:w-2/4 ">
                         <input
                             class=" block w-full text-sm text-gray-500 file:mr-4 file:py-1 px-0 m-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-systems-600 file:text-white hover:file:bg-systems-500 file:cursor-pointer "
-                            type="file" @input="form.file = $event.target.files[0]" />
+                            type="file" required @input="form.file = $event.target.files[0]" />
                         <div class="mb-3 ">
 
                         </div>

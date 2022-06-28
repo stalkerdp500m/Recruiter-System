@@ -37,12 +37,9 @@ class Payment extends Model
 
 
 
-    public function scopeDashboardFilter($query, array $filters, object  $startPeriod, object $endPeriod)
+    public function scopeDashboardFilter($query, $startYear, $startMonth, $endYear,  $endMonth)
     {
-        $startYear = isset($filters['start']) ? explode("-", $filters['start'])[1] : $startPeriod['year'];
-        $startMonth = isset($filters['start']) ? explode("-", $filters['start'])[0] : $startPeriod['month'];
-        $endYear = isset($filters['end']) ? explode("-", $filters['end'])[1] : $endPeriod['year'];
-        $endMonth = isset($filters['end']) ? explode("-", $filters['end'])[0] : $endPeriod['month'];
+
 
         if ($endYear - $startYear >= 1) {
             $query->whereRaw(
@@ -57,24 +54,47 @@ class Payment extends Model
                 [$startMonth, $endMonth, $endYear]
             );
         }
-
-
-        // $query->whereRaw(
-        //     '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
-        //     [$startMonth, $startYear, $endMonth, $endYear]
-        // );
-
         $query->orderBy('year', 'asc');
         $query->orderBy('month', 'asc');
-
-        // $query->whereRaw(
-        //     '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
-        //     [$startPeriod['month'], $startPeriod['year'], $endPeriod['month'], $endPeriod['year']]
-        // );
-        // $query->orderBy('year', 'asc');
-        // $query->orderBy('month', 'asc');
-
     }
+    // public function scopeDashboardFilter($query, array $filters, object  $startPeriod, object $endPeriod)
+    // {
+    //     $startYear = isset($filters['start']) ? explode("-", $filters['start'])[1] : $startPeriod['year'];
+    //     $startMonth = isset($filters['start']) ? explode("-", $filters['start'])[0] : $startPeriod['month'];
+    //     $endYear = isset($filters['end']) ? explode("-", $filters['end'])[1] : $endPeriod['year'];
+    //     $endMonth = isset($filters['end']) ? explode("-", $filters['end'])[0] : $endPeriod['month'];
+
+    //     if ($endYear - $startYear >= 1) {
+    //         $query->whereRaw(
+    //             '(  ((month between ? and 12) and (year = ?))
+    //                  or ( (month between 1 and ?) and (year =?))
+    //                  or ((month between 1 and 12) and year > ? and year < ? ) )',
+    //             [$startMonth, $startYear,  $endMonth,  $endYear, $startYear, $endYear]
+    //         );
+    //     } else {
+    //         $query->whereRaw(
+    //             '(  ((month between ? and ?) and year = ?) )',
+    //             [$startMonth, $endMonth, $endYear]
+    //         );
+    //     }
+
+
+    //     // $query->whereRaw(
+    //     //     '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
+    //     //     [$startMonth, $startYear, $endMonth, $endYear]
+    //     // );
+
+    //     $query->orderBy('year', 'asc');
+    //     $query->orderBy('month', 'asc');
+
+    //     // $query->whereRaw(
+    //     //     '((month >= ? and year = ?) or ( month <= ? and year = ? ))',
+    //     //     [$startPeriod['month'], $startPeriod['year'], $endPeriod['month'], $endPeriod['year']]
+    //     // );
+    //     // $query->orderBy('year', 'asc');
+    //     // $query->orderBy('month', 'asc');
+
+    // }
 
 
 

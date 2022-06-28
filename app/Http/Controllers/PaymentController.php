@@ -39,11 +39,16 @@ class PaymentController extends Controller
             });
 
 
-        return Inertia::render('Payment/Index', [
-            'ranges' => $monthAnYears,
-            'filters' => Request::only('month', 'year', 'recruiter'),
-            'payments' => $payments
-        ]);
+
+        if (count($monthAnYears) > 0) {
+            return Inertia::render('Payment/Index', [
+                'ranges' => $monthAnYears,
+                'filters' => Request::only('month', 'year', 'recruiter'),
+                'payments' => $payments
+            ]);
+        } else {
+            return Inertia::render('EmptyDataPage');
+        }
     }
 
     /**
@@ -51,56 +56,56 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return Inertia::render('Payment/Create');
-    }
-    public function import()
-    {
-        $tableSettings = [
-            'sheatName' => 'Lista',
-            'RowStart' => 6
-        ];
+    // public function create()
+    // {
+    //     return Inertia::render('Payment/Create');
+    // }
+    // public function import()
+    // {
+    //     $tableSettings = [
+    //         'sheatName' => 'Lista',
+    //         'RowStart' => 6
+    //     ];
 
 
-        $data = Excel::toCollection(new PaymentsImport($tableSettings), Request::file('file'));
-        $month = Request::get('month');
-        $year = Request::get('year');
+    //     $data = Excel::toCollection(new PaymentsImport($tableSettings), Request::file('file'));
+    //     $month = Request::get('month');
+    //     $year = Request::get('year');
 
-        if ($month &&  $year) {
-            foreach ($data['Lista'] as $payment) {
-                if (isset($payment['prac_identyfikator']) && isset($payment['prac_nazwiskoimie']) && $payment['prac_nazwiskoimie'] != '') {
-                    // dd($payment);
-                    $client = Client::firstOrCreate(
-                        ['pasport' => trim($payment['prac_identyfikator'])],
-                        ['name' => trim($payment['prac_nazwiskoimie'])]
-                    );
+    //     if ($month &&  $year) {
+    //         foreach ($data['Lista'] as $payment) {
+    //             if (isset($payment['prac_identyfikator']) && isset($payment['prac_nazwiskoimie']) && $payment['prac_nazwiskoimie'] != '') {
+    //                 // dd($payment);
+    //                 $client = Client::firstOrCreate(
+    //                     ['pasport' => trim($payment['prac_identyfikator'])],
+    //                     ['name' => trim($payment['prac_nazwiskoimie'])]
+    //                 );
 
-                    $recruiter = Recruiter::firstOrCreate(
-                        ['name' => trim($payment['prac_rekruternazwiskoimie'])]
-                    );
-                    $payment =  Payment::updateOrCreate(
-                        [
-                            'month' =>  $month,
-                            'year' => $year,
-                            'client_id' => $client->id,
-                            'project' => trim($payment['proj_nazwa']),
-                        ],
-                        [
-                            'recruiter_id' => $recruiter->id,
-                            'hours' => $payment['godziny_uop_enova'],
-                            'category' => trim($payment['projrek_kategoriaprojektudopremii']),
-                            'bonus' => $payment['premrek_kwotapremii_brutto'],
-                            'status' => trim($payment['status_wyplaty']),
-                            'syncroner_id' => trim($payment['prac_synchronerid']),
-                        ]
-                    );
-                }
-            }
-        }
+    //                 $recruiter = Recruiter::firstOrCreate(
+    //                     ['name' => trim($payment['prac_rekruternazwiskoimie'])]
+    //                 );
+    //                 $payment =  Payment::updateOrCreate(
+    //                     [
+    //                         'month' =>  $month,
+    //                         'year' => $year,
+    //                         'client_id' => $client->id,
+    //                         'project' => trim($payment['proj_nazwa']),
+    //                     ],
+    //                     [
+    //                         'recruiter_id' => $recruiter->id,
+    //                         'hours' => $payment['godziny_uop_enova'],
+    //                         'category' => trim($payment['projrek_kategoriaprojektudopremii']),
+    //                         'bonus' => $payment['premrek_kwotapremii_brutto'],
+    //                         'status' => trim($payment['status_wyplaty']),
+    //                         'syncroner_id' => trim($payment['prac_synchronerid']),
+    //                     ]
+    //                 );
+    //             }
+    //         }
+    //     }
 
-        return redirect()->route('payments.index');
-    }
+    //     return redirect()->route('payments.index');
+    // }
 
     /**
      * Store a newly created resource in storage.

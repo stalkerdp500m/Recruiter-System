@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 // const isUrl = computed((url) => {
 //     console.log(url);
@@ -10,7 +10,7 @@ function isUrl (url) {
     return url === route().current();
 }
 
-
+const showLoudMenu = ref(false);
 const props = defineProps(["class", "active"]);
 
 </script>
@@ -60,9 +60,9 @@ const props = defineProps(["class", "active"]);
             </div>
         </div>
         </Link>
-        <Link :href="route('payments.create')">
-        <div :class="isUrl('payments.create') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 ">
+
+        <div @click="showLoudMenu = !showLoudMenu"
+            class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 cursor-pointer">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -70,11 +70,28 @@ const props = defineProps(["class", "active"]);
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
             </div>
-            <div class="overflow-clip md:truncate md:text-xl leading-tight   text-clip">Загрузить <br> выплаты
+            <div class="overflow-clip md:truncate md:text-xl leading-tight   text-clip">
+                <p> Загрузить</p>
             </div>
         </div>
-        </Link>
 
+        <div class=" pl-4" v-if="showLoudMenu">
+            <Link :href="route('imports.payments.index')">
+            <div :class="isUrl('imports.payments.index') ? 'opacity-100' : 'opacity-40'"
+                class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 ">
+                <div class="px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="overflow-clip md:truncate md:tex-tmd leading-tight   text-clip">
+                    <p> Выплаты</p>
+                </div>
+            </div>
+            </Link>
+        </div>
 
 
     </div>

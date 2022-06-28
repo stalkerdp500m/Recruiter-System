@@ -265,10 +265,11 @@ const { lineChartProps, linetChartRef } = useLineChart({
 
         <div class="py-12 px-4 flex flex-col r ">
             <!-- Фильтры -->
-            <div class="py-4 flex  gap-2 flex-wrap ">
-                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1 h-14 ">
+            <div class="py-4 flex gap-1  md:gap-4 flex-wrap ">
+                <div
+                    class="bg-white  flex-1  box-border flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1 h-14 ">
                     <label for=" start" name="start"
-                        class="px-1 md:px-4 my-auto border-r border-systems-900/20 ">От</label>
+                        class="pr-1 md:px-4 my-auto border-r border-systems-900/20 ">От</label>
                     <select id="start" v-model="periodModel.start" @change="selectedPeriod"
                         class=" form-select   cursor-pointer focus:ring-0 ring-0 border-0  bg-transparent  "
                         aria-label="year">
@@ -276,8 +277,9 @@ const { lineChartProps, linetChartRef } = useLineChart({
                     </select>
                 </div>
 
-                <div class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md h-14  py-1">
-                    <label for="end" name="end" class="px-1 md:px-4 my-auto border-r border-systems-900/20 ">До</label>
+                <div
+                    class="bg-white  flex-1  box-border flex flex-wrap justify-center items-center  shadow-md rounded-md h-14  py-1">
+                    <label for="end" name="end" class="pr-1 md:px-4 my-auto border-r border-systems-900/20 ">До</label>
 
                     <select v-model="periodModel.end" @change="selectedPeriod" id="end" name="end"
                         class=" form-select   cursor-pointer focus:ring-0 ring-0 border-0  bg-transparent "
@@ -287,24 +289,11 @@ const { lineChartProps, linetChartRef } = useLineChart({
                 </div>
 
                 <div
-                    class="bg-white  flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1 md:w-3/5 w-full ">
+                    class="bg-white   flex flex-wrap justify-center items-center  shadow-md rounded-md  py-1 md:w-3/5 w-full ">
                     <VueMultiselect @update:model-value="selectedRecruiter" :multiple="true"
                         selectLabel="добавить на график" deselectLabel="убрать с графика" v-model="recruitersShortList"
                         :options="recruitersList" placeholder="Выберите рекрутеров">
                     </VueMultiselect>
-
-                    <!--  @update:model-value="selectedRecruiter"
-                         <select id="recruiter" v-model="recruitersShortList" @change="selectedRecruiter" multiple
-                        class=" form-multiselect  text-clip cursor-pointer focus:ring-0 ring-0 border-0  bg-transparent "
-                        aria-label="year">
-
-                        <option class="text-clip flex" v-for="(recruiter, i) in recruitersList" :key="i">
-                            <div class="flex">
-                                {{ recruiter }}</div>
-                        </option>
-
-                    </select> -->
-
                 </div>
                 <!-- <div class="bg-white flex items-center justify-start   shadow-md rounded-md py-1 ">
                     <label for="month" class="px-4 border-r border-systems-900/20">Конец</label>
