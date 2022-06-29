@@ -113,11 +113,26 @@ function createExempl (rawData) {
                     <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                         {{ form.progress.percentage }}%
                     </progress>
-                    <div v-if="processData" class="mx-auto">
-                        <div class="animate-spin   text-8xl">.</div>
-                        Обработка
+                </div>
+                <div v-if="processData" class="fixed z-10 inset-0 overflow-y-auto">
+                    <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+                        <div class="fixed inset-0 bg-systems-500/80 transition-opacity"></div>
+                        <div
+                            class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            <div class="bg-white">
+                                <div class=" p-4 bg-white text-center rounded-md">
+                                    <div class="animate-spin text-systems-800  text-8xl">.</div>
+                                    <span class="font-bold"> Обработка. <br>Не закрывайте окно</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+
+
+
             </form>
             <div v-if="props.dopBonusData" class="overflow-x-auto ">
 
