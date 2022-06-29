@@ -158,13 +158,13 @@ function createExempl (rawData) {
                                 {{ recruitDop.prac_rekruternazwiskoimie }}
                             </td>
                             <td class="px-6 py-4 text-center">
-                                {{ Math.round(recruitDop.premrek_doplatazabiuro) }} PLN
+                                {{ recruitDop.premrek_doplatazabiuro }} PLN
                             </td>
                             <td class="px-6 py-4 text-center">
-                                {{ Math.round(recruitDop.rekruter_korektapremii) }} PLN
+                                {{ recruitDop.rekruter_korektapremii }} PLN
                             </td>
                             <td class="px-6 py-4 text-center">
-                                {{ Math.round(recruitDop.premrek_rekruterdlugpoprzednimiesiac) }} PLN
+                                {{ recruitDop.premrek_rekruterdlugpoprzednimiesiac }} PLN
                             </td>
                         </tr>
                     </tbody>

@@ -29,12 +29,12 @@ return new class extends Migration
             $table->string('bitrix_id', 300)->nullable();
             $table->timestamps();
             $table->softDeletes();
-            // $table->index('recruiter_id', 'recruiter_id_idx');
-            // $table->foreign('recruiter_id', 'recruiter_id_fk')->on('recruiters')->references('id');
-            // $table->index('client_id', 'client_id_idx');
-            // $table->foreign('client_id', 'client_id_payment_fk')->on('clients')->references('id');
-            // $table->index('recommender_id', 'recommender_id_idx');
-            // $table->foreign('recommender_id', 'recommender_id_fk')->on('users')->references('id');
+            $table->index('recruiter_id', 'recruiter_id_idx');
+            $table->foreign('recruiter_id')->on('recruiters')->references('id');
+            $table->index('client_id', 'client_id_idx');
+            $table->foreign('client_id')->on('clients')->references('id');
+            $table->index('recommender_id', 'recommender_id_idx');
+            $table->foreign('recommender_id')->on('users')->references('id');
         });
     }
 

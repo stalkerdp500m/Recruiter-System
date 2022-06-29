@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('recruiter_user', function (Blueprint $table) {
+        Schema::create('add_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('recruiter_id')->nullable();
             $table->timestamps();
-            //  $table->index('user_id', 'user_id_idx');
-            $table->foreign('user_id')->on('users')->references('id');
+            $table->unsignedBigInteger('recruiter_id')->nullable();
+            $table->integer('month');
+            $table->integer('year');
+            $table->double('summ', 8, 2)->nullable();
+            $table->string('type', 100)->nullable();
             $table->index('recruiter_id', 'recruiter_id_idx');
             $table->foreign('recruiter_id')->on('recruiters')->references('id');
         });
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recruiter_user');
+        Schema::dropIfExists('add_payments');
     }
 };

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Import;
 
 use App\Http\Controllers\Controller;
 use App\Imports\PaymentsImport;
+use App\Models\AddPayment;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Recruiter;
@@ -44,18 +45,27 @@ class ImportPaymentController extends Controller
 
     public function store()
     {
-        $tableSettings = [
+
+        //   ТУТ ВСЕ ОБЯЗАТЕЛЬНО ЗАВЕРНУТЬ В ТРАНЗАКЦИИ !!
+
+
+
+        $listaTableSettings = [
             'sheatName' => 'Lista',
             'RowStart' => 6
         ];
 
-
-        $data = Excel::toCollection(new PaymentsImport($tableSettings), Request::file('file'));
+        $recruterTableSettings = [
+            'sheatName' => 'Rekruter',
+            'RowStart' => 6
+        ];
+        $dataLista = Excel::toCollection(new PaymentsImport($listaTableSettings), Request::file('file'));
+        $dataRecruter = Excel::toCollection(new PaymentsImport($recruterTableSettings), Request::file('file'));
         $month = Request::get('month');
         $year = Request::get('year');
 
         if ($month &&  $year) {
-            foreach ($data['Lista'] as $payment) {
+            foreach ($dataLista['Lista'] as $payment) {
                 if (isset($payment['prac_identyfikator']) && isset($payment['prac_nazwiskoimie']) && $payment['prac_nazwiskoimie'] != '') {
                     $client = Client::firstOrCreate(
                         ['pasport' => trim($payment['prac_identyfikator'])],
@@ -81,6 +91,52 @@ class ImportPaymentController extends Controller
                             'syncroner_id' => trim($payment['prac_synchronerid']),
                         ]
                     );
+                }
+            }
+
+            foreach ($dataRecruter['Rekruter'] as $recrut) {
+
+                if (trim($recrut['prac_rekruternazwiskoimie']) != '') {
+
+                    $recruiter = Recruiter::firstOrCreate(
+                        ['name' => trim($recrut['prac_rekruternazwiskoimie'])]
+                    );
+
+                    foreach ($recrut as $key => $addPaym) {
+                        if ($key == "premrek_doplatazabiuro" && intval($addPaym) != 0) {
+                            AddPayment::updateOrCreate(
+                                [
+                                    'month' =>  $month,
+                                    'year' => $year,
+                                    'recruiter_id' => $recruiter->id,
+                                    'type' => "doplata za biuro",
+                                    'summ' => intval($addPaym)
+                                ]
+                            );
+                        }
+                        if ($key == "rekruter_korektapremii" && intval($addPaym) != 0) {
+                            AddPayment::updateOrCreate(
+                                [
+                                    'month' =>  $month,
+                                    'year' => $year,
+                                    'recruiter_id' => $recruiter->id,
+                                    'type' => "korekta premii",
+                                    'summ' => intval($addPaym)
+                                ]
+                            );
+                        }
+                        if ($key == "premrek_rekruterdlugpoprzednimiesiac" && intval($addPaym) != 0) {
+                            AddPayment::updateOrCreate(
+                                [
+                                    'month' =>  $month,
+                                    'year' => $year,
+                                    'recruiter_id' => $recruiter->id,
+                                    'type' => "dlug poprzedni miesiac",
+                                    'summ' => intval($addPaym)
+                                ]
+                            );
+                        }
+                    }
                 }
             }
         }

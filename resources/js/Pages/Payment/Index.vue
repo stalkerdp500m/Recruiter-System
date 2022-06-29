@@ -9,6 +9,7 @@ const props = defineProps({
     ranges: Object,
     filters: Object
 });
+console.log(props.payments);
 
 // const currenYear = ref(2022);
 // const currenMonth = ref(2);
@@ -48,8 +49,33 @@ function paymentsSum (payments) {
             count++
         }
     });
-    return `всего ${sum} PLN за ${count} клиентов`; // TODO " тут добавить склонения"
+    return `${sum} PLN за ${count} клиентов`; // TODO " тут добавить склонения"
 }
+
+function recruiterAllSum (recruiter) {
+
+    let sumForRecruits = 0;
+    let sumForAdd = 0;
+    let count = 0;
+    recruiter.payments.forEach(paym => {
+        if (paym.bonus > 0) {
+            sumForRecruits += paym.bonus;
+            count++
+        }
+    });
+    sumForAdd += sumForRecruits;
+    recruiter.add_payments.forEach(paym => {
+        if (paym.summ) {
+            sumForAdd += Number(paym.summ);
+        }
+    });
+    return {
+        'sumForRecruits': sumForRecruits,
+        'sumForAdd': sumForAdd,
+        'count': count
+    };
+}
+
 
 </script>
 
@@ -102,13 +128,28 @@ function paymentsSum (payments) {
 
                     <div @click="recruiter.show = !recruiter.show"
                         class="p-6  text-lg  bg-white  border-systems-200 overflow-hidden cursor-pointer">
-                        <span class="font-bold pr-2"> {{ recruiter.name }}</span>
-                        <span> {{ paymentsSum(recruiter.payments) }}
+                        <div class="font-semibold pr-2"> {{ recruiter.name }}
+                            <span class="font-bold text-systems-800"> {{ `${recruiterAllSum(recruiter).sumForAdd} PLN`
+                            }} </span>
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 inline" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
-                        </span>
+
+                        </div>
+                        <div class="font-semibold">
+                            <div class="text-green-800 before:content-['+']"> {{
+                                    `${recruiterAllSum(recruiter).sumForRecruits} PLN за ${recruiterAllSum(recruiter).count}
+                            рекрутаций` }}</div>
+                            <div v-for="addPaym in recruiter.add_payments">
+                                <span
+                                    :class="addPaym.summ < 0 ? 'text-red-700' : `text-green-800 before:content-['+']`">
+                                    {{ `${addPaym.summ} PLN` }}
+                                    {{ addPaym.type }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
                     <div :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'opacity-0 hidden'"
