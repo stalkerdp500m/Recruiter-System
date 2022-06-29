@@ -2,8 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import PaymentsTable from "@/Components/PaymentsTable.vue";
 import { Head, useForm } from "@inertiajs/inertia-vue3";
-import { Inertia } from '@inertiajs/inertia'
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 
 
 const props = defineProps({

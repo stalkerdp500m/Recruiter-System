@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Recruiter;
 use App\Models\User;
-//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -35,7 +34,6 @@ class DashboardController extends Controller
             ->where('bonus', '>', 0)
             ->groupBy('recruiter_id', 'month', 'year')
             ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
-            // ->dashboardFilter(Request::only('start', 'end'), $startPeriod, $endPeriod)
             ->with('recruiter:id,name')
             ->get();
 

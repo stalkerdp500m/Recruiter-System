@@ -23,7 +23,6 @@ const props = defineProps({
                 <th class="font-semibold text-sm uppercase px-6 py-4 text-left"> Клиент </th>
                 <th class="font-semibold text-sm uppercase px-6 py-4 text-left"> Проект </th>
                 <th class="font-semibold text-sm uppercase px-6 py-4 text-center"> Часы </th>
-                <!-- <th class="font-semibold text-sm uppercase px-6 py-4"> </th> -->
             </tr>
         </thead>
         <tbody class="divide-systems-800 border border-systems-900 ">
@@ -56,9 +55,7 @@ const props = defineProps({
                     </span>
                 </td>
                 <td v-if="props.showBonus" class="px-6 py-4 text-center"> {{ salary?.bonus }} PLN </td>
-                <!-- <td class="px-6 py-4 text-center"> <a href="#"
-                                    class="text-systems-800 hover:underline">Edit</a>
-                            </td> -->
+
             </tr>
 
         </tbody>

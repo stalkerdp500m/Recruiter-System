@@ -1,10 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
-// const isUrl = computed((url) => {
-//     console.log(url);
-//     return url === route().current();
-// })
 
 function isUrl (url) {
     return url === route().current();

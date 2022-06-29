@@ -69,9 +69,7 @@ const props = defineProps({
                 </td>
                 <td v-if="props.showBonus" class=" py-2 px-2 text-right whitespace-nowrap"> {{ payment?.bonus }} PLN
                 </td>
-                <!-- <td class="px-6 py-4 text-center"> <a href="#"
-                                    class="text-systems-800 hover:underline">Edit</a>
-                            </td> -->
+
             </tr>
 
         </tbody>

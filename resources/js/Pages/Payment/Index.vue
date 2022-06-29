@@ -3,30 +3,15 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import PaymentsTable from "@/Components/PaymentsTable.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { Inertia } from '@inertiajs/inertia'
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 const props = defineProps({
     payments: Object,
     ranges: Object,
     filters: Object
 });
-console.log(props.payments);
-
-// const currenYear = ref(2022);
-// const currenMonth = ref(2);
-
-// if (props.filters.length > 0) {
-//     currenYear = props.filters.year;
-//     currenMonth = props.filters.month;
-// } else if (props.ranges.length > 0) {
-//     currenYear = Object.keys(props.ranges).reverse()[0]// последний ключь-год
-//     currenMonth = props.ranges[currenYear][0];
-// }
-
 
 const currenYear = props.filters.year ? props.filters.year : Object.keys(props.ranges).reverse()[0]// последний ключь-год
 const currenMonth = props.filters.month ? props.filters.month : props.ranges[currenYear][0]
-
-
 
 
 const rangeModel = {
@@ -34,23 +19,10 @@ const rangeModel = {
     'month': currenMonth
 }
 
-
 function selectedRange () {
     Inertia.get('/payments', rangeModel)
 }
 
-
-function paymentsSum (payments) {
-    let sum = 0;
-    let count = 0;
-    payments.forEach(paym => {
-        if (paym.bonus > 0) {
-            sum += paym.bonus;
-            count++
-        }
-    });
-    return `${sum} PLN за ${count} клиентов`; // TODO " тут добавить склонения"
-}
 
 function recruiterAllSum (recruiter) {
 
