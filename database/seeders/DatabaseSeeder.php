@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\PaymentUser;
+use App\Models\ReclamationStatus;
 use App\Models\Recruiter;
 use App\Models\Salary;
 use App\Models\User;
@@ -45,6 +46,18 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('123'),
                 'role' => 'admin'
             ]
+        );
+        ReclamationStatus::firstOrCreate(
+            ['title' => 'Новая']
+        );
+        ReclamationStatus::firstOrCreate(
+            ['title' => 'В работе']
+        );
+        ReclamationStatus::firstOrCreate(
+            ['title' => 'Одобрена']
+        );
+        ReclamationStatus::firstOrCreate(
+            ['title' => 'Отклонена']
         );
         // Client::factory(100)->create();
         // Recruiter::factory(15)->create();

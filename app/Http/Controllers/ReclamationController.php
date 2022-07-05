@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Payment;
-//use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
-class ClientController extends Controller
+class ReclamationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,22 +15,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-
-        $searchResults = Client::where('pasport', Request::input('pasport', ''))
-            ->with(['payments.recruiter:id,name', 'salaries'])->first();
-
-        return Inertia::render('Client/Index', [
+        return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
-            'searchResults' => $searchResults
+            'searchResults' => '$searchResults'
         ]);
-    }
-    public function search()
-    {
-        $searchResults = Client::where('pasport', Request::input('pasport', ''))
-            ->with(['payments.recruiter:id,name', 'salaries'])->first();
-        return  [
-            'searchResults' => $searchResults
-        ];
     }
 
     /**

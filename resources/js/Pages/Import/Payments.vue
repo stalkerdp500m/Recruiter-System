@@ -117,7 +117,7 @@ function createExempl (rawData) {
                     <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
                         <div class="fixed inset-0 bg-systems-500/80 transition-opacity"></div>
                         <div
-                            class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            class="relative my-auto bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
                             <div class="bg-white">
                                 <div class=" p-4 bg-white text-center rounded-md">
                                     <div class="animate-spin text-systems-800  text-8xl">.</div>

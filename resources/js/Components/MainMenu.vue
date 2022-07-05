@@ -12,11 +12,11 @@ const props = defineProps(["class", "active"]);
 </script>
 
 <template>
-    <div class="transition-all px-2 ">
+    <div class="transition-all pl-1  flex flex-col ">
 
         <Link :href="route('dashboard')">
         <div :class="isUrl('dashboard') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-20 flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 ">
+            class="text-white mt-20 flex flex-row items-center  overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -30,7 +30,7 @@ const props = defineProps(["class", "active"]);
         </Link>
         <Link :href="route('payments.index')">
         <div :class="isUrl('payments.index') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 ">
+            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -44,7 +44,7 @@ const props = defineProps(["class", "active"]);
         </Link>
         <Link :href="route('clients.index')">
         <div :class="isUrl('clients.index') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 ">
+            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -56,9 +56,23 @@ const props = defineProps(["class", "active"]);
             </div>
         </div>
         </Link>
+        <Link :href="route('reclamations.index')">
+        <div :class="isUrl('reclamations.index') ? 'opacity-100' : 'opacity-40'"
+            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+            <div class="px-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </div>
+            <div class="overflow-clip md:truncate md:text-xl leading-tight   text-clip">Рекламации
+            </div>
+        </div>
+        </Link>
 
         <div @click="showLoudMenu = !showLoudMenu"
-            class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 cursor-pointer">
+            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 cursor-pointer">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -74,7 +88,7 @@ const props = defineProps(["class", "active"]);
         <div class=" pl-4" v-if="showLoudMenu">
             <Link :href="route('imports.payments.index')">
             <div :class="isUrl('imports.payments.index') ? 'opacity-100' : 'opacity-40'"
-                class="text-white mt-10  flex flex-row items-center justify-center overflow-x-clip hover:opacity-100 ">
+                class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
                 <div class="px-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">

@@ -10,7 +10,6 @@ const props = defineProps({
     searchResults: Object,
 });
 
-console.log(props.searchResults);
 
 const client = {
     'name': props.searchResults?.name,
