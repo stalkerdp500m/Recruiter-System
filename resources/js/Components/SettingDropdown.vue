@@ -21,7 +21,9 @@ import { Link } from "@inertiajs/inertia-vue3";
                 </template>
                 <template #content>
                     <div class="mt-2 py-2 text-sm   rounded shadow-xl cursor-pointer">
-                        <Link class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">Мой профиль
+                        <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                        Мой
+                        профиль
                         </Link>
                         <Link class="block px-6 py-2 hover:text-white hover:bg-systems-700 " href="/users">Управлять
                         пользователями</Link>

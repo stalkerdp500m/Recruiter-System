@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SalaryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum', 'admin'])->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {
+
+    // добавить вынагродзения
+    Route::post('salary', [SalaryController::class, 'create']);
 });

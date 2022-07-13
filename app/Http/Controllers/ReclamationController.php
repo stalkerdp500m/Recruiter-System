@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Payment;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -15,9 +17,18 @@ class ReclamationController extends Controller
      */
     public function index()
     {
+
+        $periodList = Payment::selectRaw('month, year , concat(month,"-", year) as period')
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->distinct('period')->get();
+
+        $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
+
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
-            'searchResults' => '$searchResults'
+            'periodList' => $periodList,
+            'recruiterList' => $recruiterList
         ]);
     }
 

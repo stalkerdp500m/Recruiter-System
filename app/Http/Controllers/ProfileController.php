@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Payment;
-//use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class ClientController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,37 +15,16 @@ class ClientController extends Controller
      */
     public function index()
     {
-
-
-        $searchResults = Client::where('pasport', Request::input('pasport', ''))
-            ->with(['payments' => function ($query) {
-                $query->orderBy('year', 'DESC')->orderBy('month', 'DESC');
-            }, 'payments.recruiter:id,name', 'salaries' => function ($query) {
-                $query->orderBy('year', 'DESC')->orderBy('month', 'DESC');
-            }])->first();
-
-
-
-        if (!Request::input('json', false)) {
-            return Inertia::render('Client/Index', [
-                'searchPasport' => Request::only('pasport'),
-                'searchResults' => $searchResults
-            ]);
-        } else {
-            return  [
-                'searchPasport' => Request::only('pasport'),
-                'searchResults' => $searchResults
-            ];
-        }
+        return Inertia::render('Profile/Index', []);
     }
-    public function search()
+    public function createToken(Request $request)
     {
-        $searchResults = Client::where('pasport', Request::input('pasport', ''))
-            ->with(['payments.recruiter:id,name', 'salaries'])->first();
-        return  [
-            'searchResults' => $searchResults
-        ];
+        $request->user()->tokens()->delete();
+        $token = $request->user()->createToken($request->token_name, ['salaries:update'])->plainTextToken;
+        dd($token);
     }
+
+
 
     /**
      * Show the form for creating a new resource.

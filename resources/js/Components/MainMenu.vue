@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import { Link, usePage } from "@inertiajs/inertia-vue3";
+
 
 function isUrl (url) {
     return url === route().current();
@@ -8,6 +9,8 @@ function isUrl (url) {
 
 const showLoudMenu = ref(false);
 const props = defineProps(["class", "active"]);
+const userRole = usePage().props.value.auth.user.role
+
 
 </script>
 
@@ -71,7 +74,7 @@ const props = defineProps(["class", "active"]);
         </div>
         </Link>
 
-        <div @click="showLoudMenu = !showLoudMenu"
+        <div @click="showLoudMenu = !showLoudMenu" v-if="userRole === 'admin'"
             class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 cursor-pointer">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
