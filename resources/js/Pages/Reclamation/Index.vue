@@ -1,12 +1,14 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import ReclamationForm from "@/Components/ReclamationForm.vue";
+import ReclamationList from "@/Components/ReclamationList.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 
 const props = defineProps({
     periodList: Object,
-    recruiterList: Object
+    recruiterList: Object,
+    reclamations: Object,
 });
 
 const showForm = ref(false);
@@ -37,6 +39,10 @@ const showForm = ref(false);
                             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
+            </div>
+
+            <div>
+                <ReclamationList :reclamations="props.reclamations" />
             </div>
 
             <ReclamationForm :periodList="props.periodList" :recruiterList="props.recruiterList" searchPasport="{a:b}"

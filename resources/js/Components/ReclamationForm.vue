@@ -8,11 +8,15 @@ import { Inertia } from '@inertiajs/inertia';
 const props = defineProps({
     showForm: Boolean,
     periodList: Object,
-    recruiterList: Object
+    recruiterList: Object,
 });
+const emit = defineEmits(['hide']);
+//const loudForm = ref(false);
+
 
 const beforeSearch = ref(true);
 const searchResults = ref('');
+
 const agregatedResults = reactive({
     'haveResults': false,
     'isEmpty': false,
@@ -25,17 +29,21 @@ const agregatedResults = reactive({
     'sequencePeriods': {}
 });
 
-const reclamationForm = reactive({
-    'json': true,
+const reclamationForm = useForm({
+    // 'json': true,
     'pasport': '',
     'project': '',
     'client_id': '',
     'client_name': '',
     'recruiter_id': '',
+    'period': '',
     'comment': ''
 });
 
 
+if (props.recruiterList.recruiters.length == 1) {
+    reclamationForm.recruiter_id = props.recruiterList.recruiters[0].id;
+}
 
 
 function serchClient () {
@@ -54,6 +62,7 @@ function serchClient () {
 }
 
 function clear () {
+    // document.location.reload()
     agregatedResults.haveResults = false;
     agregatedResults.isEmpty = false;
     agregatedResults.clientName = '';
@@ -70,10 +79,16 @@ function clear () {
     reclamationForm.recruiter_id = '';
     reclamationForm.comment = '';
     reclamationForm.client_name = '';
+    reclamationForm.period = '';
+    emit('hide');
 }
 
 function sendReclamation () {
-    console.log(reclamationForm);
+    reclamationForm.post('./reclamations', {
+        onSuccess: () => {
+            clear();
+        }
+    });
 }
 
 
@@ -119,7 +134,9 @@ function toLocaleDate (date) {
 
 <template>
 
+
     <div v-if="props.showForm" class="fixed z-10 inset-0 overflow-y-auto">
+
 
         <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
             <div @click="$emit('hide')" class="fixed inset-0 bg-systems-500/80 transition-opacity "></div>
@@ -200,9 +217,9 @@ function toLocaleDate (date) {
                                 </div>
                                 <div class="md:w-2/5 w-full">
                                     <p class="text-center">Период</p>
-                                    <select required id="year" v-model="reclamationForm.year" @change="selectedRange"
-                                        class=" form-select cursor-pointer focus:ring-0  bg-transparent rounded-md md:w-3/4"
-                                        aria-label="year">
+                                    <select required id="period" v-model="reclamationForm.period"
+                                        @change="selectedRange"
+                                        class=" form-select cursor-pointer focus:ring-0  bg-transparent rounded-md md:w-3/4">
                                         <option v-for="month in props.periodList">{{ month.period }}</option>
                                     </select>
                                 </div>
@@ -236,26 +253,41 @@ function toLocaleDate (date) {
                             </div>
 
                             <div class="flex gap-6">
-                                <button @click="clear"
+                                <div @click="clear"
                                     class="rounded-md px-3 disabled:bg-gray-500/60  py-2 bg-red-700  cursor-pointer text-white flex flex-row items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1  " fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                     Отмена
-                                </button>
+                                </div>
 
 
-                                <button type="submit"
+                                <button type="submit" :disabled="reclamationForm.processing"
                                     class="rounded-md px-3 disabled:bg-gray-500/60  py-2 bg-green-600 cursor-pointer text-white flex flex-row items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1  " fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <svg v-if="!reclamationForm.processing" xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4 mr-1  " fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                                     </svg>
-                                    Отправить
+                                    <svg v-else class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                    {{ reclamationForm.processing ? `Сохраняю` : `Отправить` }}
                                 </button>
-
+                            </div>
+                            <div v-if="Object.keys($page.props.errors).length"
+                                class=" text-center text-white p-3 mt-4 bg-red-600 mx-auto rounded-md">
+                                <div>Ошибки формы</div>
+                                <ul>
+                                    <li v-for="error in $page.props.errors">{{ error }}</li>
+                                </ul>
                             </div>
 
                         </form>
@@ -263,6 +295,7 @@ function toLocaleDate (date) {
                     <!-- /форма рекламации-->
                 </div>
             </div>
+
         </div>
     </div>
 </template>

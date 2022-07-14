@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('status_id');
             $table->string('project', 300);
+            $table->string('period', 50);
             $table->text('comment')->nullable();
             $table->text('answer')->nullable();
             $table->timestamps();

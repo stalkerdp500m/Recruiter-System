@@ -28,7 +28,7 @@ class ClientController extends Controller
 
 
 
-        if (!Request::input('json', false)) {
+        if (!Request::expectsJson()) {
             return Inertia::render('Client/Index', [
                 'searchPasport' => Request::only('pasport'),
                 'searchResults' => $searchResults
@@ -39,15 +39,19 @@ class ClientController extends Controller
                 'searchResults' => $searchResults
             ];
         }
+        // if (!Request::input('json', false)) {
+        //     return Inertia::render('Client/Index', [
+        //         'searchPasport' => Request::only('pasport'),
+        //         'searchResults' => $searchResults
+        //     ]);
+        // } else {
+        //     return  [
+        //         'searchPasport' => Request::only('pasport'),
+        //         'searchResults' => $searchResults
+        //     ];
+        // }
     }
-    public function search()
-    {
-        $searchResults = Client::where('pasport', Request::input('pasport', ''))
-            ->with(['payments.recruiter:id,name', 'salaries'])->first();
-        return  [
-            'searchResults' => $searchResults
-        ];
-    }
+
 
     /**
      * Show the form for creating a new resource.

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Payment;
+use App\Models\Reclamation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ReclamationController extends Controller
@@ -25,10 +29,13 @@ class ReclamationController extends Controller
 
         $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
 
+        $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with('reclamations')->first()->only('reclamations');
+        //   dd($reclamations);
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
             'periodList' => $periodList,
-            'recruiterList' => $recruiterList
+            'recruiterList' => $recruiterList,
+            'reclamations' => $reclamations['reclamations']
         ]);
     }
 
@@ -48,9 +55,39 @@ class ReclamationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+
+        $validatedData = Request::validate([
+            'project' => ['required', 'max:255'],
+            'client_name' => ['required', 'max:255'],
+            'client_id' => ['nullable', 'integer'],
+            'pasport' => ['required', 'max:100'],
+            'recruiter_id' => ['required', 'integer'],
+            'comment' => ['required'],
+            'period' => ['required'],
+        ]);
+
+        $client = $validatedData['client_id'] ?
+            Client::find($validatedData['client_id']) :
+            Client::firstOrCreate(['pasport' => $validatedData['pasport']], ['name' => $validatedData['client_name']]);
+
+        $reclamation = Reclamation::firstOrCreate(
+            [
+                'period' =>  $validatedData['period'],
+                'client_id' => $client->id,
+                'recruiter_id' => $validatedData['recruiter_id'],
+                'user_id' => Auth::user()->id
+            ],
+            [
+                'project' => $validatedData['project'],
+                'comment' => $validatedData['comment'],
+                'status_id' => 1,
+            ]
+        );
+
+        // return Redirect::route('reclamations.index');
+        return redirect()->action([ReclamationController::class, 'index']);
     }
 
     /**

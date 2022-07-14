@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Reclamation extends Model
 {
     use HasFactory;
+    protected $table = 'reclamations';
+    protected $guarded = [];
 
     public function client()
     {

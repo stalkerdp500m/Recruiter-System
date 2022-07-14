@@ -59,11 +59,11 @@ class DatabaseSeeder extends Seeder
         ReclamationStatus::firstOrCreate(
             ['title' => 'Отклонена']
         );
-        // Client::factory(100)->create();
-        // Recruiter::factory(15)->create();
-        // Salary::factory(100)->create();
-        // Payment::factory(100)->create();
-        // PaymentUser::factory(20)->create();
-        // RecruiterUser::factory(10)->create();
+        Client::factory(200)->create();
+        Recruiter::factory(15)->create();
+        Salary::factory(400)->create();
+        Payment::factory(280)->create();
+        PaymentUser::factory(20)->create();
+        RecruiterUser::factory(10)->create();
     }
 }

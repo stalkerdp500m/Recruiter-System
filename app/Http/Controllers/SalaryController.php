@@ -33,6 +33,7 @@ class SalaryController extends Controller
 
         if ($this->isCan(Request::user(), 'salaries:update')) {
             $validator = Validator::make(Request::all(), $this->salaryValidationRules());
+
             if ($validator->passes()) {
                 $salaryesData = Request::input('data');
                 $countAded = 0;

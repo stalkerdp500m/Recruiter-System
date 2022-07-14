@@ -54,6 +54,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Recruiter::class)->orderBy('name');
     }
+    public function reclamations()
+    {
+        return $this->hasMany(Reclamation::class, 'user_id', 'id')->orderByDesc('updated_at');
+    }
 
 
 
