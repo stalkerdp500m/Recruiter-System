@@ -29,7 +29,7 @@ class ReclamationController extends Controller
 
         $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
 
-        $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with('reclamations')->first()->only('reclamations');
+        $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations.status:id,title', 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
         //   dd($reclamations);
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
@@ -72,7 +72,7 @@ class ReclamationController extends Controller
             Client::find($validatedData['client_id']) :
             Client::firstOrCreate(['pasport' => $validatedData['pasport']], ['name' => $validatedData['client_name']]);
 
-        $reclamation = Reclamation::firstOrCreate(
+        Reclamation::firstOrCreate(
             [
                 'period' =>  $validatedData['period'],
                 'client_id' => $client->id,
@@ -132,6 +132,8 @@ class ReclamationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //проверка, что рекламация принадлежить тому, кто ее удаляет
+        Reclamation::destroy($id);
+        return Redirect::route('reclamations.index');
     }
 }

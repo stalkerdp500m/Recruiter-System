@@ -216,7 +216,7 @@ function toLocaleDate (date) {
                                         class="rounded-md " placeholder="Фамилия/Имя клиента">
                                 </div>
                                 <div class="md:w-2/5 w-full">
-                                    <p class="text-center">Период</p>
+                                    <p class="text-center">Фактура</p>
                                     <select required id="period" v-model="reclamationForm.period"
                                         @change="selectedRange"
                                         class=" form-select cursor-pointer focus:ring-0  bg-transparent rounded-md md:w-3/4">

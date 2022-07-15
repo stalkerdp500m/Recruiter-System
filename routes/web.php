@@ -47,6 +47,7 @@ Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth', 
 
 Route::get('/reclamations', [ReclamationController::class, 'index'])->middleware(['auth', 'verified'])->name('reclamations.index');
 Route::post('/reclamations', [ReclamationController::class, 'store'])->middleware(['auth', 'verified'])->name('reclamations.store');
+Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('reclamations.destroy');
 
 
 Route::get('/imports/payments/', [ImportPaymentController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.index');

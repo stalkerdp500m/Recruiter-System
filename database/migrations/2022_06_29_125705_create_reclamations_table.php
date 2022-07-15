@@ -36,6 +36,8 @@ return new class extends Migration
 
             $table->index('status_id', 'status_id_idx');
             $table->foreign('status_id')->on('reclamation_statuses')->references('id');
+
+            $table->softDeletes();
         });
     }
 
