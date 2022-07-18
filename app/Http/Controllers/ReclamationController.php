@@ -30,12 +30,19 @@ class ReclamationController extends Controller
         $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
 
         $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations.status:id,title', 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
+        //  dd($reclamations['reclamations']);
+
+        $statuseList = $reclamations['reclamations']->mapWithKeys(function ($item) {
+            return  [$item['status']['id'] => $item['status']['title']];
+        });
+
         //   dd($reclamations);
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
             'periodList' => $periodList,
             'recruiterList' => $recruiterList,
-            'reclamations' => $reclamations['reclamations']
+            'reclamations' => $reclamations['reclamations'],
+            'statuseList' => $statuseList
         ]);
     }
 

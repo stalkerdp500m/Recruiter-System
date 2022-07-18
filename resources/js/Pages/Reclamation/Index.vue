@@ -2,6 +2,8 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import ReclamationForm from "@/Components/ReclamationForm.vue";
 import ReclamationList from "@/Components/ReclamationList.vue";
+import VueMultiselect from 'vue-multiselect'
+import { useForm } from "@inertiajs/inertia-vue3";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 
@@ -9,9 +11,25 @@ const props = defineProps({
     periodList: Object,
     recruiterList: Object,
     reclamations: Object,
+    statuseList: Object
 });
 
+console.log(props.reclamations);
+console.log(props.statuseList);
+
 const showForm = ref(false);
+const statuseShortList = ref([])
+const statuses = [] // тут записывать статусы в массив
+
+
+
+const searchReclamation = useForm({
+    'pasport': ''
+})
+
+function selectedRecruiter (list) {
+    log(list)
+}
 
 </script>
 
@@ -40,6 +58,30 @@ const showForm = ref(false);
                     </svg>
                 </div>
             </div>
+            <!-- Фильтры
+            поиск, фильтр статусы, архивные
+            -->
+            <div class="  rounded-md w-full h-20 gap-2  flex items-center justify-center">
+                <div class=" w-2/6  justify-center flex items-center ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4   -mr-5 z-10 hidden md:inline " fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input @type="text" v-model="searchReclamation.pasport"
+                        class="rounded-md h-10 md:pl-8 w-full md:w-4/5" placeholder="Найти по паспорту">
+                </div>
+                <div class=" w-3/6 h-20 ">
+                    <VueMultiselect @update:model-value="selectedRecruiter" :multiple="true"
+                        selectLabel="добавить на график" deselectLabel="убрать с графика" v-model="statuseShortList"
+                        :options="statuses" placeholder="Выберите рекрутеров">
+                    </VueMultiselect>
+                </div>
+                <div class=" w-1/6 bg-black h-20 "></div>
+
+            </div>
+            <!-- /Фильтры -->
+
 
             <div>
                 <ReclamationList :reclamations="props.reclamations" />

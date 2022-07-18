@@ -47,7 +47,7 @@ if (props.recruiterList.recruiters.length == 1) {
 
 
 function serchClient () {
-    axios.get("/clients", { params: reclamationForm }).then((response) => {
+    axios.get("/clients", { params: { 'pasport': reclamationForm.pasport } }).then((response) => {
         if (response.status == "200") {
             agregatedResults.haveResults = true;
             if (response.data.searchResults) {
