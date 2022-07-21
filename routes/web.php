@@ -22,14 +22,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 
 
@@ -47,8 +47,8 @@ Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth', 
 
 Route::get('/reclamations', [ReclamationController::class, 'index'])->middleware(['auth', 'verified'])->name('reclamations.index');
 Route::post('/reclamations', [ReclamationController::class, 'store'])->middleware(['auth', 'verified'])->name('reclamations.store');
-Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('reclamations.destroy');
-
+Route::delete('/reclamations/{reclamation}', [ReclamationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('reclamations.destroy');
+Route::put('reclamations/{reclamation}/restore', [ReclamationController::class, 'restore'])->middleware(['auth', 'verified'])->name('reclamations.restore');
 
 Route::get('/imports/payments/', [ImportPaymentController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.index');
 Route::post('/imports/payments/', [ImportPaymentController::class, 'create'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.create');

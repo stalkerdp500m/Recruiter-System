@@ -29,20 +29,25 @@ class ReclamationController extends Controller
 
         $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
 
-        $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations.status:id,title', 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
-        //  dd($reclamations['reclamations']);
+        // $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations.status:id,title', 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
+
+
+        $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations' => function ($query) {
+            $query->trashedFilter(Request::only('trashed'))->with('status:id,title');
+        }, 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
 
         $statuseList = $reclamations['reclamations']->mapWithKeys(function ($item) {
-            return  [$item['status']['id'] => $item['status']['title']];
+            return  [$item['status']['title'] => $item['status']['id']];
         });
 
-        //   dd($reclamations);
+
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
             'periodList' => $periodList,
             'recruiterList' => $recruiterList,
             'reclamations' => $reclamations['reclamations'],
-            'statuseList' => $statuseList
+            'statuseList' => $statuseList,
+            'trashed' => Request::input('trashed', 'no')
         ]);
     }
 
@@ -141,6 +146,15 @@ class ReclamationController extends Controller
     {
         //проверка, что рекламация принадлежить тому, кто ее удаляет
         Reclamation::destroy($id);
-        return Redirect::route('reclamations.index');
+        return Redirect::back()->with('success', 'Рекламация перенесена в архив');
+    }
+
+
+    public function restore(Reclamation $reclamation)
+    {
+        //   dd($reclamation);
+        $reclamation->restore();
+        // dd($reclamation);
+        return Redirect::back()->with('success', 'Рекламация востановлена из архива');
     }
 }

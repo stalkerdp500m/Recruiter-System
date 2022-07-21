@@ -23,8 +23,8 @@ class AddPayment extends Model
             $query->where('add_payments.month', $filters['month']);
         } else {
             $query->whereRaw(
-                "month = (select max(`month`) from add_payments where year = (select max(`year`) from add_payments))
-                 AND year = (select max(`year`) from add_payments)"
+                "month = (select max(`month`) from payments where year = (select max(`year`) from payments))
+                 AND year = (select max(`year`) from payments)"
             );
         }
     }

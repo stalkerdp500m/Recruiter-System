@@ -13,6 +13,11 @@ class Reclamation extends Model
     protected $table = 'reclamations';
     protected $guarded = [];
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();
+    }
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');
@@ -31,5 +36,16 @@ class Reclamation extends Model
     public function status()
     {
         return $this->belongsTo(ReclamationStatus::class, 'status_id', 'id');
+    }
+
+    public function scopeTrashedFilter($query, array $filters)
+    {
+        $query->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed == 'with') {
+                $query->withTrashed();
+            } elseif ($trashed == 'only') {
+                $query->onlyTrashed();
+            }
+        });
     }
 }

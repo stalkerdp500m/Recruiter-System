@@ -3,32 +3,76 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import ReclamationForm from "@/Components/ReclamationForm.vue";
 import ReclamationList from "@/Components/ReclamationList.vue";
 import VueMultiselect from 'vue-multiselect'
-import { useForm } from "@inertiajs/inertia-vue3";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
+
+
 
 const props = defineProps({
     periodList: Object,
     recruiterList: Object,
     reclamations: Object,
-    statuseList: Object
+    statuseList: Object,
+    trashed: String
 });
 
 console.log(props.reclamations);
-console.log(props.statuseList);
+console.log(route('reclamations.index'));
+
 
 const showForm = ref(false);
-const statuseShortList = ref([])
-const statuses = [] // тут записывать статусы в массив
+const statuseShortList = ref([]);
+const statuses = [];
+
+for (const key in props.statuseList) {
+    statuses.push({ 'title': key, 'statusId': props.statuseList[key] })
+}
+
+const searchPasport = ref('');
 
 
 
-const searchReclamation = useForm({
-    'pasport': ''
-})
+function selectedStatus (list) {
+    let statuseArr = list.map(status => {
+        return status.statusId
+    })
+    props.reclamations.map((reclamation) => {
+        if (statuseArr.length == 0 || statuseArr.indexOf(reclamation.status.id) != -1) {
+            reclamation.hidden = false
+        } else {
+            reclamation.hidden = true
+        }
+    })
+}
 
-function selectedRecruiter (list) {
-    log(list)
+function serched () {
+    let pasport = searchPasport.value.toUpperCase();
+    console.log(pasport);
+    if (searchPasport.value.length >= 3) {
+        props.reclamations.map((reclamation) => {
+            if (reclamation.client.pasport.toUpperCase().indexOf(pasport) != -1) {
+                reclamation.hidden = false
+            } else {
+                reclamation.hidden = true
+            }
+        })
+    } else if (searchPasport.value.length == 0) {
+        props.reclamations.map((reclamation) => { reclamation.hidden = false })
+    }
+}
+
+const isTrashed = useForm({
+    trashed: props.trashed
+});
+function selectTrashed () {
+    isTrashed.get('/reclamations')
+    console.log(isTrashed);
+    // if (isTrashed.trashed == 'only') {
+    //     isTrashed.get('/reclamations')
+    // } else {
+    // }
+
 }
 
 </script>
@@ -61,29 +105,64 @@ function selectedRecruiter (list) {
             <!-- Фильтры
             поиск, фильтр статусы, архивные
             -->
-            <div class="  rounded-md w-full h-20 gap-2  flex items-center justify-center">
-                <div class=" w-2/6  justify-center flex items-center ">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4   -mr-5 z-10 hidden md:inline " fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <div class=" my-4  rounded-md w-full gap-2  flex items-center md:justify-center justify-evenly flex-wrap">
+                <div class=" md:w-2/6 justify-center flex items-center w-11/12 ">
+                    <VueMultiselect @update:model-value="selectedStatus" :multiple="true"
+                        selectLabel="добавить в фильтр" deselectLabel="убрать из фильтра" v-model="statuseShortList"
+                        track-by="title" :options="statuses" label="title" :searchable="false"
+                        placeholder="фильтровать по статусам">
+                    </VueMultiselect>
+                </div>
+
+
+                <div class=" md:w-2/6 w-6/12  justify-center flex items-center bg-white rounded-md ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2  z-10  " fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <input @type="text" v-model="searchReclamation.pasport"
-                        class="rounded-md h-10 md:pl-8 w-full md:w-4/5" placeholder="Найти по паспорту">
+                    <input @input="serched" type="text" v-model="searchPasport"
+                        class=" h-10  w-full md:w-4/5 focus:ring-0 border-0 " placeholder="Найти по паспорту">
                 </div>
-                <div class=" w-3/6 h-20 ">
-                    <VueMultiselect @update:model-value="selectedRecruiter" :multiple="true"
-                        selectLabel="добавить на график" deselectLabel="убрать с графика" v-model="statuseShortList"
-                        :options="statuses" placeholder="Выберите рекрутеров">
-                    </VueMultiselect>
-                </div>
-                <div class=" w-1/6 bg-black h-20 "></div>
 
+
+                <div class=" md:w-1/6 w-4/12 justify-center flex items-center ">
+                    <select @change="selectTrashed" v-model="isTrashed.trashed"
+                        :class="props.trashed == 'only' ? 'bg-red-400' : 'bg-green-400'"
+                        class=" form-select rounded-md shadow-md cursor-pointer " name="" id="">
+                        <option class="bg-red-400 " value="only">В архиве </option>
+                        <option class="bg-green-400" value="no">Активные </option>
+                    </select>
+                </div>
+                <!-- <Link v-if="!props.trashed" :href="route('reclamations.index', { 'trashed': 'only' })"
+                    class=" md:w-1/6 w-4/12 justify-center flex items-center">
+                <div
+                    class=" bg-red-400  md:px-5 md:py-3 p-2 text-xs  rounded-md shadow-md cursor-pointer  flex justify-center items-center ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4  mr-3 " fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <div class="font-bold ">архивные</div>
+                </div>
+                </Link> -->
+                <!-- <Link v-else :href="route('reclamations.index')"
+                    class=" md:w-1/6 w-4/12 justify-center flex items-center">
+                <div
+                    class=" bg-green-400  md:px-5 md:py-3 p-2 text-xs  rounded-md shadow-md cursor-pointer  flex justify-center items-center ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4  mr-3 " fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <div class="font-bold ">активные</div>
+                </div>
+                </Link> -->
             </div>
             <!-- /Фильтры -->
 
 
-            <div>
+            <div class="md:px-10">
                 <ReclamationList :reclamations="props.reclamations" />
             </div>
 
@@ -92,3 +171,5 @@ function selectedRecruiter (list) {
         </div>
     </MainLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css">
+</style>

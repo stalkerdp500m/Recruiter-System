@@ -25,7 +25,7 @@ class PaymentController extends Controller
 
         $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
             $query->filter(Request::only('month', 'year', 'recruiter'))->with('client');
-        }, 'recruiters.addPayments' => function ($query) {
+        }, 'recruiters.addPayments' => function ($query) { // тут подтягивать допвыплаты по той же фактуре, что и основные
             $query->filter(Request::only('month', 'year', 'recruiter'));
         }])->first();
 
