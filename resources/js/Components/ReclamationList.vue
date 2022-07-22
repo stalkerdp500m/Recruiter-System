@@ -68,14 +68,15 @@ function deleteReclamation (id) {
                     <div class=" -rotate-90 my-auto ">{{ reclamation.status?.title }}</div>
                 </div>
 
-                <div :class="statusColors[reclamation.status?.id].label"
+                <Link :href="route('reclamations.edit', { 'id': reclamation.id })"
+                    :class="statusColors[reclamation.status?.id].label"
                     class="w-6/12 h-40 text-center  p-2 overflow-clip rounded-md leading-tight flex flex-col justify-evenly cursor-pointer ">
 
-                    <div class="font-bold  break-words "> {{ reclamation?.client?.name }}</div>
-                    <div class="mb-2">{{ reclamation?.client?.pasport }}</div>
-                    <div class=" break-all truncate ">🏭 {{ reclamation.project }}</div>
-                    <div class=" text-xs pt-2 break-words">отправлена: {{ toLocaleDate(reclamation.created_at) }}</div>
-                </div>
+                <div class="font-bold  break-words "> {{ reclamation?.client?.name }}</div>
+                <div class="mb-2">{{ reclamation?.client?.pasport }}</div>
+                <div class=" break-all truncate ">🏭 {{ reclamation.project }}</div>
+                <div class=" text-xs pt-2 break-words">отправлена: {{ toLocaleDate(reclamation.created_at) }}</div>
+                </Link>
 
 
                 <div

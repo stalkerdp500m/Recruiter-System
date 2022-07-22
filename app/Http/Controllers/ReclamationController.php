@@ -119,9 +119,13 @@ class ReclamationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Reclamation $reclamation)
     {
-        //
+
+        $reclamation->client;
+        return Inertia::render('Reclamation/Edit', [
+            'reclamation' => $reclamation
+        ]);
     }
 
     /**
@@ -145,6 +149,7 @@ class ReclamationController extends Controller
     public function destroy($id)
     {
         //проверка, что рекламация принадлежить тому, кто ее удаляет
+        // Rule::exists('organizations', 'id')->where(fn ($query) => $query->where('account_id', Auth::user()->account_id))
         Reclamation::destroy($id);
         return Redirect::back()->with('success', 'Рекламация перенесена в архив');
     }
