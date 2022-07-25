@@ -166,8 +166,8 @@ function selectTrashed () {
                 <ReclamationList :reclamations="props.reclamations" />
             </div>
 
-            <ReclamationForm :periodList="props.periodList" :recruiterList="props.recruiterList" searchPasport="{a:b}"
-                :showForm="showForm" @hide="showForm = false" />
+            <ReclamationForm :periodList="props.periodList" :recruiterList="props.recruiterList" :showForm="showForm"
+                @hide="showForm = false" />
         </div>
     </MainLayout>
 </template>

@@ -121,8 +121,6 @@ class ReclamationController extends Controller
      */
     public function edit(Reclamation $reclamation)
     {
-
-        $reclamation->client;
         return Inertia::render('Reclamation/Edit', [
             'reclamation' => $reclamation
         ]);

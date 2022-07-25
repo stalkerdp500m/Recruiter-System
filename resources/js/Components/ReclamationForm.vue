@@ -2,6 +2,7 @@
 import { useForm } from "@inertiajs/inertia-vue3";
 import { ref, reactive } from "vue";
 import { Inertia } from '@inertiajs/inertia';
+import SummaryClient from "@/Components/SummaryClient.vue";
 // import { defineEmits } from 'vue'
 
 
@@ -11,26 +12,13 @@ const props = defineProps({
     recruiterList: Object,
 });
 const emit = defineEmits(['hide']);
-//const loudForm = ref(false);
 
 
-const beforeSearch = ref(true);
-const searchResults = ref('');
 
-const agregatedResults = reactive({
-    'haveResults': false,
-    'isEmpty': false,
-    'clientName': '',
-    'maxPaymentDate': 0,
-    'maxWorkDate': 0,
-    'countPayments': 0,
-    'countWorks': 0,
-    'sumHours': 0,
-    'sequencePeriods': {}
-});
+const beforeSearch = ref(false);
+const pasportSearh = ref('');
 
 const reclamationForm = useForm({
-    // 'json': true,
     'pasport': '',
     'project': '',
     'client_id': '',
@@ -47,40 +35,8 @@ if (props.recruiterList.recruiters.length == 1) {
 
 
 function serchClient () {
-    axios.get("/clients", { params: { 'pasport': reclamationForm.pasport } }).then((response) => {
-        if (response.status == "200") {
-            agregatedResults.haveResults = true;
-            if (response.data.searchResults) {
-                agregateResult(response.data.searchResults);
-                reclamationForm.client_id = response.data.searchResults.id;
-                reclamationForm.client_name = response.data.searchResults.name;
-            } else {
-                agregatedResults.isEmpty = true;
-            }
-        }
-    })
-}
-
-function clear () {
-    // document.location.reload()
-    agregatedResults.haveResults = false;
-    agregatedResults.isEmpty = false;
-    agregatedResults.clientName = '';
-    agregatedResults.maxPaymentDate = 0;
-    agregatedResults.maxWorkDate = 0;
-    agregatedResults.countPayments = 0;
-    agregatedResults.countWorks = 0;
-    agregatedResults.sumHours = 0;
-    agregatedResults.sequencePeriods = {};
-
-    reclamationForm.pasport = '';
-    reclamationForm.project = '';
-    reclamationForm.client_id = '';
-    reclamationForm.recruiter_id = '';
-    reclamationForm.comment = '';
-    reclamationForm.client_name = '';
-    reclamationForm.period = '';
-    emit('hide');
+    pasportSearh.value = reclamationForm.pasport;
+    beforeSearch.value = true;
 }
 
 function sendReclamation () {
@@ -91,44 +47,20 @@ function sendReclamation () {
     });
 }
 
-
-function agregateResult (result) {
-    agregatedResults.clientName = result.name;
-    result?.payments.map(paym => {
-        let datePayment = new Date(paym.year, paym.month - 1)
-        if (paym.bonus > 0) {
-            agregatedResults.countPayments++;
-            if (datePayment > agregatedResults.maxPaymentDate) {
-                agregatedResults.maxPaymentDate = datePayment;
-            }
-        }
-    })
-    let lastPeriod = { year: 0, month: 0 };
-    let countSequence = 1;
-    result?.salaries.map(salary => {
-        let dateSalary = new Date(salary.year, salary.month - 1)
-        agregatedResults.countWorks++;
-        agregatedResults.sumHours += salary.hours;
-        if (dateSalary > agregatedResults.maxWorkDate) {
-            agregatedResults.maxWorkDate = dateSalary;
-        }
-        if ((lastPeriod.month + 12 * lastPeriod.year) - (salary.month + 12 * salary.year) == countSequence) {
-            countSequence++;
-            agregatedResults.sequencePeriods[`${lastPeriod.month}-${lastPeriod.year}`] = { 'count': countSequence, 'started': `${salary.month}-${salary.year}` };
-        } else {
-            countSequence = 1;
-            lastPeriod.year = salary.year;
-            lastPeriod.month = salary.month;
-        }
-    })
-}
-
-function toLocaleDate (date) {
-    if (date instanceof Date) {
-        return date.toLocaleDateString('ru-RU', { year: 'numeric', month: 'numeric' });
+function clientDataAutocomplete (data) {
+    console.log('data', data);
+    if (data.pasport == reclamationForm.pasport) {
+        reclamationForm.client_name = data.name
+        reclamationForm.client_id = data.client_id
     }
-    return false;
 }
+
+function clear () {
+    reclamationForm.reset();
+    beforeSearch.value = false;
+    emit('hide');
+}
+
 
 </script>
 
@@ -153,37 +85,18 @@ function toLocaleDate (date) {
 
 
                     <!-- Результаты поиска -->
-                    <div v-if="agregatedResults.haveResults" class=" bg-systems-300 mt-0 ">
-                        <div v-if="agregatedResults.isEmpty" class=" text-center p-4 ">
-                            Данные по этому паспорту отсутсвуют в системе</div>
-                        <div v-else>
-                            <div class=" text-center p-4 font-semibold uppercase">Данные по клиенту
-                            </div>
-                            <div v-if="agregatedResults.countPayments" class=" text-center px-4 font-bold ">
-                                💸 Выплат {{ agregatedResults.countPayments }},
-                                последняя {{ toLocaleDate(agregatedResults.maxPaymentDate) }},
-                            </div>
-                            <div v-if="agregatedResults.countWorks" class=" text-center px-4 font-bold">
-                                Работал(а) {{ agregatedResults.countWorks }} месяца,
-                                последний {{ toLocaleDate(agregatedResults.maxWorkDate) }}, ⏰ часов всего {{
-                                        agregatedResults.sumHours
-                                }}</div>
-                            <div v-if="agregatedResults.countWorks" class=" text-center px-4 ">
-                                <div v-for="(period, kay) in agregatedResults.sequencePeriods">
-                                    Работал(а) {{ period.count }} месяца подряд с {{ period.started }} по {{ kay }}
-                                </div>
-                            </div>
-                        </div>
+                    <div v-if="beforeSearch" class=" bg-systems-300  p-2">
+                        <SummaryClient @reciveClientData="clientDataAutocomplete" :pasport="pasportSearh" />
                     </div>
 
 
 
                     <!-- Поиск клиента -->
-                    <div class=" p-4 text-center rounded-md" v-else>
-                        <div v-if="!agregatedResults.haveResults"> Введите паспорт клиента</div>
+                    <div v-if="!beforeSearch" class=" p-4 text-center rounded-md">
+                        <div> Введите паспорт клиента</div>
                         <form @submit.prevent="serchClient" class=" flex justify-center py-5 gap-2 flex-wrap">
-                            <input @input="beforeSearch = false" type="text" v-model="reclamationForm.pasport"
-                                class="rounded-md w-2/5 " placeholder="Паспорт клиента">
+                            <input type="text" v-model="reclamationForm.pasport" class="rounded-md w-2/5 "
+                                placeholder="Паспорт клиента">
                             <button :disabled="reclamationForm.pasport.length < 6" type="submit"
                                 class="rounded-md px-3 disabled:bg-gray-500/60  py-2 bg-systems-700  cursor-pointer text-white flex flex-row items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1  " fill="none"
@@ -200,7 +113,7 @@ function toLocaleDate (date) {
 
 
                     <!-- форма рекламации -->
-                    <div class=" p-4  rounded-md text-center" v-if="agregatedResults.haveResults">
+                    <div v-if="beforeSearch" class=" p-4  rounded-md text-center">
                         <div class=" text-xl"> Форма рекламации</div>
                         <form @submit.prevent="sendReclamation" class=" flex justify-evenly py-5 gap-2 flex-wrap">
                             <div class="flex  justify-evenly flex-wrap md:flex-nowrap w-full">

@@ -2,7 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Link, useForm } from "@inertiajs/inertia-vue3";
 import { Head } from "@inertiajs/inertia-vue3";
-import ClientData from "@/Classes/ClientData"
+import SummaryClient from "@/Components/SummaryClient.vue";
 import { ref } from "vue";
 
 
@@ -10,27 +10,14 @@ import { ref } from "vue";
 const props = defineProps({
     reclamation: Object,
 });
-console.log(props.reclamation);
-const clientData = ref(new ClientData(props.reclamation?.client.pasport));
-
-
-
-
-
-const showForm = ref(false);
-const statuseShortList = ref([]);
-const statuses = [];
-
-
-
-
-
-
-
-
-
-
-
+const showPayments = ref(false);
+const showSalaries = ref(false);
+const statusColors = {
+    1: { 'label': 'bg-systems-300', 'bg': 'bg-systems-100' },
+    2: { 'label': 'bg-yellow-300', 'bg': 'bg-yellow-100' },
+    3: { 'label': 'bg-green-300', 'bg': 'bg-green-100' },
+    4: { 'label': 'bg-red-300', 'bg': 'bg-red-100' }
+}
 
 </script>
 
@@ -51,32 +38,48 @@ const statuses = [];
 
 
 
-            <div v-if="clientData.haveResults" class=" bg-systems-300 mt-0 ">
-                <div v-if="clientData.isEmpty" class=" text-center p-4 ">
-                    Данные по этому паспорту отсутсвуют в системе</div>
-                <div v-else>
-                    <div class=" text-center p-4 font-semibold uppercase">Данные по клиенту
-                    </div>
-                    <div v-if="clientData.countPayments" class=" text-center px-4 font-bold ">
-                        💸 Выплат {{ clientData.countPayments }},
-                        последняя {{ clientData.maxPaymentDateLocal }},
-                    </div>
-                    <div v-if="clientData.countWorks" class=" text-center px-4 font-bold">
-                        Работал(а) {{ clientData.countWorks }} месяца,
-                        последний {{ clientData.maxWorkDateLocal }}, ⏰ часов всего {{
-                                clientData.sumHours
-                        }}</div>
-                    <div v-if="clientData.countWorks" class=" text-center px-4 ">
-                        <div v-for="(period, kay) in clientData.sequencePeriods">
-                            Работал(а) {{ period.count }} месяца подряд с {{ period.started }} по {{ kay }}
-                        </div>
-                    </div>
+            <!-- данные по рекламации -->
+
+            <div class=" bg-white flex flex-col gap-4 p-3 rounded-md my-4">
+                <div class=" text-center p-4 font-semibold uppercase">Данные по рекламации
                 </div>
+                <div class="w-fit ">
+                    <span class=" font-bold "> Статус -</span> <span class="px-2 py-1 rounded-sm"
+                        :class="statusColors[reclamation.status?.id].label"> {{ props.reclamation.status.title }}</span>
+                </div>
+                <div>
+                    <span class=" font-bold "> Отправлена -</span> {{ props.reclamation.created_at }}
+                </div>
+                <div>
+                    <span class=" font-bold "> Рекрутер -</span> {{ props.reclamation.recruiter.name }}
+                </div>
+                <div>
+                    <span class=" font-bold "> Клиент - </span> {{ props.reclamation.client.name }}, {{
+                            props.reclamation.client.pasport
+                    }}
+                </div>
+                <div>
+                    <span class=" font-bold ">Проект и период оплаты - </span> {{ props.reclamation.project }}, {{
+                            props.reclamation.period
+                    }}
+                </div>
+                <div>
+                    <span class=" font-bold ">Комментарий - </span> {{ props.reclamation.comment }}
+                </div>
+                <div>
+                    <span class=" font-bold "> Ответ - </span> {{ props.reclamation.answer }}
+                </div>
+            </div>
+
+            <!-- /данные по рекламации -->
+
+
+
+            <div class=" bg-systems-300 mt-0 rounded-md p-2">
+                <SummaryClient :pasport="props.reclamation?.client.pasport" />
             </div>
 
 
         </div>
     </MainLayout>
 </template>
-<style src="vue-multiselect/dist/vue-multiselect.css">
-</style>

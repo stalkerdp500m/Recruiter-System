@@ -3,7 +3,8 @@
 const props = defineProps({
     payments: Array,
     showRecruiter: Boolean,
-    showBonus: Boolean
+    showBonus: Boolean,
+    hideClientName: Boolean
 });
 
 </script>
@@ -22,7 +23,8 @@ const props = defineProps({
                 <th class="font-semibold text-sm uppercase px-2 py-2 text-left"> Фактура </th>
                 <th v-if="props.showRecruiter" class="font-semibold text-sm uppercase px-2 py-4 text-left"> Рерутер
                 </th>
-                <th class="font-semibold text-sm uppercase px-2 py-2 text-left "> Клиент </th>
+                <th v-if="!props.hideClientName" class="font-semibold text-sm uppercase px-2 py-2 text-left "> Клиент
+                </th>
                 <th class="font-semibold text-sm uppercase px-2 py-2 text-left"> Проект </th>
                 <th class="font-semibold text-sm uppercase px-2 py-2 text-center"> Статус </th>
                 <th v-if="props.showBonus" class="font-semibold text-sm uppercase px-2 py-2 text-right"> Сумма </th>
@@ -45,7 +47,7 @@ const props = defineProps({
                         </div>
                     </div>
                 </td>
-                <td class="px-2 py-2">
+                <td class="px-2 py-2" v-if="!props.hideClientName">
                     <div class="flex items-center space-x-3">
                         <div>
                             <p> {{ payment?.client?.name }}</p>

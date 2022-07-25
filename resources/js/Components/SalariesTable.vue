@@ -3,7 +3,8 @@
 const props = defineProps({
     salaries: Array,
     showRecruiter: Boolean,
-    showBonus: Boolean
+    showBonus: Boolean,
+    hideClientName: Boolean
 });
 
 </script>
@@ -17,15 +18,16 @@ const props = defineProps({
             <td class="px-6 py-6  font-bold text-lg text-systems-700/70" colspan="4">Wynagrodzenia отсутсвуют
             </td>
         </tr>
-        <thead v-else class="bg-systems-900 divide-systems-800 divide-x  border border-systems-900">
+        <thead v-else class="bg-systems-900 divide-systems-800 divide-x  border border-systems-900  ">
             <tr class="text-white text-center">
                 <th class="font-semibold text-sm uppercase px-6 py-4 text-left"> Период </th>
-                <th class="font-semibold text-sm uppercase px-6 py-4 text-left"> Клиент </th>
+                <th v-if="!props.hideClientName" class="font-semibold text-sm uppercase px-6 py-4 text-left"> Клиент
+                </th>
                 <th class="font-semibold text-sm uppercase px-6 py-4 text-left"> Проект </th>
                 <th class="font-semibold text-sm uppercase px-6 py-4 text-center"> Часы </th>
             </tr>
         </thead>
-        <tbody class="divide-systems-800 border border-systems-900 ">
+        <tbody class="divide-y  divide-systems-800 border border-systems-900 ">
             <tr v-for="salary in props.salaries" :key="salary.id">
                 <td class="px-6 py-4">
                     <div class="flex items-center space-x-3">
@@ -34,7 +36,7 @@ const props = defineProps({
                         </div>
                     </div>
                 </td>
-                <td class="px-6 py-4">
+                <td v-if="!props.hideClientName" class="px-6 py-4">
                     <div class="flex items-center space-x-3">
                         <div>
                             <p> {{ salary?.client?.name }}</p>
