@@ -40,12 +40,16 @@ const statusColors = {
 
             <!-- данные по рекламации -->
 
-            <div class=" bg-white flex flex-col gap-4 p-3 rounded-md my-4">
-                <div class=" text-center p-4 font-semibold uppercase">Данные по рекламации
+            <div class=" bg-white flex flex-col gap-4 p-3 rounded-md my-4"
+                :class="reclamation.deleted_at ? 'contrast-50' : ''">
+                <div v-if="reclamation.deleted_at" class=" text-center p-4 font-semibold uppercase">Рекламация в архиве
+                </div>
+                <div v-else class=" text-center p-4 font-semibold uppercase">Данные по рекламации
                 </div>
                 <div class="w-fit ">
                     <span class=" font-bold "> Статус -</span> <span class="px-2 py-1 rounded-sm"
-                        :class="statusColors[reclamation.status?.id].label"> {{ props.reclamation.status.title }}</span>
+                        :class="statusColors[props.reclamation.status?.id].label"> {{ props.reclamation.status.title
+                        }}</span>
                 </div>
                 <div>
                     <span class=" font-bold "> Отправлена -</span> {{ props.reclamation.created_at }}

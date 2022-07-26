@@ -14,7 +14,7 @@ function toLocaleDate (date) {
 }
 
 const statusColors = {
-    1: { 'label': 'bg-systems-300', 'bg': 'bg-systems-100' },
+    1: { 'label': 'bg-systems-200', 'bg': 'bg-systems-100' },
     2: { 'label': 'bg-yellow-300', 'bg': 'bg-yellow-100' },
     3: { 'label': 'bg-green-300', 'bg': 'bg-green-100' },
     4: { 'label': 'bg-red-300', 'bg': 'bg-red-100' }
@@ -61,7 +61,7 @@ function deleteReclamation (id) {
         <div v-for="reclamation in props.reclamations" :class="statusColors[reclamation.status?.id].bg"
             class=" flex  w-full   gap-2 my-2 shadow-sm rounded-md p-2 " v-show="!reclamation.hidden">
 
-            <div class="w-full md:w-7/12  h-40 gap-2 flex ">
+            <div :class="reclamation.deleted_at ? 'contrast-50' : ''" class="w-full md:w-7/12  h-40 gap-2 flex ">
 
                 <div class="w-1/12 bg-white h-40   rounded-md  flex justify-center  truncate"
                     :class="statusColors[reclamation.status?.id].label">
@@ -75,7 +75,9 @@ function deleteReclamation (id) {
                 <div class="font-bold  break-words "> {{ reclamation?.client?.name }}</div>
                 <div class="mb-2">{{ reclamation?.client?.pasport }}</div>
                 <div class=" break-all truncate ">🏭 {{ reclamation.project }}</div>
-                <div class=" text-xs pt-2 break-words">отправлена: {{ toLocaleDate(reclamation.created_at) }}</div>
+                <div class=" text-xs pt-2 break-words">отправлена: {{ reclamation.user.name }}<br>{{
+                        toLocaleDate(reclamation.created_at)
+                }}</div>
                 </Link>
 
 

@@ -163,6 +163,8 @@ function selectTrashed () {
 
 
             <div class="md:px-10">
+                <!-- <ReclamationList v-for="recruiter in props.reclamations.recruiters"
+                    :reclamations="recruiter.reclamations" /> -->
                 <ReclamationList :reclamations="props.reclamations" />
             </div>
 

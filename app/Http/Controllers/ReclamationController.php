@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ReclamationController extends Controller
@@ -29,23 +30,28 @@ class ReclamationController extends Controller
 
         $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
 
-        // $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations.status:id,title', 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
+        // $reclamations = User::where('id', Auth::user()->id)->with(['recruiters.reclamations' => function ($query) {
+        //     $query->trashedFilter(Request::only('trashed'))->with('status:id,title');
+        // }, 'recruiters.reclamations.client:id,name,pasport'])->first();
 
 
-        $reclamations = User::select('name', 'id')->where('id', Auth::user()->id)->with(['reclamations' => function ($query) {
-            $query->trashedFilter(Request::only('trashed'))->with('status:id,title');
-        }, 'reclamations.client:id,name,pasport', 'reclamations.recruiter:id,name'])->first()->only('reclamations');
 
-        $statuseList = $reclamations['reclamations']->mapWithKeys(function ($item) {
+        $reclamations = Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
+            $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
+        })->trashedFilter(Request::only('trashed'))
+            ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
+
+        $statuseList = $reclamations->mapWithKeys(function ($item) {
             return  [$item['status']['title'] => $item['status']['id']];
         });
+
 
 
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
             'periodList' => $periodList,
             'recruiterList' => $recruiterList,
-            'reclamations' => $reclamations['reclamations'],
+            'reclamations' => $reclamations,
             'statuseList' => $statuseList,
             'trashed' => Request::input('trashed', 'no')
         ]);
@@ -121,6 +127,7 @@ class ReclamationController extends Controller
      */
     public function edit(Reclamation $reclamation)
     {
+        abort_if(Auth::user()->role !== 'admin'  && !Auth::user()->recruiters->pluck('id')->contains($reclamation->recruiter_id), 403);
         return Inertia::render('Reclamation/Edit', [
             'reclamation' => $reclamation
         ]);
@@ -144,20 +151,21 @@ class ReclamationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Reclamation $reclamation)
     {
-        //проверка, что рекламация принадлежить тому, кто ее удаляет
-        // Rule::exists('organizations', 'id')->where(fn ($query) => $query->where('account_id', Auth::user()->account_id))
-        Reclamation::destroy($id);
+        // dump(Auth::user()->id);
+        //dd($reclamation->user_id);
+        abort_if(Auth::user()->id != $reclamation->user_id, 403);
+        $reclamation->delete();
         return Redirect::back()->with('success', 'Рекламация перенесена в архив');
     }
 
 
+
     public function restore(Reclamation $reclamation)
     {
-        //   dd($reclamation);
+        abort_if(Auth::user()->id != $reclamation->user_id, 403);
         $reclamation->restore();
-        // dd($reclamation);
         return Redirect::back()->with('success', 'Рекламация востановлена из архива');
     }
 }

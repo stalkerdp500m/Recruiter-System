@@ -22,6 +22,7 @@ class Recruiter extends Model
     {
         return $this->hasMany(Payment::class,  'recruiter_id', 'id')->where('recruiter_id', $this->recruiter_id)->count();
     }
+
     public function addPayments()
     {
         return $this->hasMany(AddPayment::class,  'recruiter_id', 'id');
@@ -31,6 +32,11 @@ class Recruiter extends Model
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function reclamations()
+    {
+        return $this->hasMany(Reclamation::class, 'recruiter_id', 'id');
     }
 
 
