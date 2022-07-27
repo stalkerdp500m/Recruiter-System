@@ -108,10 +108,10 @@ function toLocaleDate (date) {
 
 <template>
     <div class=" bg-systems-300 mt-0 rounded-md">
-        <div v-if="!haveResults" class=" text-center p-4 ">
+        <div v-if="!haveResults" class=" text-center p-4 font-bold">
             Данные по этому паспорту отсутсвуют в системе</div>
         <div v-else>
-            <div v-if="countPayments || countWorks" class=" text-center p-4 font-semibold uppercase">Данные по <b>{{
+            <div v-if="countPayments || countWorks" class=" text-center p-4 font-bold uppercase">Данные по <b>{{
                     name
             }}</b>
             </div>

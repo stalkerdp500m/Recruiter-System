@@ -1,6 +1,6 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import { Link, useForm } from "@inertiajs/inertia-vue3";
+import { Link, useForm, usePage } from "@inertiajs/inertia-vue3";
 import { Head } from "@inertiajs/inertia-vue3";
 import SummaryClient from "@/Components/SummaryClient.vue";
 import { ref } from "vue";
@@ -10,6 +10,18 @@ import { ref } from "vue";
 const props = defineProps({
     reclamation: Object,
 });
+const userName = usePage().props.value.auth.user.name
+const userRole = usePage().props.value.auth.user.role
+//const user = [...usePage().props.value.auth.user]
+//[user.name, user.role] = [...usePage().props.value.auth.user]
+// const userName = usePage().props.value.auth.user.name
+
+console.log(usePage().props.value.auth.user);
+console.log(props.reclamation);
+const addCommentForm = useForm({
+    'comments': props.reclamation.comments
+});
+const newComment = ref('');
 const showPayments = ref(false);
 const showSalaries = ref(false);
 const statusColors = {
@@ -19,6 +31,25 @@ const statusColors = {
     4: { 'label': 'bg-red-300', 'bg': 'bg-red-100' }
 }
 
+function toLocaleDate (date) {
+    return new Date(date).toLocaleDateString('ru-RU', { year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+}
+
+function addComment () {
+    addCommentForm.transform(form => {
+        form.comments.push({
+            "sendedAt": new Date,
+            "message": newComment.value,
+            "user": userName,
+            "role": userRole
+        })
+        return form
+    })
+    console.log(addCommentForm);
+    // route('reclamations.restore', { 'id': reclamation.id })
+    addCommentForm.put(route('reclamations.update', { 'id': props.reclamation.id }), { preserveScroll: true });
+    newComment.value = '';
+}
 </script>
 
 <template>
@@ -47,33 +78,59 @@ const statusColors = {
                 <div v-else class=" text-center p-4 font-semibold uppercase">Данные по рекламации
                 </div>
                 <div class="w-fit ">
-                    <span class=" font-bold "> Статус -</span> <span class="px-2 py-1 rounded-sm"
-                        :class="statusColors[props.reclamation.status?.id].label"> {{ props.reclamation.status.title
-                        }}</span>
+                    <p><span class=" font-bold "> Статус: </span> <span class="px-2 py-1 rounded-sm"
+                            :class="statusColors[props.reclamation.status?.id].label"> {{ props.reclamation.status.title
+                            }}</span></p>
                 </div>
                 <div>
-                    <span class=" font-bold "> Отправлена -</span> {{ props.reclamation.created_at }}
+                    <p> <span class=" font-bold "> Отправлена: </span> {{
+                            props.reclamation.user.name
+                    }} - {{
+        toLocaleDate(props.reclamation.created_at)
+}}</p>
                 </div>
                 <div>
-                    <span class=" font-bold "> Рекрутер -</span> {{ props.reclamation.recruiter.name }}
+                    <p> <span class=" font-bold "> Рекрутер: </span> {{ props.reclamation.recruiter.name }}</p>
                 </div>
                 <div>
-                    <span class=" font-bold "> Клиент - </span> {{ props.reclamation.client.name }}, {{
+                    <p> <span class=" font-bold "> Клиент: </span> {{ props.reclamation.client.name }}, {{
                             props.reclamation.client.pasport
-                    }}
+                    }}</p>
                 </div>
                 <div>
-                    <span class=" font-bold ">Проект и период оплаты - </span> {{ props.reclamation.project }}, {{
+                    <p><span class=" font-bold ">Проект и период оплаты: </span> {{ props.reclamation.project }}, {{
                             props.reclamation.period
-                    }}
+                    }}</p>
                 </div>
                 <div>
-                    <span class=" font-bold ">Комментарий - </span> {{ props.reclamation.comment }}
+                    <p> <span class=" font-bold "> Ответ </span></p>
+                    <p class="p-2 my-2 border border-systems-900 rounded-t-md rounded-r-md bg-systems-200"> {{
+                            props.reclamation.answer ? props.reclamation.answer : 'Еще не предоставлен'
+                    }}</p>
                 </div>
                 <div>
-                    <span class=" font-bold "> Ответ - </span> {{ props.reclamation.answer }}
+                    <p class=" font-bold ">Комментарии</p>
+                    <p class="p-2 my-2 border border-systems-600 " v-for="comment, i in props.reclamation.comments"
+                        :key="i"
+                        :class="comment.role == 'admin' ? 'bg-systems-300 text-right rounded-t-md rounded-l-md' : 'rounded-t-md rounded-r-md'">
+                        {{
+                                comment.message
+                        }} <br> <span class=" text-xs "><b>{{ comment.user }}</b> {{ toLocaleDate(comment.sendedAt) }}
+                        </span></p>
+                    <form @submit.prevent="addComment"
+                        class=" flex justify-evenly items-center py-2 gap-2 flex-wrap w-full">
+                        <textarea required class="rounded-md w-8/12 " placeholder="Добавить комментарий"
+                            v-model="newComment"></textarea>
+                        <button type="submit" :disabled="addCommentForm.processing"
+                            class="rounded-md px-3 disabled:bg-gray-500/60 h-10  bg-green-600 cursor-pointer text-white  items-center">
+                            {{ addCommentForm.processing ? `Сохраняю` : `Отправить` }}
+                        </button>
+                    </form>
                 </div>
+
             </div>
+
+
 
             <!-- /данные по рекламации -->
 
@@ -82,7 +139,6 @@ const statusColors = {
             <div class=" bg-systems-300 mt-0 rounded-md p-2">
                 <SummaryClient :pasport="props.reclamation?.client.pasport" />
             </div>
-
 
         </div>
     </MainLayout>

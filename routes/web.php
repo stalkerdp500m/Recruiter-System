@@ -47,6 +47,7 @@ Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth', 
 
 Route::get('/reclamations', [ReclamationController::class, 'index'])->middleware(['auth', 'verified'])->name('reclamations.index');
 Route::get('/reclamations/{reclamation}/edit', [ReclamationController::class, 'edit'])->middleware(['auth', 'verified'])->name('reclamations.edit');
+Route::put('/reclamations/{reclamation}', [ReclamationController::class, 'update'])->middleware(['auth', 'verified'])->name('reclamations.update');
 Route::post('/reclamations', [ReclamationController::class, 'store'])->middleware(['auth', 'verified'])->name('reclamations.store');
 Route::delete('/reclamations/{reclamation}', [ReclamationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('reclamations.destroy');
 Route::put('reclamations/{reclamation}/restore', [ReclamationController::class, 'restore'])->middleware(['auth', 'verified'])->name('reclamations.restore');

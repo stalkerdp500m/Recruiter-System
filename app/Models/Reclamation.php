@@ -12,10 +12,13 @@ class Reclamation extends Model
     use SoftDeletes;
     protected $table = 'reclamations';
     protected $guarded = [];
+    protected $casts = [
+        'comments' => 'array',
+    ];
 
     public function resolveRouteBinding($value, $field = null)
     {
-        return $this->where($field ?? 'id', $value)->with('client:id,pasport,name', 'recruiter:id,name', 'status')->withTrashed()->firstOrFail();
+        return $this->where($field ?? 'id', $value)->with('client:id,pasport,name', 'recruiter:id,name', 'status', 'user:id,name')->withTrashed()->firstOrFail();
     }
 
     public function client()

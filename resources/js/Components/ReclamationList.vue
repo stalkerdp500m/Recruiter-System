@@ -94,7 +94,10 @@ function deleteReclamation (id) {
             <div class="w-5/12 h-40 gap-2 hidden md:flex ">
                 <div class="w-6/12 h-40 ">
                     <div class=" border border-systems-400 bg-white/40 h-full rounded-md p-1 overflow-hidden ">
-                        <div class="text-xs break-words ">коментарий:</div>{{ reclamation.comment }}
+                        <div class="text-xs break-words ">комментарии:</div>
+                        <p class="bg-systems-300  rounded-t-md my-1 p-1 rounded-r-md "
+                            v-for="coment in reclamation.comments">{{ coment.message }}</p>
+
                     </div>
                 </div>
                 <div class="w-6/12  h-40 ">

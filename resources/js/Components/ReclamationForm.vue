@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3";
+import { useForm, usePage } from "@inertiajs/inertia-vue3";
 import { ref, reactive } from "vue";
 import { Inertia } from '@inertiajs/inertia';
 import SummaryClient from "@/Components/SummaryClient.vue";
@@ -11,6 +11,7 @@ const props = defineProps({
     periodList: Object,
     recruiterList: Object,
 });
+const userName = usePage().props.value.auth.user.name;
 const emit = defineEmits(['hide']);
 
 
@@ -25,7 +26,11 @@ const reclamationForm = useForm({
     'client_name': '',
     'recruiter_id': '',
     'period': '',
-    'comment': ''
+    'comment': [{
+        "sendedAt": new Date,
+        "message": "",
+        "user": userName
+    }]
 });
 
 
@@ -160,9 +165,9 @@ function clear () {
                                 </div>
                             </div>
                             <div class="w-11/12">
-                                <p class="text-center">Коментарий</p>
-                                <textarea required v-model="reclamationForm.comment" class="rounded-md w-full "
-                                    placeholder="коментарий"> </textarea>
+                                <p class="text-center">Комментарий</p>
+                                <textarea required v-model="reclamationForm.comment[0].message"
+                                    class="rounded-md w-full " placeholder="комментарий"> </textarea>
                             </div>
 
                             <div class="flex gap-6">

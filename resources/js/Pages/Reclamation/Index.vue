@@ -67,12 +67,6 @@ const isTrashed = useForm({
 });
 function selectTrashed () {
     isTrashed.get('/reclamations')
-    console.log(isTrashed);
-    // if (isTrashed.trashed == 'only') {
-    //     isTrashed.get('/reclamations')
-    // } else {
-    // }
-
 }
 
 </script>

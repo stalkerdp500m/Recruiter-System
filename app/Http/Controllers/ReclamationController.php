@@ -38,7 +38,7 @@ class ReclamationController extends Controller
 
         $reclamations = Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
             $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
-        })->trashedFilter(Request::only('trashed'))
+        })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
             ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
 
         $statuseList = $reclamations->mapWithKeys(function ($item) {
@@ -99,7 +99,7 @@ class ReclamationController extends Controller
             ],
             [
                 'project' => $validatedData['project'],
-                'comment' => $validatedData['comment'],
+                'comments' => $validatedData['comment'],
                 'status_id' => 1,
             ]
         );
@@ -140,9 +140,11 @@ class ReclamationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Reclamation $reclamation)
     {
-        //
+        abort_if(Auth::user()->role !== 'admin'  && !Auth::user()->recruiters->pluck('id')->contains($reclamation->recruiter_id), 403);
+        $reclamation->update(Request::only('comments'));
+        return Redirect::back()->with('success', 'Комментарий добавлен');
     }
 
     /**
