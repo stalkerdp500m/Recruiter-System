@@ -38,14 +38,6 @@ function deleteReclamation (id) {
 
 
 
-    <!-- { "id": 28, "user_id": 1, "recruiter_id": 12, "client_id": 187, "status_id": 1, "project": "dfsdsfdsd", "period": "12-2021", "comment": "sdfsdfdsfsfds", "answer": null, "created_at": "2022-07-15T07:27:25.000000Z", "updated_at": "2022-07-15T07:27:25.000000Z",
-"status": { "id": 1, "title": "Новая" },
-"client": { "id": 187, "name": "Janina Przybylska", "pasport": "EQSMVX5O8Z0" },
-"recruiter": { "id": 12, "name": "Tola Kamińska" } } -->
-
-
-
-
 
 <template>
 
@@ -75,9 +67,7 @@ function deleteReclamation (id) {
                 <div class="font-bold  break-words "> {{ reclamation?.client?.name }}</div>
                 <div class="mb-2">{{ reclamation?.client?.pasport }}</div>
                 <div class=" break-all truncate ">🏭 {{ reclamation.project }}</div>
-                <div class=" text-xs pt-2 break-words">отправлена: {{ reclamation.user.name }}<br>{{
-                        toLocaleDate(reclamation.created_at)
-                }}</div>
+
                 </Link>
 
 
@@ -86,7 +76,12 @@ function deleteReclamation (id) {
                     <div class=" text-lg md:text-2xl -mb-2 "> {{ reclamation.period }}</div>
 
                     <div class=" ">{{ reclamation?.recruiter?.name }}</div>
-
+                    <div class=" text-xs pt-2 break-words">отправлена: {{ reclamation.user.name }}<br>{{
+                            toLocaleDate(reclamation.created_at)
+                    }}</div>
+                    <div class=" text-xs pt-2 break-words">изменена: {{
+                            toLocaleDate(reclamation.updated_at)
+                    }}</div>
 
                 </div>
             </div>
@@ -95,7 +90,7 @@ function deleteReclamation (id) {
                 <div class="w-6/12 h-40 ">
                     <div class=" border border-systems-400 bg-white/40 h-full rounded-md p-1 overflow-hidden ">
                         <div class="text-xs break-words ">комментарии:</div>
-                        <p class="bg-systems-300  rounded-t-md my-1 p-1 rounded-r-md "
+                        <p class="bg-systems-200  rounded-t-md my-1 p-1 rounded-r-md "
                             v-for="coment in reclamation.comments">{{ coment.message }}</p>
 
                     </div>

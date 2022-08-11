@@ -17,8 +17,7 @@ const props = defineProps({
     trashed: String
 });
 
-console.log(props.reclamations);
-console.log(route('reclamations.index'));
+
 
 
 const showForm = ref(false);

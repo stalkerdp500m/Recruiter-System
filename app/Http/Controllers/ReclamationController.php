@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Reclamation;
+use App\Models\ReclamationStatus;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -105,7 +106,7 @@ class ReclamationController extends Controller
         );
 
         // return Redirect::route('reclamations.index');
-        return redirect()->action([ReclamationController::class, 'index']);
+        return redirect()->action([ReclamationController::class, 'index'])->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация Создана"]);;
     }
 
     /**
@@ -128,8 +129,10 @@ class ReclamationController extends Controller
     public function edit(Reclamation $reclamation)
     {
         abort_if(Auth::user()->role !== 'admin'  && !Auth::user()->recruiters->pluck('id')->contains($reclamation->recruiter_id), 403);
+        $statuseList = ReclamationStatus::select('id', 'title')->get();
         return Inertia::render('Reclamation/Edit', [
-            'reclamation' => $reclamation
+            'reclamation' => $reclamation,
+            'statuseList' => $statuseList,
         ]);
     }
 
@@ -143,8 +146,23 @@ class ReclamationController extends Controller
     public function update(Reclamation $reclamation)
     {
         abort_if(Auth::user()->role !== 'admin'  && !Auth::user()->recruiters->pluck('id')->contains($reclamation->recruiter_id), 403);
-        $reclamation->update(Request::only('comments'));
-        return Redirect::back()->with('success', 'Комментарий добавлен');
+
+        if (Auth::user()->role !== 'admin') {
+            $validatedData = Request::validate([
+                'comments' => ['required', 'array'],
+                'status_id' => ['required', 'integer'],
+                'answer' => ['nullable', 'string'],
+            ]);
+            $reclamation->update($validatedData);
+        } else {
+            $validatedData = Request::validate([
+                'comments' => ['required', 'array'],
+                'status_id' => ['required', 'integer'],
+                'answer' => ['nullable', 'string'],
+            ]);
+            $reclamation->update($validatedData);
+        }
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация обновлена"]);
     }
 
     /**
@@ -159,7 +177,7 @@ class ReclamationController extends Controller
         //dd($reclamation->user_id);
         abort_if(Auth::user()->id != $reclamation->user_id, 403);
         $reclamation->delete();
-        return Redirect::back()->with('success', 'Рекламация перенесена в архив');
+        return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Рекламация перенесена в архив"]);
     }
 
 
@@ -168,6 +186,6 @@ class ReclamationController extends Controller
     {
         abort_if(Auth::user()->id != $reclamation->user_id, 403);
         $reclamation->restore();
-        return Redirect::back()->with('success', 'Рекламация востановлена из архива');
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация востановлена из архива"]);
     }
 }
