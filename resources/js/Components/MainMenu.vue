@@ -106,6 +106,21 @@ const userRole = usePage().props.value.auth.user.role
             </Link>
         </div>
 
+        <Link v-if="userRole === 'admin'" :href="route('users.index')">
+        <div :class="isUrl('users.index') ? 'opacity-100' : 'opacity-40'"
+            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+            <div class="px-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <div class="overflow-clip md:truncate md:text-xl leading-tight   text-clip">Пользователи
+            </div>
+        </div>
+        </Link>
+
 
     </div>
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Import\IndexController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -55,5 +56,11 @@ Route::put('reclamations/{reclamation}/restore', [ReclamationController::class, 
 Route::get('/imports/payments/', [ImportPaymentController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.index');
 Route::post('/imports/payments/', [ImportPaymentController::class, 'create'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.create');
 Route::post('/imports/payments/store/', [ImportPaymentController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.store');
+
+
+Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('users.index');
+Route::put('/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('users.update');
+
+
 
 require __DIR__ . '/auth.php';

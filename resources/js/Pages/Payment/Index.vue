@@ -124,7 +124,8 @@ function recruiterAllSum (recruiter) {
                         </div>
                     </div>
 
-                    <div :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'opacity-0 hidden'"
+                    <div v-if="recruiter.show || props.payments.recruiters.length"
+                        :class="recruiter.show || props.payments.recruiters.length == 1 ? '' : 'opacity-0 hidden'"
                         class=' transition-all overflow-auto overflow-y-hidden h-fit px-2 md:px-10 py-5 '>
                         <PaymentsTable showBonus :payments="recruiter.payments"></PaymentsTable>
                     </div>
