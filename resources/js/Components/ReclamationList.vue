@@ -96,8 +96,9 @@ function deleteReclamation (id) {
                     </div>
                 </div>
                 <div class="w-6/12  h-40 ">
-                    <div class=" border border-systems-400 h-full rounded-md p-1 bg-white/40 ">
-                        <div class="text-xs break-words ">ответ:</div>{{ reclamation.answer }}
+                    <div class=" border border-systems-400 h-full overflow-clip rounded-md p-1 bg-white/40 ">
+                        <div class="text-xs break-words ">ответ:</div>
+                        <div class="m-1">{{ reclamation.answer }}</div>
                     </div>
                 </div>
             </div>

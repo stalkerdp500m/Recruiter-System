@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $userList = User::with('recruiters:id,name')->get();
+        $userList = User::with('recruiters:id,name')->orderBy('name')->get();
         $recruiterList = Recruiter::select('id', 'name')->get();
 
         return Inertia::render('User/Index', [
@@ -78,9 +78,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-
-        // dd($user->recruiters);
-
         $user->recruiters()->sync($request->recruiter_id);
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $user->name обновлен"]);
     }

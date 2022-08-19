@@ -121,36 +121,12 @@ function selectTrashed () {
 
                 <div class=" md:w-1/6 w-4/12 justify-center flex items-center ">
                     <select @change="selectTrashed" v-model="isTrashed.trashed"
-                        :class="props.trashed == 'only' ? 'bg-red-400' : 'bg-green-400'"
+                        :class="props.trashed == 'only' ? 'bg-slate-400' : 'bg-green-400'"
                         class=" form-select rounded-md shadow-md cursor-pointer " name="" id="">
-                        <option class="bg-red-400 " value="only">В архиве </option>
+                        <option class="bg-slate-400 " value="only">В архиве </option>
                         <option class="bg-green-400" value="no">Активные </option>
                     </select>
                 </div>
-                <!-- <Link v-if="!props.trashed" :href="route('reclamations.index', { 'trashed': 'only' })"
-                    class=" md:w-1/6 w-4/12 justify-center flex items-center">
-                <div
-                    class=" bg-red-400  md:px-5 md:py-3 p-2 text-xs  rounded-md shadow-md cursor-pointer  flex justify-center items-center ">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4  mr-3 " fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    <div class="font-bold ">архивные</div>
-                </div>
-                </Link> -->
-                <!-- <Link v-else :href="route('reclamations.index')"
-                    class=" md:w-1/6 w-4/12 justify-center flex items-center">
-                <div
-                    class=" bg-green-400  md:px-5 md:py-3 p-2 text-xs  rounded-md shadow-md cursor-pointer  flex justify-center items-center ">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4  mr-3 " fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    <div class="font-bold ">активные</div>
-                </div>
-                </Link> -->
             </div>
             <!-- /Фильтры -->
 
