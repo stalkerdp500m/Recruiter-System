@@ -97,7 +97,8 @@ function formUpdate (list) {
 
 
             <div :class="user.id == curentUserId ? 'bg-systems-300 border-2 border-white' : ''"
-                class="bg-white my-2 p-3 rounded-md shadow-md  " v-for="(user, i) in filteredUserList" :key="i">
+                class="bg-white my-2 p-3 rounded-md shadow-md overflow-x-clip " v-for="(user, i) in filteredUserList"
+                :key="i">
                 <div class="flex justify-start cursor-pointer " @click="curentUserId = user.id">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-2" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">

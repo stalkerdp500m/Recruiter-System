@@ -60,6 +60,10 @@ function clientDataAutocomplete (data) {
     }
 }
 
+function checkPasport () {
+    if (reclamationForm.pasport) { return true }
+}
+
 function clear () {
     reclamationForm.reset();
     beforeSearch.value = false;
@@ -100,8 +104,8 @@ function clear () {
                     <div v-if="!beforeSearch" class=" p-4 text-center rounded-md">
                         <div> Введите паспорт клиента</div>
                         <form @submit.prevent="serchClient" class=" flex justify-center py-5 gap-2 flex-wrap">
-                            <input type="text" v-model="reclamationForm.pasport" class="rounded-md w-2/5 "
-                                placeholder="Паспорт клиента">
+                            <input type="text" v-model="reclamationForm.pasport" @input="checkPasport"
+                                class="rounded-md w-2/5 " placeholder="Паспорт клиента">
                             <button :disabled="reclamationForm.pasport.length < 6" type="submit"
                                 class="rounded-md px-3 disabled:bg-gray-500/60  py-2 bg-systems-700  cursor-pointer text-white flex flex-row items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1  " fill="none"
