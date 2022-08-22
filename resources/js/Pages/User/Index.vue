@@ -97,9 +97,8 @@ function formUpdate (list) {
 
 
             <div :class="user.id == curentUserId ? 'bg-systems-300 border-2 border-white' : ''"
-                class="bg-white my-2 p-3 rounded-md shadow-md overflow-x-clip " v-for="(user, i) in filteredUserList"
-                :key="i">
-                <div class="flex justify-start cursor-pointer " @click="curentUserId = user.id">
+                class="bg-white my-2 p-3 rounded-md shadow-md   " v-for="(user, i) in filteredUserList" :key="i">
+                <div class="flex justify-start cursor-pointer items-center h-12 " @click="curentUserId = user.id">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-2" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -107,9 +106,11 @@ function formUpdate (list) {
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <h3 class="text-xl">{{ user.name }} <span class="text-base"> {{ user.email }}</span> </h3>
-                    <span :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
-                        class=" text-sm  mx-2  h-fit rounded-sm px-1">{{ user.role
-                        }}</span>
+                    <div :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
+                        class=" text-sm overflow-x-clip absolute mx-3 -mt-12 md:mr-14 md:-mt-5 right-0  h-fit rounded-sm px-1">
+                        {{
+                                user.role
+                        }}</div>
                 </div>
                 <div v-if="user.id == curentUserId"
                     class=" py-4 border-t-2 border-systems-700/50   w-full gap-2  flex items-center md:justify-center justify-evenly flex-wrap">

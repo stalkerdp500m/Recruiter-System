@@ -7,11 +7,13 @@ use Illuminate\Database\Seeder;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\PaymentUser;
+use App\Models\Reclamation;
 use App\Models\ReclamationStatus;
 use App\Models\Recruiter;
 use App\Models\Salary;
 use App\Models\User;
 use App\Models\RecruiterUser;
+use Database\Factories\ReclamationFactory;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
@@ -59,12 +61,13 @@ class DatabaseSeeder extends Seeder
         ReclamationStatus::firstOrCreate(
             ['title' => 'Отклонена']
         );
-        User::factory(200)->create();
-        Client::factory(300)->create();
-        Recruiter::factory(15)->create();
-        Salary::factory(500)->create();
-        Payment::factory(500)->create();
-        PaymentUser::factory(400)->create();
-        RecruiterUser::factory(400)->create();
+        // User::factory(200)->create();
+        //  Client::factory(300)->create();
+        //     Recruiter::factory(15)->create();
+        //   Salary::factory(500)->create();
+        //   Payment::factory(500)->create();
+        //    PaymentUser::factory(400)->create();
+        //   RecruiterUser::factory(400)->create();
+        Reclamation::factory(200)->create();
     }
 }
