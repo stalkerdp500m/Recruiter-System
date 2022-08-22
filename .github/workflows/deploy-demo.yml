@@ -24,4 +24,4 @@ jobs:
           username: ${{ secrets.DEMO_USERNAME }}
           port: ${{ secrets.DEMO_PORT }}
           key: ${{ secrets.DEMO_SSHKEY }}
-          script: "cd /var/www/html && ./.scripts/deploy.sh"
+          script: "cd web/demo.recruiter-system.ml/public_html/ && ./.scripts/deploy.sh"
