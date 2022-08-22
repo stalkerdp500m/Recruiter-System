@@ -20,7 +20,7 @@ php artisan clear-compiled
 php artisan optimize
 
 # Install dev dependencies
-npm install --production
+npm install
 
 # Compile npm assets
 npm run prod
