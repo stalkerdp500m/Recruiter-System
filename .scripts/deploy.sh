@@ -19,6 +19,9 @@ php artisan clear-compiled
 # Recreate cache
 php artisan optimize
 
+# Install dev dependencies
+npm install --production
+
 # Compile npm assets
 npm run prod
 
