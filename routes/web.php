@@ -9,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -60,6 +62,17 @@ Route::post('/imports/payments/store/', [ImportPaymentController::class, 'store'
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('users.index');
 Route::put('/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('users.update');
+
+
+// Route::get('/demo-mail', function () {
+//     return (new MailMessage)
+//         ->subject(Lang::get('Уведомление о сбросе пароля'))
+//         ->line(Lang::get('Вы получили это письмо, потому что мы получили запрос на сброс пароля для вашей учетной записи.'))
+//         ->action(Lang::get('сбросить пароль'), "url")
+//         ->line(Lang::get('срок действия ссылки для сброса пароля истекает через :count минут.', ['count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire')]))
+//         ->line(Lang::get('Если вы не запрашивали сброс пароля, никаких дальнейших действий не требуется.'));
+// });
+
 
 
 
