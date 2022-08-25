@@ -15,7 +15,7 @@ defineProps({
 const form = useForm({
     email: '',
     password: '',
-    remember: false
+    remember: true
 });
 
 const submit = () => {
@@ -36,7 +36,8 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" autocomplete="on">
+            <div class="text-center my-4 ">ФОРМА ВХОДА</div>
             <div>
                 <BreezeLabel for="email" value="Email" />
                 <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus
@@ -44,7 +45,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <BreezeLabel for="password" value="Password" />
+                <BreezeLabel for="password" value="Пароль" />
                 <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
                     autocomplete="current-password" />
             </div>
@@ -52,23 +53,28 @@ const submit = () => {
             <div class="block mt-4">
                 <label class="flex items-center">
                     <BreezeCheckbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    <span class="ml-2 text-sm text-gray-600">Запомнить меня</span>
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900">
-                Forgot your password?
-                </Link>
-                <!-- <Link v-if="canResetPassword" :href="route('register')"
-                    class=" bg-slate-600 text-sm px-3 py-2 text-white mx-2 rounded-md hover:text-gray-900">
-                Registration
-                </Link> -->
+            <div class="flex items-center justify-between mt-4 ">
+                <div>
+                    <Link v-if="canResetPassword" :href="route('password.request')"
+                        class="underline text-left text-sm text-gray-600 hover:text-gray-900">
+                    Забыли пароль?
+                    </Link>
+                </div>
+                <div>
+                    <BreezeButton class="mr-4 bg-green-700" :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing">
+                        Вход
+                    </BreezeButton>
+                    <Link v-if="canResetPassword" :href="route('register')"
+                        class=" bg-systems-400 text-sm px-2 py-1 text-black font-bold  rounded-md hover:text-gray-900">
+                    Регистрация
+                    </Link>
 
-                <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </BreezeButton>
+                </div>
             </div>
         </form>
     </BreezeGuestLayout>

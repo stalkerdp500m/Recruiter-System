@@ -23,77 +23,45 @@ const submit = () => {
 
 <template>
     <BreezeGuestLayout>
+
         <Head title="Register" />
 
         <BreezeValidationErrors class="mb-4" />
 
         <form @submit.prevent="submit">
+            <div class="text-center my-4 ">ФОРМА РЕГИСТРАЦИИ</div>
             <div>
-                <BreezeLabel for="name" value="Name" />
-                <BreezeInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+                <BreezeLabel for="name" value="Имя" />
+                <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
+                    autocomplete="name" />
             </div>
 
             <div class="mt-4">
                 <BreezeLabel for="email" value="Email" />
-                <BreezeInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
+                    autocomplete="username" />
             </div>
 
             <div class="mt-4">
-                <BreezeLabel for="password" value="Password" />
-                <BreezeInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
+                <BreezeLabel for="password" value="Пароль" />
+                <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
+                    autocomplete="new-password" />
             </div>
 
             <div class="mt-4">
-                <BreezeLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-                <BreezeInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
+                <BreezeLabel for="password_confirmation" value="Повторите пароль" />
+                <BreezeInput id="password_confirmation" type="password" class="mt-1 block w-full"
+                    v-model="form.password_confirmation" required autocomplete="new-password" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900"
-                >
-                    Already registered?
+            <div class="flex items-center justify-between mt-4">
+                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                Уже зарегистрированы ?
                 </Link>
 
-                <BreezeButton
-                    class="ml-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Register
+                <BreezeButton class="ml-4 font-bold" :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
+                    Регистрация
                 </BreezeButton>
             </div>
         </form>
