@@ -19,6 +19,10 @@ php artisan clear-compiled
 # Recreate cache
 php artisan optimize
 
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
 # Install dev dependencies
 npm install
 
