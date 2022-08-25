@@ -15,9 +15,10 @@ const props = defineProps({
 const searchUserQuery = ref('');
 const filteredUserList = ref(props.userList);
 
-function serched () {
+function serched (input) {
+    searchUserQuery.value = input
     filteredUserList.value = props.userList.filter((user) => {
-        let searchStr = searchUserQuery.value.toLowerCase();
+        let searchStr = input.toLowerCase();
         let countLeters = searchStr.length;
         return user.name.toLowerCase().substring(0, countLeters).includes(searchStr) || user.email.toLowerCase().substring(0, countLeters).includes(searchStr)
     })
@@ -78,7 +79,7 @@ function formUpdate (list) {
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <input @input="serched" type="text" v-model="searchUserQuery"
+                    <input @input="e => serched(e.target.value)" type="text" :value="searchUserQuery"
                         class=" h-10  w-full md:w-4/5 focus:ring-0 border-0 "
                         placeholder="Найти пользователя (имя или email)">
                 </div>
