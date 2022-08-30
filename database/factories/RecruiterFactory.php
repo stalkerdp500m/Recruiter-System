@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class RecruiterFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'mail' => $this->faker->unique()->safeEmail(),
+            'team_id' => Team::get()->random(),
         ];
     }
 }
