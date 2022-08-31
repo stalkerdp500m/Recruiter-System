@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Team;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -21,7 +22,10 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Auth/Register');
+
+        return Inertia::render('Auth/Register', [
+            'teams' => Team::select('name', 'id')->get()
+        ]);
     }
 
     /**
@@ -38,11 +42,13 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'team' => ['nullable', 'exists:teams,id']
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'team_id' => $request->team,
             'password' => Hash::make($request->password),
         ]);
 
