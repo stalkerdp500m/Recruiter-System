@@ -19,6 +19,7 @@ class UserController extends Controller
     {
         $userList = User::with('recruiters:id,name')->orderBy('name')->get();
         $recruiterList = Recruiter::select('id', 'name')->get();
+        $roleList = "";
 
         return Inertia::render('User/Index', [
             'userList' => $userList,

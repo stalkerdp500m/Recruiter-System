@@ -6,12 +6,12 @@ import { Link } from "@inertiajs/inertia-vue3";
 <template>
     <div class="flex items-center ml-6 px-5 transition-all">
         <div class="ml-3 relative">
-            <BreezeDropdown align="right" width="48">
+            <BreezeDropdown align="left" width="48">
                 <template #trigger>
                     <div class="group flex items-center cursor-pointer select-none">
                         <div
                             class="mr-1 text-black font-bold group-hover:text-indigo-700 focus:text-indigo-600 whitespace-nowrap">
-                            <span>{{ $page.props.auth.user.name }}</span>
+                            <span>{{  $page.props.auth.user.name  }}</span>
                         </div>
                         <!-- <icon
                                                 class="w-5 h-5 fill-gray-700 group-hover:fill-indigo-600 focus:fill-indigo-600"

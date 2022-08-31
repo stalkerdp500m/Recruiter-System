@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { Link, usePage } from "@inertiajs/inertia-vue3";
+import BreezeDropdown from "@/Components/Breeze/Dropdown.vue";
 
 
 function isUrl (url) {
@@ -8,6 +9,9 @@ function isUrl (url) {
 }
 
 const showLoudMenu = ref(false);
+
+
+
 const props = defineProps(["class", "active"]);
 const userRole = usePage().props.value.auth.user.role
 
@@ -15,7 +19,7 @@ const userRole = usePage().props.value.auth.user.role
 </script>
 
 <template>
-    <div class="transition-all pl-1  flex flex-col ">
+    <div class="transition-all pl-1  flex flex-col gap-8">
 
         <Link :href="route('dashboard')">
         <div :class="isUrl('dashboard') ? 'opacity-100' : 'opacity-40'"
@@ -33,7 +37,7 @@ const userRole = usePage().props.value.auth.user.role
         </Link>
         <Link :href="route('payments.index')">
         <div :class="isUrl('payments.index') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+            class="text-white  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -47,7 +51,7 @@ const userRole = usePage().props.value.auth.user.role
         </Link>
         <Link :href="route('clients.index')">
         <div :class="isUrl('clients.index') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+            class="text-white flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -61,7 +65,7 @@ const userRole = usePage().props.value.auth.user.role
         </Link>
         <Link :href="route('reclamations.index')">
         <div :class="isUrl('reclamations.index') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+            class="text-white flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -75,7 +79,8 @@ const userRole = usePage().props.value.auth.user.role
         </Link>
 
         <div @click="showLoudMenu = !showLoudMenu" v-if="userRole === 'admin'"
-            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 cursor-pointer">
+            :class="showLoudMenu ? 'opacity-100' : 'opacity-40'"
+            class="text-white flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 cursor-pointer">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -91,7 +96,7 @@ const userRole = usePage().props.value.auth.user.role
         <div class=" pl-4" v-if="showLoudMenu">
             <Link :href="route('imports.payments.index')">
             <div :class="isUrl('imports.payments.index') ? 'opacity-100' : 'opacity-40'"
-                class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+                class="text-white flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
                 <div class="px-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -106,9 +111,54 @@ const userRole = usePage().props.value.auth.user.role
             </Link>
         </div>
 
+
+        <!-- Пользователи -->
+
+        <BreezeDropdown align="bottom" width="56">
+            <template #trigger>
+                <div :class="isUrl('users.index') ? 'opacity-100' : 'opacity-40'"
+                    class="text-white flex flex-row items-center justify-start overflow-x-clip cursor-pointer hover:opacity-100 ">
+                    <div class="px-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div class="overflow-clip md:truncate md:text-xl leading-tight   text-clip">Пользователи
+                    </div>
+                </div>
+            </template>
+            <template #content>
+                <div class=" py-2 text-sm   rounded shadow-xl cursor-pointer  ">
+                    <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                    Управлять пользователями
+                    </Link>
+                    <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                    Управлять командами
+                    </Link>
+                    <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                    Мой
+                    профиль
+                    </Link>
+                </div>
+            </template>
+        </BreezeDropdown>
+
+
+        <!-- /Пользователи -->
+
+
+
+
+
+
+
+
+
         <Link v-if="userRole === 'admin'" :href="route('users.index')">
         <div :class="isUrl('users.index') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-10  flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
+            class="text-white flex flex-row items-center justify-start overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">

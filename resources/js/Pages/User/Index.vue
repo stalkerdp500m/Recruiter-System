@@ -8,7 +8,9 @@ import { reactive, ref } from "vue";
 
 const props = defineProps({
     userList: Object,
-    recruiterList: Object
+    recruiterList: Object,
+    roleList: Object,
+    teamsList: Object
 });
 
 
@@ -26,7 +28,8 @@ function serched (input) {
 
 
 const updateUserForm = useForm({
-    'recruiter_id': []
+    'recruiter_id': [],
+    'role': ""
 });
 const curentUserId = ref(null);
 
@@ -106,23 +109,37 @@ function formUpdate (list) {
                             d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <h3 class="text-xl">{{ user.name }} <span class="text-base"> {{ user.email }}</span> </h3>
+                    <h3 class="text-xl">{{  user.name  }} <span class="text-base"> {{  user.email  }}</span> </h3>
                     <div :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
                         class=" text-sm overflow-x-clip absolute mx-3 -mt-12 md:mr-14 md:-mt-5 right-0  h-fit rounded-sm px-1">
                         {{
-                                user.role
+                         user.role 
                         }}</div>
                 </div>
                 <div v-if="user.id == curentUserId"
-                    class=" py-4 border-t-2 border-systems-700/50   w-full gap-2  flex items-center md:justify-center justify-evenly flex-wrap">
-                    <h3 class="flex-1 ">Доступ к рекрутерам</h3>
-                    <div class="  justify-center flex items-center w-11/12 ">
-                        <!-- <VueMultiselect @update:model-value="user.recruiters" :multiple="true" -->
-                        <VueMultiselect @update:model-value="formUpdate" :multiple="true"
-                            selectLabel="добавить рекрутера" deselectLabel="убрать рекрутера" v-model="user.recruiters"
-                            track-by="name" :options="props.recruiterList" label="name" :searchable="true"
-                            placeholder="поиск рекрутера">
-                        </VueMultiselect>
+                    class=" py-4 border-t-2 border-systems-700/50   w-full gap-2  flex flex-col items-center md:justify-center justify-evenly flex-wrap">
+
+                    <div class="w-full">
+                        <h3 class="flex-1 ">Роль</h3>
+                        <div class="  justify-center flex items-center w-11/12 ">
+                            <!-- <VueMultiselect @update:model-value="user.recruiters" :multiple="true" -->
+                            <VueMultiselect @update:model-value="formUpdate" :multiple="false"
+                                selectLabel="добавить рекрутера" deselectLabel="убрать рекрутера"
+                                v-model="user.recruiters" track-by="name" :options="props.recruiterList" label="name"
+                                :searchable="true" placeholder="поиск рекрутера">
+                            </VueMultiselect>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <h3 class="flex-1 ">Доступ к рекрутерам</h3>
+                        <div class="  justify-center flex items-center w-11/12 ">
+                            <!-- <VueMultiselect @update:model-value="user.recruiters" :multiple="true" -->
+                            <VueMultiselect @update:model-value="formUpdate" :multiple="true"
+                                selectLabel="добавить рекрутера" deselectLabel="убрать рекрутера"
+                                v-model="user.recruiters" track-by="name" :options="props.recruiterList" label="name"
+                                :searchable="true" placeholder="поиск рекрутера">
+                            </VueMultiselect>
+                        </div>
                     </div>
                 </div>
             </div>
