@@ -13,6 +13,7 @@ use App\Models\Recruiter;
 use App\Models\Salary;
 use App\Models\User;
 use App\Models\RecruiterUser;
+use App\Models\Role;
 use App\Models\Team;
 use Database\Factories\ReclamationFactory;
 use Illuminate\Support\Facades\DB;
@@ -53,18 +54,31 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin'
             ]
         );
-        ReclamationStatus::firstOrCreate(
-            ['title' => 'Новая']
-        );
-        ReclamationStatus::firstOrCreate(
-            ['title' => 'В работе']
-        );
-        ReclamationStatus::firstOrCreate(
-            ['title' => 'Одобрена']
-        );
-        ReclamationStatus::firstOrCreate(
-            ['title' => 'Отклонена']
-        );
+
+        $roleList = ['user', 'assistant', 'owner', 'accountant', 'admin'];
+        $reclamationStatusesList = ['Новая', 'В работе', 'Одобрена', 'Отклонена'];
+
+        foreach ($roleList as $role) {
+            Role::firstOrCreate(['title' => $role]);
+        }
+
+        foreach ($reclamationStatusesList as $status) {
+            ReclamationStatus::firstOrCreate(['title' => $status]);
+        }
+
+
+        // ReclamationStatus::firstOrCreate(
+        //     ['title' => 'Новая']
+        // );
+        // ReclamationStatus::firstOrCreate(
+        //     ['title' => 'В работе']
+        // );
+        // ReclamationStatus::firstOrCreate(
+        //     ['title' => 'Одобрена']
+        // );
+        // ReclamationStatus::firstOrCreate(
+        //     ['title' => 'Отклонена']
+        // );
         Team::factory(10)->create();
         User::factory(200)->create();
         Client::factory(350)->create();

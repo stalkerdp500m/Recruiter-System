@@ -23,7 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'team_id'
+        'team_id',
+        'role'
     ];
 
     public function sendEmailVerificationNotification()
@@ -58,5 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function recruiters()
     {
         return $this->belongsToMany(Recruiter::class)->orderBy('name');
+    }
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

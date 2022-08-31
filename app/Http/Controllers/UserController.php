@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recruiter;
+use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -17,13 +19,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $userList = User::with('recruiters:id,name')->orderBy('name')->get();
-        $recruiterList = Recruiter::select('id', 'name')->get();
-        $roleList = "";
-
         return Inertia::render('User/Index', [
-            'userList' => $userList,
-            'recruiterList' => $recruiterList
+            'userList' => User::with(['recruiters:id,name', 'team'])->orderBy('created_at', 'desc')->get(),
+            'recruiterList' => Recruiter::select('id', 'name')->get(),
+            'roleList' => Role::select('title')->get()->pluck('title'),
+            'teamsList' => Team::select('id', 'name')->get()
         ]);
     }
 
@@ -79,8 +79,23 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->recruiters()->sync($request->recruiter_id);
-        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $user->name обновлен"]);
+
+
+        switch ($request->action) {
+            case 'role':
+                //  dd($request->only('role'));
+                $user->update($request->only('role'));
+                return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "новая роль у $user->name $request->role"]);
+            case 'recruitersList':
+                $user->recruiters()->sync($request->recruiter_id);
+                return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Список рекрутеров у $user->name обновлен"]);
+            case 'team':
+                $user->update($request->only('team_id'));
+                return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Команда пользователя $user->name обновлена"]);
+            default:
+                # code...
+                break;
+        }
     }
 
     /**

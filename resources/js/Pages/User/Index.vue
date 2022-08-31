@@ -13,9 +13,12 @@ const props = defineProps({
     teamsList: Object
 });
 
+console.log(props);
+
 
 const searchUserQuery = ref('');
 const filteredUserList = ref(props.userList);
+const filterRoleStr=ref('');
 
 function serched (input) {
     searchUserQuery.value = input
@@ -26,20 +29,41 @@ function serched (input) {
     })
 }
 
+function filtered(role){
+    if (!role){filteredUserList.value = props.userList}
+    else{
+    filteredUserList.value = props.userList.filter((user) => {
+        return user.role==role;
+    })}
+}
 
 const updateUserForm = useForm({
+    'action': false,
     'recruiter_id': [],
-    'role': ""
+    'role': '',
+    'team_id': ''
 });
 const curentUserId = ref(null);
 
-
-
-function formUpdate (list) {
+function recruiterListUpdate (list) {
+    updateUserForm.action = 'recruitersList';
     updateUserForm.recruiter_id = [];
     list.forEach(recruiter => {
         updateUserForm.recruiter_id.push(recruiter.id)
     });
+    updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
+}
+
+function roleUpdate (role) {
+
+    updateUserForm.action = 'role';
+    updateUserForm.role = role;
+    updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
+}
+function teamUpdate (team) {
+    console.log(team);
+    updateUserForm.action = 'team';
+    updateUserForm.team_id = team.id;
     updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
 }
 
@@ -66,7 +90,7 @@ function formUpdate (list) {
             <!-- Фильтры
             поиск, фильтр статусы, архивные
             -->
-            <div class=" my-4  rounded-md w-full gap-2  flex items-start  justify-start flex-wrap">
+            <div class=" my-4  rounded-md w-full gap-2 flex items-start  justify-start flex-wrap">
                 <!-- <div class=" md:w-2/6 justify-center flex items-center w-11/12 ">
                     <VueMultiselect @update:model-value="selectedStatus" :multiple="true"
                         selectLabel="добавить в фильтр" deselectLabel="убрать из фильтра" v-model="statuseShortList"
@@ -76,7 +100,7 @@ function formUpdate (list) {
                 </div> -->
 
 
-                <div class="  w-8/12  justify-center flex items-center bg-white rounded-md ">
+                <div class="  w-7/12  justify-center flex items-center bg-white rounded-md ">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2  z-10  " fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -88,14 +112,13 @@ function formUpdate (list) {
                 </div>
 
 
-                <!-- <div class=" md:w-1/6 w-4/12 justify-center flex items-center ">
-                    <select @change="selectTrashed" v-model="isTrashed.trashed"
-                        :class="props.trashed == 'only' ? 'bg-slate-400' : 'bg-green-400'"
-                        class=" form-select rounded-md shadow-md cursor-pointer " name="" id="">
-                        <option class="bg-slate-400 " value="only">В архиве </option>
-                        <option class="bg-green-400" value="no">Активные </option>
-                    </select>
-                </div> -->
+
+                <div class="  w-3/12 justify-center flex items-center ">
+                    <VueMultiselect @update:model-value="filtered" v-model="filterRoleStr" :multiple="false"
+                                selectLabel="фильтровать по"  deselectLabel="очистить фильтр" :options="props.roleList"
+                                :searchable="false" placeholder="Роли">
+                            </VueMultiselect>
+                </div>
             </div>
 
 
@@ -113,7 +136,7 @@ function formUpdate (list) {
                     <div :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
                         class=" text-sm overflow-x-clip absolute mx-3 -mt-12 md:mr-14 md:-mt-5 right-0  h-fit rounded-sm px-1">
                         {{
-                         user.role 
+                         user.role
                         }}</div>
                 </div>
                 <div v-if="user.id == curentUserId"
@@ -123,18 +146,27 @@ function formUpdate (list) {
                         <h3 class="flex-1 ">Роль</h3>
                         <div class="  justify-center flex items-center w-11/12 ">
                             <!-- <VueMultiselect @update:model-value="user.recruiters" :multiple="true" -->
-                            <VueMultiselect @update:model-value="formUpdate" :multiple="false"
-                                selectLabel="добавить рекрутера" deselectLabel="убрать рекрутера"
-                                v-model="user.recruiters" track-by="name" :options="props.recruiterList" label="name"
-                                :searchable="true" placeholder="поиск рекрутера">
+                            <VueMultiselect @update:model-value="roleUpdate" :multiple="false"
+                                selectLabel="выбрать роль" v-model="user.role" :options="props.roleList"
+                                :searchable="false" placeholder="выбор роли">
                             </VueMultiselect>
                         </div>
                     </div>
                     <div class="w-full">
+                        <h3 class="flex-1 ">Команда</h3>
+                        <div class="  justify-center flex items-center w-11/12 ">
+                            <!-- <VueMultiselect @update:model-value="user.recruiters" :multiple="true" -->
+                            <VueMultiselect @update:model-value="teamUpdate" :multiple="false"
+                                selectLabel="Добавить в команду" v-model="user.team" :options="props.teamsList"
+                                label="name" :searchable="true" placeholder="выбор команды">
+                            </VueMultiselect>
+                        </div>
+                    </div>
+                    <div class="w-full" v-if="user.role != 'assistant'">
                         <h3 class="flex-1 ">Доступ к рекрутерам</h3>
                         <div class="  justify-center flex items-center w-11/12 ">
                             <!-- <VueMultiselect @update:model-value="user.recruiters" :multiple="true" -->
-                            <VueMultiselect @update:model-value="formUpdate" :multiple="true"
+                            <VueMultiselect @update:model-value="recruiterListUpdate" :multiple="true"
                                 selectLabel="добавить рекрутера" deselectLabel="убрать рекрутера"
                                 v-model="user.recruiters" track-by="name" :options="props.recruiterList" label="name"
                                 :searchable="true" placeholder="поиск рекрутера">
