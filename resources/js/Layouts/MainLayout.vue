@@ -12,13 +12,15 @@ import FlashMessages from "@/Components/FlashMessages.vue";
 
 
 const showNaw = ref(false);
+const showSubMenu = ref(false);
 </script>
 
 <template>
     <div class="flex  h-full bg-systems-500 min-h-screen  md:max-w-fit md:min-w-full ">
         <!-- <div class="flex flex-row h-full bg-systems-50 min-h-screen md:max-w-full w-sm "> -->
 
-        <div class="shrink bg-systems-800 transition-all " :class="showNaw ? 'w-44 md:w-12' : 'w-12 md:w-64'">
+        <div class="shrink bg-systems-800 transition-all "
+            :class="showSubMenu ? 'w-44 md:w-64' : showNaw ? 'w-44 md:w-12' : 'w-12 md:w-64'">
             <div class="sticky top-0">
                 <div class=" bg-systems-900 text-white h-16 flex  items-center justify-between ">
                     <div class="mx-auto overflow-clip md:truncate md:text-lg leading-tight text-clip tracking-tight">
@@ -29,7 +31,7 @@ const showNaw = ref(false);
                         </svg></div>
                 </div>
 
-                <MainMenu />
+                <MainMenu @clickSubMenu="showSubMenu = !showSubMenu" />
             </div>
         </div>
         <div class="flex-auto w-4/12">

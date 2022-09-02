@@ -60,8 +60,11 @@ Route::post('/imports/payments/', [ImportPaymentController::class, 'create'])->m
 Route::post('/imports/payments/store/', [ImportPaymentController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.store');
 
 
-Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('users.index');
-Route::put('/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('users.update');
+Route::get('/setting/users', [UserController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('users.index');
+Route::get('/setting/users/create', [UserController::class, 'create'])->middleware(['auth', 'verified', 'admin'])->name('users.create');
+Route::post('/setting/users/check-email', [UserController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('users.checkEmail');
+Route::post('/setting/users/store', [UserController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('users.store');
+Route::put('/setting/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('users.update');
 
 
 // Route::get('/demo-mail', function () {

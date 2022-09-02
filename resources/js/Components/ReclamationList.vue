@@ -57,7 +57,11 @@ function deleteReclamation (id) {
 
                 <div class="w-1/12 bg-white h-40   rounded-md  flex justify-center  truncate"
                     :class="statusColors[reclamation.status?.id].label">
-                    <div class=" -rotate-90 my-auto ">{{ reclamation.status?.title }}</div>
+
+                    <div class="-rotate-90  my-auto  ">
+                        <span>{{ reclamation.status?.title }}</span>
+                    </div>
+
                 </div>
 
                 <Link :href="route('reclamations.edit', { 'id': reclamation.id })"

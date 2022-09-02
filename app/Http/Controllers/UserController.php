@@ -7,7 +7,9 @@ use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -32,9 +34,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        return Inertia::render('User/Create', [
+            'recruiterList' => Recruiter::select('id', 'name')->get(),
+            'roleList' => Role::select('title')->get()->pluck('title'),
+            'teamsList' => Team::select('id', 'name')->get()
+        ]);
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $validator = Validator::make($request->only('email'), ['email' => 'required|string|email|max:255|unique:users']);
+        return $validator->errors();
     }
 
     /**
@@ -45,7 +57,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => ['required'],
+            'team' => ['nullable', 'exists:teams,id'],
+            'role' => ['required', 'exists:roles,title'],
+            'dontConfirmMail' => ['boolean']
+
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'team_id' => $request->team,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+            'email_verified_at' => $request->dontConfirmMail ? now() : null
+        ]);
+        $user->recruiters()->sync($request->recruiter_id);
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $request->name добавлен"]);
     }
 
     /**
@@ -83,7 +114,6 @@ class UserController extends Controller
 
         switch ($request->action) {
             case 'role':
-                //  dd($request->only('role'));
                 $user->update($request->only('role'));
                 return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "новая роль у $user->name $request->role"]);
             case 'recruitersList':
