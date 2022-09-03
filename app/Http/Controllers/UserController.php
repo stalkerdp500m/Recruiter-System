@@ -6,6 +6,7 @@ use App\Models\Recruiter;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
+use App\Notifications\createUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -36,6 +37,7 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
+
         return Inertia::render('User/Create', [
             'recruiterList' => Recruiter::select('id', 'name')->get(),
             'roleList' => Role::select('title')->get()->pluck('title'),
@@ -62,9 +64,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required'],
             'team' => ['nullable', 'exists:teams,id'],
-            'role' => ['required', 'exists:roles,title'],
-            'dontConfirmMail' => ['boolean']
-
+            'role' => ['required', 'exists:roles,title']
         ]);
 
         $user = User::create([
@@ -73,9 +73,10 @@ class UserController extends Controller
             'team_id' => $request->team,
             'role' => $request->role,
             'password' => Hash::make($request->password),
-            'email_verified_at' => $request->dontConfirmMail ? now() : null
+            'email_verified_at' =>  now()
         ]);
         $user->recruiters()->sync($request->recruiter_id);
+        $user->notify(new createUser($request->only(['name', 'email', 'password'])));
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $request->name добавлен"]);
     }
 
@@ -123,7 +124,7 @@ class UserController extends Controller
                 $user->update($request->only('team_id'));
                 return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Команда пользователя $user->name обновлена"]);
             default:
-                # code...
+                return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Действие не определено"]);
                 break;
         }
     }

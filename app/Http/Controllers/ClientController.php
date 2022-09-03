@@ -18,6 +18,8 @@ class ClientController extends Controller
     public function index()
     {
 
+        // добавить ограничение (если нет доступа ни к одному рекрутеру - нет возможности поиска)
+
 
         $searchResults = Client::where('pasport', Request::input('pasport', ''))
             ->with(['payments' => function ($query) {
