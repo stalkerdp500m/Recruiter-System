@@ -2,7 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import VueMultiselect from 'vue-multiselect'
 import { Link, useForm, usePage } from "@inertiajs/inertia-vue3";
-import CreateRecruiterForm from "@/Components/CreateRecruiterForm";
+import CreateTeamForm from "@/Components/CreateTeamForm";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 
@@ -12,33 +12,39 @@ const props = defineProps({
     teamsList: Object
 });
 
+
+// Добавить список асистентов (в моделе добавляю связь асистент в которой получаю пользователей которые в этой команде и у них роль асистента )
+
+console.log(props);
+
 const showCreateRecruiterForm = ref(false);
 
 
-const updateRecruiterForm = useForm({
-    'userName': '',
-    'team_id': '',
-    'teamName': ''
+const updateTeamForm = useForm({
+    'recruiters': [],
+    'teamName':''
 });
 
 
 
-function recruiterTeamUpdate (team, recruiter) {
+function teamUpdate (newRecruitersList,team) {
 
-    updateRecruiterForm.team_id = team.id
-    updateRecruiterForm.teamName = team.name
-    updateRecruiterForm.userName = recruiter.name
-    updateRecruiterForm.put(route('control.recruiters.update', { 'id': recruiter.id }), { preserveScroll: true });
+    updateTeamForm.recruiters = [];
+    newRecruitersList.forEach(recruiter => {
+        updateTeamForm.recruiters.push(recruiter.id)
+    });
+    updateTeamForm.teamName=team.name;
+ updateTeamForm.put(route('control.teams.update', { 'id': team.id }), { preserveScroll: true });
 }
 
-const filteredRecruiterList = ref(props.recruiterList);
+const filteredTeamsList = ref(props.teamsList);
 const searchRecruiterQuery = ref('');
 
 function serched (input) {
     searchRecruiterQuery.value = input;
-    filteredRecruiterList.value = props.recruiterList.filter((recruiter) => {
+    filteredTeamsList.value = props.teamsList.filter((team) => {
         let searchStr = input.toLowerCase();
-        return recruiter.name.toLowerCase().includes(searchStr)
+        return team.name.toLowerCase().includes(searchStr)
     })
 }
 
@@ -48,18 +54,13 @@ function serched (input) {
 
 <template>
 
-    <Head title="Управлиение пользователями" />
+    <Head title="Управлиение командами" />
 
     <MainLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Управлиение рекрутерами
-            </h2>
-        </template>
         <div class="md:px-10">
-            <h1 class="text-2xl  text-center my-8">Управление рекрутерами</h1>
-            <h2 class="text-xl  text-center my-8">Рекрутер - сущность к которой привязываютсы выплаты и рекламации (не
-                имеет доступа к системе)</h2>
+            <h1 class="text-2xl  text-center my-8">Управление командами</h1>
+            <h2 class="text-xl  text-center my-8">Команда - сущность к которой привязываютсы рерутеры и пользователи
+            </h2>
             <div class="flex gap-2">
                 <div class="  w-7/12  justify-center flex items-center bg-white rounded-md ">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2  z-10  " fill="none" viewBox="0 0 24 24"
@@ -78,26 +79,28 @@ function serched (input) {
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p class=" md:ml-4"> Добавить рекрутера</p>
+                        <p class=" md:ml-4"> Добавить команду</p>
                     </div>
                 </div>
             </div>
 
-            <CreateRecruiterForm :showForm="showCreateRecruiterForm" :teamsList="props.teamsList" />
+            <CreateTeamForm :showForm="showCreateRecruiterForm" :teamsList="props.teamsList" />
 
-            <div class="bg-white my-2 p-3 rounded-md shadow-md   " v-for="(recruiter, i) in filteredRecruiterList"
-                :key="i">
+            <div class="bg-white my-2 p-3 rounded-md shadow-md   " v-for="(team, i) in filteredTeamsList" :key="i">
                 <div class="flex justify-start cursor-pointer items-center h-12 ">
-                    <h3 class="text-xl">{{ recruiter.name }} </h3>
+                    <h3 class="text-xl">{{ team.name }} </h3>
                 </div>
                 <div
                     class=" py-4 border-t-2 border-systems-700/50   w-full gap-2  flex flex-col items-center md:justify-center justify-evenly flex-wrap">
                     <div class="w-full">
-                        <h3 class="flex-1 ">Команда</h3>
+                        <h3 class="flex-1 ">Рекрутеры</h3>
                         <div class="  justify-center flex items-center w-11/12">
-                            <VueMultiselect @update:model-value="recruiterTeamUpdate($event, recruiter)"
-                                :multiple="false" selectLabel="Изменить команду на эту" v-model="recruiter.team"
-                                :options="props.teamsList" label="name" :searchable="true" placeholder="выбор команды">
+                            <!-- @update:model-value="recruiterTeamUpdate($event, recruiter)" -->
+                            <VueMultiselect @update:model-value="teamUpdate($event, team)" :multiple="true"
+                                selectLabel="Перенести в эту команду" track-by="name"
+                                deselectLabel="убрать из этой команды" v-model="team.recruiters"
+                                :options="props.recruiterList" label="name" :searchable="true"
+                                placeholder="выбор рекрутера">
                             </VueMultiselect>
                         </div>
                     </div>

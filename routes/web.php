@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
 use App\Http\Controllers\RecruiterController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -66,10 +67,15 @@ Route::get('/control/users/create', [UserController::class, 'create'])->middlewa
 Route::post('/control/users/check-email', [UserController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('control.users.checkEmail');
 Route::post('/control/users/store', [UserController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('control.users.store');
 Route::put('/control/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('control.users.update');
+
 Route::get('/control/recruiters', [RecruiterController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.index');
 Route::put('/control/recruiters/{recruiter}', [RecruiterController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.update');
 Route::post('/control/recruiters/check-email', [RecruiterController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.checkEmail');
 Route::post('/control/recruiters/store', [RecruiterController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.store');
+
+Route::get('/control/teams', [TeamController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('control.teams.index');
+Route::put('/control/teams/{team}', [TeamController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('control.teams.update');
+Route::post('/control/teams/store', [TeamController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('control.teams.store');
 
 
 // Route::get('/demo-mail', function () {

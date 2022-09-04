@@ -11,10 +11,10 @@ class Team extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class);
     }
     public function recruiters()
     {
-        return $this->belongsToMany(Recruiter::class);
+        return $this->hasMany(Recruiter::class);
     }
 }

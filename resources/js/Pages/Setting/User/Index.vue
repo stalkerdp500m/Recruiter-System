@@ -52,18 +52,18 @@ function recruiterListUpdate (list) {
     list.forEach(recruiter => {
         updateUserForm.recruiter_id.push(recruiter.id)
     });
-    updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
+    updateUserForm.put(route('control.users.update', { 'id': curentUserId.value }), { preserveScroll: true });
 }
 
 function roleUpdate (role) {
     updateUserForm.action = 'role';
     updateUserForm.role = role;
-    updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
+    updateUserForm.put(route('control.users.update', { 'id': curentUserId.value }), { preserveScroll: true });
 }
 function teamUpdate (team) {
     updateUserForm.action = 'team';
     updateUserForm.team_id = team.id;
-    updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
+    updateUserForm.put(route('control.users.update', { 'id': curentUserId.value }), { preserveScroll: true });
 }
 
 
@@ -135,7 +135,7 @@ function teamUpdate (team) {
                     <div :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
                         class=" text-sm overflow-x-clip absolute mx-3 -mt-12 md:mr-14 md:-mt-5 right-0  h-fit rounded-sm px-1">
                         {{
-                                user.role
+                        user.role
                         }}</div>
                 </div>
                 <div v-if="user.id == curentUserId"
