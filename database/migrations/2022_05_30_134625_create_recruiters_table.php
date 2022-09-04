@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('recruiters', function (Blueprint $table) {
             $table->id();
             $table->string('name', 200)->nullable();
-            $table->string('mail', 200)->nullable();
+            $table->string('email', 200)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

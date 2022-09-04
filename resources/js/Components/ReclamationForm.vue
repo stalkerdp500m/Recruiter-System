@@ -53,7 +53,6 @@ function sendReclamation () {
 }
 
 function clientDataAutocomplete (data) {
-    console.log('data', data);
     if (data.pasport == reclamationForm.pasport) {
         reclamationForm.client_name = data.name
         reclamationForm.client_id = data.client_id

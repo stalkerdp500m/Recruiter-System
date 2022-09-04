@@ -61,14 +61,15 @@ Route::post('/imports/payments/', [ImportPaymentController::class, 'create'])->m
 Route::post('/imports/payments/store/', [ImportPaymentController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.store');
 
 
-Route::get('/setting/users', [UserController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('users.index');
-Route::get('/setting/users/create', [UserController::class, 'create'])->middleware(['auth', 'verified', 'admin'])->name('users.create');
-Route::post('/setting/users/check-email', [UserController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('users.checkEmail');
-Route::post('/setting/users/store', [UserController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('users.store');
-Route::put('/setting/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('users.update');
-Route::get('/setting/recruiters', [RecruiterController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('recruiters.index');
-Route::put('/setting/recruiters/{recruiter}', [RecruiterController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('recruiters.update');
-Route::post('/setting/recruiters/check-email', [RecruiterController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('recruiters.checkEmail');
+Route::get('/control/users', [UserController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('control.users.index');
+Route::get('/control/users/create', [UserController::class, 'create'])->middleware(['auth', 'verified', 'admin'])->name('control.users.create');
+Route::post('/control/users/check-email', [UserController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('control.users.checkEmail');
+Route::post('/control/users/store', [UserController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('control.users.store');
+Route::put('/control/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('control.users.update');
+Route::get('/control/recruiters', [RecruiterController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.index');
+Route::put('/control/recruiters/{recruiter}', [RecruiterController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.update');
+Route::post('/control/recruiters/check-email', [RecruiterController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.checkEmail');
+Route::post('/control/recruiters/store', [RecruiterController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('control.recruiters.store');
 
 
 // Route::get('/demo-mail', function () {

@@ -37,7 +37,7 @@ const emailErrors = ref(undefined);
 
 function chekEmail () {
     axios
-        .post(route('users.checkEmail'), { email: form.email })
+        .post(route('control.users.checkEmail'), { email: form.email })
         .then((response) => {
             console.log(response.data);
             if (response.status == "200") {
@@ -52,8 +52,10 @@ function chekEmail () {
 
 const submit = () => {
     // console.log(form);
-    form.post(route("users.store"), {
-        onFinish: () => form.reset('name', 'email'),
+    form.post(route("control.users.store"), {
+        onSuccess: () => {
+            form.reset()
+        }
     });
 };
 </script>

@@ -19,7 +19,7 @@ class RecruiterFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'mail' => $this->faker->unique()->safeEmail(),
+            'email' => $this->faker->unique()->safeEmail(),
             'team_id' => Team::get()->random(),
         ];
     }

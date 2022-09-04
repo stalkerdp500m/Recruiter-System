@@ -120,7 +120,7 @@ const userRole = usePage().props.value.auth.user.role
 
         <BreezeDropdown align="bottom" width="54" v-if="userRole === 'admin'" @click="$emit('clickSubMenu')">
             <template #trigger>
-                <div :class="isUrl('users', true) ? 'opacity-100' : 'opacity-40'"
+                <div :class="isUrl('control', true) ? 'opacity-100' : 'opacity-40'"
                     class="text-white flex flex-row items-center justify-start overflow-x-clip cursor-pointer hover:opacity-100 ">
                     <div class="px-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
@@ -135,17 +135,19 @@ const userRole = usePage().props.value.auth.user.role
             </template>
             <template #content>
                 <div class=" py-2 text-sm   rounded shadow-xl cursor-pointer  ">
-                    <Link :href="route('users.index')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                    <Link :href="route('control.users.index')"
+                        class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Управлять пользователями
                     </Link>
-                    <Link :href="route('recruiters.index')"
+                    <Link :href="route('control.recruiters.index')"
                         class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Управлять рекрутерами
                     </Link>
                     <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Управлять командами
                     </Link>
-                    <Link :href="route('users.create')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                    <Link :href="route('control.users.create')"
+                        class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Добавить пользователя
                     </Link>
 

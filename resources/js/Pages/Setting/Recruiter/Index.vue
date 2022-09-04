@@ -21,8 +21,8 @@ const updateRecruiterForm = useForm({
     'teamName': ''
 });
 
-function checkClick () {
-    console.log('click');
+function reloud () {
+    Inertia.reload({ only: ['recruiterList'] })
 }
 
 function recruiterTeamUpdate (team, recruiter) {
@@ -75,17 +75,17 @@ function serched (input) {
                 <div class="w-4/12 ">
                     <div @click="showCreateRecruiterForm = !showCreateRecruiterForm"
                         class="bg-systems-800 rounded-md text-white shadow-md px-4 py-2  text-center cursor-pointer flex">
-                        Добавить рекрутера
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3 " fill="none" viewBox="0 0 24 24"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6  " fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
+                        <p class=" md:ml-4"> Добавить рекрутера</p>
                     </div>
                 </div>
             </div>
 
-            <CreateRecruiterForm :showForm="showCreateRecruiterForm" />
+            <CreateRecruiterForm :showForm="showCreateRecruiterForm" :teamsList="props.teamsList" />
 
             <div class="bg-white my-2 p-3 rounded-md shadow-md   " v-for="(recruiter, i) in filteredRecruiterList"
                 :key="i">

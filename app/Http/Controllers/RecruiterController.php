@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Recruiter;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +19,7 @@ class RecruiterController extends Controller
     public function index()
     {
         return Inertia::render('Setting/Recruiter/Index', [
-            'recruiterList' => Recruiter::select('id', 'name', 'team_id')->with('team')->get(),
+            'recruiterList' => Recruiter::select('id', 'name', 'team_id')->with('team')->orderBy('created_at', 'desc')->get(),
             'teamsList' => Team::select('id', 'name')->get()
         ]);
     }
@@ -50,7 +49,18 @@ class RecruiterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:recruiters',
+            'team' => ['nullable', 'exists:teams,id'],
+        ]);
+
+        $recruiter = Recruiter::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'team_id' => $request->team,
+        ]);
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекрутер $request->name добавлен"]);
     }
 
     /**

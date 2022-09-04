@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('recruiters', function (Blueprint $table) {
-            $table->unsignedBigInteger('team_id')->nullable()->after('mail');
+            $table->unsignedBigInteger('team_id')->nullable()->after('email');
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('SET NULL');
         });
     }

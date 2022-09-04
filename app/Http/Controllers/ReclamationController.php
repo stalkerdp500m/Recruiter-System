@@ -106,7 +106,7 @@ class ReclamationController extends Controller
         );
 
         // return Redirect::route('reclamations.index');
-        return redirect()->action([ReclamationController::class, 'index'])->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация Создана"]);;
+        return redirect()->action([ReclamationController::class, 'index'])->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация Создана"]);
     }
 
     /**
