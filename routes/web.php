@@ -7,6 +7,7 @@ use App\Http\Controllers\Import\IndexController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
+use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -65,6 +66,9 @@ Route::get('/setting/users/create', [UserController::class, 'create'])->middlewa
 Route::post('/setting/users/check-email', [UserController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('users.checkEmail');
 Route::post('/setting/users/store', [UserController::class, 'store'])->middleware(['auth', 'verified', 'admin'])->name('users.store');
 Route::put('/setting/users/{user}', [UserController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('users.update');
+Route::get('/setting/recruiters', [RecruiterController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('recruiters.index');
+Route::put('/setting/recruiters/{recruiter}', [RecruiterController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('recruiters.update');
+Route::post('/setting/recruiters/check-email', [RecruiterController::class, 'checkEmail'])->middleware(['auth', 'verified', 'admin'])->name('recruiters.checkEmail');
 
 
 // Route::get('/demo-mail', function () {

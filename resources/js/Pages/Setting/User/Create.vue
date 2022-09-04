@@ -60,13 +60,9 @@ const submit = () => {
 
     <template>
 
-    <Head title="Управлиение пользователями" />
+    <Head title="Добавить пользователя" />
 
     <MainLayout>
-
-        <Head title="Register" />
-
-
 
         <form @submit.prevent="submit" autocomplete="off" class="w-10/12 md:w-1/2 mx-auto">
             <div class="text-center my-4 ">Добавить пользователя</div>

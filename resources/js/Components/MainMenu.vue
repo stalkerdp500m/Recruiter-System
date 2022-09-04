@@ -138,7 +138,8 @@ const userRole = usePage().props.value.auth.user.role
                     <Link :href="route('users.index')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Управлять пользователями
                     </Link>
-                    <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
+                    <Link :href="route('recruiters.index')"
+                        class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Управлять рекрутерами
                     </Link>
                     <Link :href="route('profile')" class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">

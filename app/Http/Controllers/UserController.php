@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return Inertia::render('User/Index', [
+        return Inertia::render('Setting/User/Index', [
             'userList' => User::with(['recruiters:id,name', 'team'])->orderBy('created_at', 'desc')->get(),
             'recruiterList' => Recruiter::select('id', 'name')->get(),
             'roleList' => Role::select('title')->get()->pluck('title'),
@@ -38,7 +38,7 @@ class UserController extends Controller
     public function create(Request $request)
     {
 
-        return Inertia::render('User/Create', [
+        return Inertia::render('Setting/User/Create', [
             'recruiterList' => Recruiter::select('id', 'name')->get(),
             'roleList' => Role::select('title')->get()->pluck('title'),
             'teamsList' => Team::select('id', 'name')->get()

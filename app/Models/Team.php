@@ -13,4 +13,8 @@ class Team extends Model
     {
         return $this->belongsToMany(User::class);
     }
+    public function recruiters()
+    {
+        return $this->belongsToMany(Recruiter::class);
+    }
 }

@@ -44,4 +44,9 @@ class Recruiter extends Model
     {
         return $this->belongsToMany(Payment::class)->wherePivotIn('id', $id);
     }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
 }

@@ -13,7 +13,7 @@ const props = defineProps({
     teamsList: Object
 });
 
-
+console.log(props);
 
 
 const searchUserQuery = ref('');
@@ -56,13 +56,11 @@ function recruiterListUpdate (list) {
 }
 
 function roleUpdate (role) {
-
     updateUserForm.action = 'role';
     updateUserForm.role = role;
     updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
 }
 function teamUpdate (team) {
-    console.log(team);
     updateUserForm.action = 'team';
     updateUserForm.team_id = team.id;
     updateUserForm.put(route('users.update', { 'id': curentUserId.value }), { preserveScroll: true });
