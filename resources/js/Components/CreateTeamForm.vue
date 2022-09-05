@@ -25,10 +25,10 @@ const newRecruiterForm = useForm({
 
 
 const submit = () => {
-    newRecruiterForm.post(route("control.recruiters.store"), {
+    newRecruiterForm.post(route("control.teams.store"), {
         onSuccess: () => {
             newRecruiterForm.reset();
-            Inertia.visit(route('control.teams.index'), { only: ['recruiterList'],preserveScroll: true })
+            Inertia.visit(route('control.teams.index'), { only: ['recruiterList'], preserveScroll: true })
         }
     });
 };

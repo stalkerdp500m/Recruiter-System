@@ -9,32 +9,50 @@ import { ref } from "vue";
 
 const props = defineProps({
     recruiterList: Object,
-    teamsList: Object
+    teamsList: Object,
+    userList: Object
 });
 
 
-// Добавить список асистентов (в моделе добавляю связь асистент в которой получаю пользователей которые в этой команде и у них роль асистента )
 
 console.log(props);
 
 const showCreateRecruiterForm = ref(false);
 
 
-const updateTeamForm = useForm({
+const updateRecruitersTeamForm = useForm({
     'recruiters': [],
-    'teamName':''
+    'action': 'recruiters',
+    'teamName': ''
+});
+const updateAssistantTeamForm = useForm({
+    'assistants': [],
+    'action': 'assistants',
+    'teamName': ''
 });
 
 
 
-function teamUpdate (newRecruitersList,team) {
 
-    updateTeamForm.recruiters = [];
+
+function teamUpdate (newRecruitersList, team) {
+
+    updateRecruitersTeamForm.recruiters = [];
     newRecruitersList.forEach(recruiter => {
-        updateTeamForm.recruiters.push(recruiter.id)
+        updateRecruitersTeamForm.recruiters.push(recruiter.id)
     });
-    updateTeamForm.teamName=team.name;
- updateTeamForm.put(route('control.teams.update', { 'id': team.id }), { preserveScroll: true });
+    updateRecruitersTeamForm.teamName = team.name;
+    updateRecruitersTeamForm.put(route('control.teams.update', { 'id': team.id }), { preserveScroll: true });
+}
+
+
+function teamUpdateAssistants (newAssistantsList, team) {
+    updateAssistantTeamForm.assistants = [];
+    newAssistantsList.forEach(recruiter => {
+        updateAssistantTeamForm.assistants.push(recruiter.id)
+    });
+    updateAssistantTeamForm.teamName = team.name;
+    updateAssistantTeamForm.put(route('control.teams.update', { 'id': team.id }), { preserveScroll: true });
 }
 
 const filteredTeamsList = ref(props.teamsList);
@@ -95,12 +113,25 @@ function serched (input) {
                     <div class="w-full">
                         <h3 class="flex-1 ">Рекрутеры</h3>
                         <div class="  justify-center flex items-center w-11/12">
-                            <!-- @update:model-value="recruiterTeamUpdate($event, recruiter)" -->
                             <VueMultiselect @update:model-value="teamUpdate($event, team)" :multiple="true"
                                 selectLabel="Перенести в эту команду" track-by="name"
                                 deselectLabel="убрать из этой команды" v-model="team.recruiters"
                                 :options="props.recruiterList" label="name" :searchable="true"
                                 placeholder="выбор рекрутера">
+                            </VueMultiselect>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class=" py-4 border-t-2  bg-systems-300 p-4 rounded-md  w-full gap-2  flex flex-col items-center md:justify-center justify-evenly flex-wrap">
+                    <div class="w-full">
+                        <h3 class="flex-1 my-2 ">Асистенты</h3>
+                        <div class="   justify-center flex items-center w-11/12">
+                            <VueMultiselect @update:model-value="teamUpdateAssistants($event, team)" :multiple="true"
+                                selectLabel="Назначить асистентом команды" track-by="name"
+                                deselectLabel="убрать из этой команды" v-model="team.assistants"
+                                :options="props.userList" label="name" :searchable="true"
+                                placeholder="выбор пользователя">
                             </VueMultiselect>
                         </div>
                     </div>

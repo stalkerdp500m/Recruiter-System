@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Recruiter;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -17,9 +19,12 @@ class TeamController extends Controller
      */
     public function index()
     {
+        //  dd(Team::select('id', 'name')->with('asistants')->get());
+
         return Inertia::render('Setting/Team/Index', [
-            'teamsList' => Team::select('id', 'name')->with('recruiters')->orderBy('created_at', 'desc')->get(),
-            'recruiterList' => Recruiter::select('id', 'name')->get()
+            'teamsList' => Team::select('id', 'name')->with(['recruiters', 'assistants'])->orderBy('created_at', 'desc')->get(),
+            'recruiterList' => Recruiter::select('id', 'name')->get(),
+            'userList' => User::select('id', 'name')->orderBy('created_at', 'desc')->get(),
         ]);
     }
 
@@ -41,7 +46,14 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        Team::create([
+            'name' => $request->name,
+        ]);
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Команда $request->name добавлена"]);
     }
 
     /**
@@ -75,9 +87,29 @@ class TeamController extends Controller
      */
     public function update(Request $request, Team $team)
     {
-        $team->recruiters()->update(['team_id' => null]);
-        Recruiter::whereIn('id', $request->recruiters)->update(['team_id' => $team->id]);
-        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => $request['userName'] . "команда " . $request['teamName'] . " обновлена"]);
+        $massageAction = "";
+        try {
+            DB::beginTransaction();
+            switch ($request->action) {
+                case 'recruiters':
+                    $massageAction = "рекрутеры";
+                    $team->recruiters()->update(['team_id' => null]);
+                    Recruiter::whereIn('id', $request->recruiters)->update(['team_id' => $team->id]);
+                    break;
+                case 'assistants':
+                    $massageAction = "асистенты";
+                    $team->assistants()->update(['team_id' => null]);
+                    User::whereIn('id', $request->assistants)->update(['role' => 'assistant', 'team_id' => $team->id]);
+                    break;
+                default:
+                    return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Действие не определено"]);
+            }
+            DB::commit();
+            return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => $massageAction . " команды  " . $request['teamName'] . " обновлены"]);
+        } catch (\Exception $expection) {
+            DB::rollBack();
+            return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Ошибка, операция не выполнена"]);
+        }
     }
 
     /**

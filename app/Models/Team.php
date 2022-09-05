@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
+
+    protected $guarded = [];
     use HasFactory;
 
     public function users()
@@ -16,5 +18,10 @@ class Team extends Model
     public function recruiters()
     {
         return $this->hasMany(Recruiter::class);
+    }
+
+    public function assistants()
+    {
+        return $this->hasMany(User::class)->where(['role' => 'assistant']);
     }
 }
