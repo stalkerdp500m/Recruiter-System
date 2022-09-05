@@ -147,10 +147,6 @@ const userRole = usePage().props.value.auth.user.role
                         class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
                     Управлять командами
                     </Link>
-                    <Link :href="route('control.users.create')"
-                        class="block px-6 py-2 hover:text-white hover:bg-systems-700 ">
-                    Добавить пользователя
-                    </Link>
 
                 </div>
             </template>

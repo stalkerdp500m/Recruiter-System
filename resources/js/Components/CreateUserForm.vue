@@ -1,7 +1,8 @@
 <script setup>
 import BreezeButton from "@/Components/Breeze/Button.vue";
+import { Inertia } from '@inertiajs/inertia';
 import { ref } from "vue";
-import MainLayout from "@/Layouts/MainLayout.vue";
+
 import VueMultiselect from 'vue-multiselect'
 import BreezeInput from "@/Components/Breeze/Input.vue";
 import BreezeLabel from "@/Components/Breeze/Label.vue";
@@ -9,6 +10,7 @@ import BreezeValidationErrors from "@/Components/Breeze/ValidationErrors.vue";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
+    showForm: Boolean,
     teamsList: Object,
     roleList: Object,
     recruiterList: Object,
@@ -21,7 +23,6 @@ const form = useForm({
     recruiters: "",
     team: false,
     password: "",
-    // dontConfirmMail: true
 });
 
 function pasGenerate () {
@@ -51,21 +52,17 @@ function chekEmail () {
 }
 
 const submit = () => {
-    // console.log(form);
     form.post(route("control.users.store"), {
         onSuccess: () => {
-            form.reset()
+            form.reset();
+            Inertia.visit(route('control.users.index'), { only: ['userList'], preserveScroll: true });
         }
     });
 };
 </script>
 
-    <template>
-
-    <Head title="Добавить пользователя" />
-
-    <MainLayout>
-
+        <template>
+    <div v-if="props.showForm" class="  rounded-md p-2 m-4 border">
         <form @submit.prevent="submit" autocomplete="off" class="w-10/12 md:w-1/2 mx-auto">
             <div class="text-center my-4 ">Добавить пользователя</div>
 
@@ -78,7 +75,6 @@ const submit = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
                             :class="emailErrors ? 'text-red-600' : 'text-green-600'" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2">
-                            <!-- absolute left-3/4 -->
                             <path v-if="emailErrors" stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                             <path v-else-if="emailErrors != undefined" stroke-linecap="round" stroke-linejoin="round"
@@ -145,12 +141,6 @@ const submit = () => {
 
 
             <div class="flex  justify-center mt-4 ">
-                <!-- <input v-model="form.dontConfirmMail"
-                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                    type="checkbox" value="" id="dontConfirmMail">
-                <label class="form-check-label inline-block text-gray-800" for="dontConfirmMail">
-                    Без подтверждения почты
-                </label> -->
                 <BreezeButton class="ml-4 font-bold" :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing">
                     Добавить пользователя
@@ -158,8 +148,8 @@ const submit = () => {
             </div>
         </form>
         <BreezeValidationErrors class="mb-4 bg-white rounded-md p-4 w-10/12 md:w-1/2 mx-auto my-5" />
-    </MainLayout>
+    </div>
 </template>
 
-<style src="vue-multiselect/dist/vue-multiselect.css">
-</style>
+    <!-- <style src="vue-multiselect/dist/vue-multiselect.css">
+    </style> -->
