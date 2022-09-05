@@ -10,7 +10,6 @@ import BreezeValidationErrors from "@/Components/Breeze/ValidationErrors.vue";
 
 const props = defineProps({
     showForm: Boolean,
-    teamsList: Object,
 });
 
 
