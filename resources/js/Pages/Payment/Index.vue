@@ -112,7 +112,7 @@ function recruiterAllSum (recruiter) {
                         </div>
                         <div class="font-semibold text-sm">
                             <div class="text-green-800 "> {{
-                                    `${recruiterAllSum(recruiter).sumForRecruits} PLN за ${recruiterAllSum(recruiter).count}
+                            `${recruiterAllSum(recruiter).sumForRecruits} PLN за ${recruiterAllSum(recruiter).count}
                             рекрутаций` }}</div>
                             <div v-for="addPaym in recruiter.add_payments">
                                 <span

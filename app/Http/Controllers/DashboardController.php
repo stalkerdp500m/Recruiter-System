@@ -29,6 +29,20 @@ class DashboardController extends Controller
 
 
 
+        // $paymentData = Recruiter::recruitersAcces(Auth::user())->withCount(['payments as countRecrutation' => function ($query) {
+        //     $query->dashboardFilter('2021', '1', '2021',  '3');
+        // }])->get();
+        // dd($paymentData);
+
+        // Payment::whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'))
+        //     ->selectRaw('count(id) as countRecrutation, month, recruiter_id, year')
+        //     ->where('bonus', '>', 0)
+        //     ->groupBy('recruiter_id', 'month', 'year')
+        //     ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
+        //     ->with('recruiter:id,name')
+        //     ->get();
+
+
         $paymentData = Payment::whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'))
             ->selectRaw('count(id) as countRecrutation, month, recruiter_id, year')
             ->where('bonus', '>', 0)

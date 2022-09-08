@@ -49,4 +49,20 @@ class Recruiter extends Model
     {
         return $this->belongsTo(Team::class);
     }
+
+    public function scopeRecruitersAcces($query, User $user)
+    {
+        switch ($user->role) {
+            case 'user':
+            case 'owner':
+            case 'admin':
+                $query->whereIn('id', $user->recruiters->pluck('id'));
+                break;
+            case 'assistant':
+                $query->whereIn('id', $user->team->recruiters->pluck('id'));
+                break;
+            default:
+                break;
+        }
+    }
 }
