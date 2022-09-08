@@ -16,7 +16,7 @@ class AddPayment extends Model
         return $this->belongsTo(Recruiter::class, 'recruiter_id', 'id');
     }
 
-    public function scopeFilter($query, array $filters)
+    public function scopePeriodAdPaymentFilter($query, array $filters)
     {
         if (isset($filters['year']) && isset($filters['month'])) {
             $query->where('add_payments.year', $filters['year']);

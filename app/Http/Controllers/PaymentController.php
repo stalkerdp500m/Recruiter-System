@@ -23,12 +23,24 @@ class PaymentController extends Controller
     {
 
         $payments = Recruiter::recruitersAcces(Auth::user())
-            ->with(['payments' => function ($query) {
-                $query->filter(Request::only('month', 'year', 'recruiter'))->with('client');
-            }, 'addPayments' => function ($query) {
-                $query->filter(Request::only('month', 'year', 'recruiter'));
-            }])
+            ->with([
+                'payments' => function ($query) {
+                    $query->paymentOneMonthFilter(Request::only('month', 'year', 'recruiter'))->with('client');
+                }, 'addPayments' => function ($query) {
+                    $query->periodAdPaymentFilter(Request::only('month', 'year', 'recruiter'));
+                }
+            ])
             ->get();
+
+        //  dd($payments);
+
+        // $payments = Recruiter::recruitersAcces(Auth::user())
+        //     ->with(['payments' => function ($query) {
+        //         $query->filter(Request::only('month', 'year', 'recruiter'))->with('client');
+        //     }, 'addPayments' => function ($query) {
+        //         $query->filter(Request::only('month', 'year', 'recruiter'));
+        //     }])
+        //     ->get();
 
 
 
@@ -41,10 +53,15 @@ class PaymentController extends Controller
 
 
 
-        $monthAnYears = Payment::selectRaw('DISTINCT  year , month, CONCAT(year,"-",month) "yearMonth"')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->get()
+        // $monthAnYears = Payment::selectRaw('DISTINCT  year , month, CONCAT(year,"-",month) "yearMonth"')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->get()
+        //     ->mapToGroups(function ($item) {
+        //         return  [$item['year'] => $item['month']];
+        //     });
+        $monthAnYears = Payment::paymentPeriodList()->get()
             ->mapToGroups(function ($item) {
                 return  [$item['year'] => $item['month']];
             });
+
 
         if (count($monthAnYears) > 0) {
             return Inertia::render('Payment/Index', [
