@@ -18,6 +18,8 @@ const props = defineProps({
     filters: Object
 });
 
+console.log(props);
+
 const recruitersData = ref([]);
 const recruitersShortList = ref([]);
 const currenStart = props.filters.start ? props.filters.start : props.autoStartPeriod?.period// последний ключь-год
@@ -342,5 +344,6 @@ const { lineChartProps, linetChartRef } = useLineChart({
     </MainLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
+
 </style>
 

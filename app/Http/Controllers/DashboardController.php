@@ -13,10 +13,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $periodList = Payment::selectRaw('month, year , concat(month,"-", year) as period')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->distinct('period')->get();
+        $periodList = Payment::paymentPeriodList()->get()->map(function ($item) {
+            return  ['month' => $item['month'], 'year' => $item['year'], 'period' => $item['month'] . "-" . $item['year']];
+        });
+        // $periodList = Payment::selectRaw('month, year , concat(month,"-", year) as period')
+        //     ->orderBy('year', 'desc')
+        //     ->orderBy('month', 'desc')
+        //     ->distinct('period')->get();
         $endPeriod = $periodList->take(6)->first() ?? ["year" => 0, "month" => 0];;
         $startPeriod = $periodList->take(6)->last() ?? ["year" => 1, "month" => 1];
         $queryFilter = Request::only('start', 'end');
