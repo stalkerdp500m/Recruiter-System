@@ -11,7 +11,7 @@ import { number } from "tailwindcss/lib/util/dataTypes";
 
 
 const props = defineProps({
-    paymentCouns: Object,
+    recruiterPaymentsCount: Object,
     periodList: Object,
     autoStartPeriod: Object,
     autoEndPeriod: Object,
@@ -32,10 +32,6 @@ const periodModel = reactive(
     }
 )
 const recruitersList = [];
-
-
-
-
 
 function* generateColorFunc () {
     const collorSet = [
@@ -61,8 +57,6 @@ function* generateColorFunc () {
 }
 const generateColor = generateColorFunc();
 
-
-
 function randColor () {
     const randomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -72,12 +66,6 @@ function randColor () {
     let l = randomInt(40, 90);
     return `hsl(${h},${s}%,${l}%)`;
 }
-
-
-
-
-
-
 
 
 function selectedPeriod () {
@@ -93,7 +81,6 @@ function selectedRecruiter (list) {
         }
     })
 }
-
 
 function deleteRecruiterFromLegends (e, item) {
     if (recruitersShortList.value.length != 0) {
@@ -129,34 +116,45 @@ function leavHoverRecruiterLegends () {
     })
 }
 
-
-
-
 let color = ''
-for (const paymCount in props.paymentCouns) {
-
+for (const recruiter in props.recruiterPaymentsCount) {
     const dataRecruiter = {};
-    props.paymentCouns[paymCount].map(month => {
-        //dataRecruiter.push(month.countPaym)
-        dataRecruiter[month.month] = month.countPaym
+    props.recruiterPaymentsCount[recruiter].payments.map(paym => {
+        dataRecruiter[`${paym.month}-${paym.year}`] = paym.countPaym
     });
-    recruitersList.push(props.paymentCouns[paymCount][0].rucruiterName);
+    recruitersList.push(props.recruiterPaymentsCount[recruiter].name);
     color = generateColor.next().value;
     recruitersData.value.push({
-        label: props.paymentCouns[paymCount][0].rucruiterName,
+        label: props.recruiterPaymentsCount[recruiter].name,
         borderColor: color,
         data: dataRecruiter,
         backgroundColor: color,
         tension: 0.1,
         borderWidth: 5,
-        //  тут добавить толщину линии в зависимости от кол-ва рекрутаций
     })
+    console.log(dataRecruiter);
 }
+// for (const paymCount in props.recruiterPaymentsCount) {
+//     const dataRecruiter = {};
+//     props.recruiterPaymentsCount[paymCount].map(month => {
+//         dataRecruiter[month.month] = month.countPaym
+//     });
+//     recruitersList.push(props.recruiterPaymentsCount[paymCount][0].rucruiterName);
+//     color = generateColor.next().value;
+//     recruitersData.value.push({
+//         label: props.recruiterPaymentsCount[paymCount][0].rucruiterName,
+//         borderColor: color,
+//         data: dataRecruiter,
+//         backgroundColor: color,
+//         tension: 0.1,
+//         borderWidth: 5,
+//         //  тут добавить толщину линии в зависимости от кол-ва рекрутаций
+//     })
+// }
 
 const chartData = computed(() => ({
     'datasets': recruitersData.value
 }))
-
 
 
 Chart.register(...registerables);
@@ -241,7 +239,6 @@ const options = {
         }
     }
 }
-
 
 
 const { lineChartProps, linetChartRef } = useLineChart({
