@@ -27,13 +27,9 @@ class DashboardController extends Controller
         $endYear = isset($queryFilter['end']) ? explode("-", $queryFilter['end'])[1] : $endPeriod['year'];
         $endMonth = isset($queryFilter['end']) ? explode("-", $queryFilter['end'])[0] : $endPeriod['month'];
 
-
-
-        // $paymentData = Recruiter::recruitersAcces(Auth::user())
-        //     ->with('payments:recruiter_id')->withCount(['payments as countRecrutation' => function ($query) {
-        //         $query->dashboardFilter('2021', '1', '2021',  '3');
-        //     }])->get();
-        // dd($paymentData);
+        // Recruiter::recruitersAcces(Auth::user())->with('payments', function ($query) {
+        //     $query->PaymentPeriodFilter([]);
+        // })->get();
 
         $recruiterPaymentsCount = Recruiter::recruitersAcces(Auth::user())
             ->with('payments', function ($query) use ($startYear, $startMonth, $endYear,  $endMonth) {
@@ -41,38 +37,11 @@ class DashboardController extends Controller
                     ->select('month', 'recruiter_id', 'year')
                     ->selectRaw('count(id) as countPaym')
                     ->where('bonus', '>', 0)
-                    ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
+                    // ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
+                    ->PaymentPeriodFilter(Request::only('start', 'end'))
                     ->groupBy('recruiter_id', 'month', 'year');
             })
             ->get();
-        // dd($paymentData);
-
-        // Payment::whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'))
-        //     ->selectRaw('count(id) as countRecrutation, month, recruiter_id, year')
-        //     ->where('bonus', '>', 0)
-        //     ->groupBy('recruiter_id', 'month', 'year')
-        //     ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
-        //     ->with('recruiter:id,name')
-        //     ->get();
-
-
-        // $paymentData = Payment::whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'))
-        //     ->selectRaw('count(id) as countRecrutation, month, recruiter_id, year')
-        //     ->where('bonus', '>', 0)
-        //     ->groupBy('recruiter_id', 'month', 'year')
-        //     ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
-        //     ->with('recruiter:id,name')
-        //     ->get();
-
-
-        // $paymentCouns = $paymentData->mapToGroups(function ($item) {
-        //     //echo $item;
-        //     return  [$item['recruiter_id'] =>  array(
-        //         'rucruiterName' => $item['recruiter']['name'],
-        //         'countPaym' => $item['countRecrutation'],
-        //         'month' => $item['month'] . '-' . $item['year']
-        //     )];
-        // });
 
         return Inertia::render('Dashboard/Index', [
             'filters' => Request::only('start', 'end'),

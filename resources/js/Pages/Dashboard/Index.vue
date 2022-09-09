@@ -94,9 +94,6 @@ function deleteRecruiterFromLegends (e, item) {
 }
 
 function hoverRecruiterLegends (e, item) {
-    console.log(item);
-    console.log(e);
-    // Доделать всплытие линни на первый слой
     recruitersData.value.map((recrut) => {
         if (recrut.label == item.text) {
             recrut.borderWidth = 10
@@ -116,9 +113,10 @@ function leavHoverRecruiterLegends () {
     })
 }
 
-let color = ''
+
 for (const recruiter in props.recruiterPaymentsCount) {
     const dataRecruiter = {};
+    let color = ''
     props.recruiterPaymentsCount[recruiter].payments.map(paym => {
         dataRecruiter[`${paym.month}-${paym.year}`] = paym.countPaym
     });
@@ -134,23 +132,7 @@ for (const recruiter in props.recruiterPaymentsCount) {
     })
     console.log(dataRecruiter);
 }
-// for (const paymCount in props.recruiterPaymentsCount) {
-//     const dataRecruiter = {};
-//     props.recruiterPaymentsCount[paymCount].map(month => {
-//         dataRecruiter[month.month] = month.countPaym
-//     });
-//     recruitersList.push(props.recruiterPaymentsCount[paymCount][0].rucruiterName);
-//     color = generateColor.next().value;
-//     recruitersData.value.push({
-//         label: props.recruiterPaymentsCount[paymCount][0].rucruiterName,
-//         borderColor: color,
-//         data: dataRecruiter,
-//         backgroundColor: color,
-//         tension: 0.1,
-//         borderWidth: 5,
-//         //  тут добавить толщину линии в зависимости от кол-ва рекрутаций
-//     })
-// }
+
 
 const chartData = computed(() => ({
     'datasets': recruitersData.value
@@ -294,42 +276,8 @@ const { lineChartProps, linetChartRef } = useLineChart({
                         :options="recruitersList" placeholder="Выберите рекрутеров">
                     </VueMultiselect>
                 </div>
-                <!-- <div class="bg-white flex items-center justify-start   shadow-md rounded-md py-1 ">
-                    <label for="month" class="px-4 border-r border-systems-900/20">Конец</label>
-                    <div class=" ">
-                        <select v-model="periodModel.end" @change="selectedPeriod" id="end" name="end"
-                            class="cursor-pointer form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
-                            <option v-for="period in props.periodList">{{ period.period }}</option>
-                        </select>
-                    </div>
-                </div> -->
             </div>
             <!-- /Фильтры -->
-            <!-- Фильтры -->
-            <!-- <div
-                class="py-5   grid gap-2 md:grid-flow-col  md:justify-start md:gap-4  justify-center  items-center md:w-2/3  ">
-                <div class="bg-white  flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit ">
-                    <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Начало</label>
-                    <div class="md:mb-3 ">
-                        <select id="start" v-model="periodModel.start" @change="selectedPeriod"
-                            class=" form-select cursor-pointer focus:ring-0 ring-0 border-0 mr-5 bg-transparent "
-                            aria-label="year">
-                            <option v-for="period in props.periodList">{{ period.period }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="bg-white flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit">
-                    <label for="month" class="px-4 border-r border-systems-900/20">Конец</label>
-                    <div class="md:mb-3 ">
-                        <select v-model="periodModel.end" @change="selectedPeriod" id="end" name="end"
-                            class="cursor-pointer form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
-                            <option v-for="period in props.periodList">{{ period.period }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div> -->
-            <!-- /Фильтры -->
-
             <div class="  ">
                 <div class="bg-white overflow-hidden shadow-sm rounded-md">
                     <div class="p-4 bg-white border-b border-gray-200">
