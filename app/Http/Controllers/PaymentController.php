@@ -32,31 +32,6 @@ class PaymentController extends Controller
             ])
             ->get();
 
-        //  dd($payments);
-
-        // $payments = Recruiter::recruitersAcces(Auth::user())
-        //     ->with(['payments' => function ($query) {
-        //         $query->filter(Request::only('month', 'year', 'recruiter'))->with('client');
-        //     }, 'addPayments' => function ($query) {
-        //         $query->filter(Request::only('month', 'year', 'recruiter'));
-        //     }])
-        //     ->get();
-
-
-
-        // $payments = User::where('id', Auth::user()->id)->with(['recruiters.payments' => function ($query) {
-        //     $query->filter(Request::only('month', 'year', 'recruiter'))->with('client');
-        // }, 'recruiters.addPayments' => function ($query) { // тут подтягивать допвыплаты по той же фактуре, что и основные
-        //     $query->filter(Request::only('month', 'year', 'recruiter'));
-        // }])->first();
-        // dd($payments);
-
-
-
-        // $monthAnYears = Payment::selectRaw('DISTINCT  year , month, CONCAT(year,"-",month) "yearMonth"')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->get()
-        //     ->mapToGroups(function ($item) {
-        //         return  [$item['year'] => $item['month']];
-        //     });
         $monthAnYears = Payment::paymentPeriodList()->get()
             ->mapToGroups(function ($item) {
                 return  [$item['year'] => $item['month']];

@@ -13,22 +13,18 @@ import { number } from "tailwindcss/lib/util/dataTypes";
 const props = defineProps({
     recruiterPaymentsCount: Object,
     periodList: Object,
-    autoStartPeriod: Object,
-    autoEndPeriod: Object,
-    filters: Object
+    queryFilter: Object
 });
 
-console.log(props);
 
 const recruitersData = ref([]);
 const recruitersShortList = ref([]);
-const currenStart = props.filters.start ? props.filters.start : props.autoStartPeriod?.period// последний ключь-год
-const currenEnd = props.filters.end ? props.filters.end : props.autoEndPeriod?.period
+
 
 const periodModel = reactive(
     {
-        'start': currenStart,
-        'end': currenEnd,
+        'start': props.queryFilter.start,
+        'end': props.queryFilter.end,
     }
 )
 const recruitersList = [];
@@ -130,7 +126,6 @@ for (const recruiter in props.recruiterPaymentsCount) {
         tension: 0.1,
         borderWidth: 5,
     })
-    console.log(dataRecruiter);
 }
 
 
@@ -235,7 +230,7 @@ const { lineChartProps, linetChartRef } = useLineChart({
 
 <template>
 
-    <Head title="Dashboard" />
+    <Head title="Аналитика" />
 
     <MainLayout>
         <template #header>

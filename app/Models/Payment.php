@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+
 
 class Payment extends Model
 {
@@ -40,66 +40,29 @@ class Payment extends Model
     }
 
 
-    public function scopePaymentPeriodFilter($query, array $userPeriods)
+    public function scopePaymentPeriodFilter($query, object $dashbourdPeriod)
     {
-
-        if (isset($userPeriods['start']) && isset($userPeriods['end'])) {
-            $startYear = explode("-", $userPeriods['start'])[1];
-            $startMonth = explode("-", $userPeriods['start'])[0];
-            $endYear = explode("-", $userPeriods['end'])[1];
-            $endMonth = explode("-", $userPeriods['end'])[0];
-        } else {
-            $periodList = $this->select('year', 'month')->distinct('year', 'month')->orderBy('year', 'DESC')->orderBy('month', 'DESC')->limit(6)->get();
-            $startYear = $periodList->last()->year;
-            $startMonth = $periodList->last()->month;
-            $endYear = $periodList->first()->year;
-            $endMonth = $periodList->first()->month;
-        }
-        if ($endYear - $startYear > 0) {
+        if ($dashbourdPeriod->endYear - $dashbourdPeriod->startYear > 0) {
             $query
-                ->where('year', '>', $startYear)
-                ->where('year', '<', $endYear)
-                ->orWhere(function ($query) use ($startYear, $startMonth) {
-                    $query->whereBetween('month', [$startMonth, 12])
-                        ->where('year',  $startYear);
+                ->where('year', '>', $dashbourdPeriod->startYear)
+                ->where('year', '<', $dashbourdPeriod->endYear)
+                ->orWhere(function ($query) use ($dashbourdPeriod) {
+                    $query->whereBetween('month', [$dashbourdPeriod->startMonth, 12])
+                        ->where('year',  $dashbourdPeriod->startYear);
                 })
-                ->orWhere(function ($query) use ($endYear,  $endMonth) {
-                    $query->whereBetween('month', [1, $endMonth])
-                        ->where('year',  $endYear);
+                ->orWhere(function ($query) use ($dashbourdPeriod) {
+                    $query->whereBetween('month', [1, $dashbourdPeriod->endMonth])
+                        ->where('year',  $dashbourdPeriod->endYear);
                 });
-            // $query->where('year', $startYear)
-            //     ->whereBetween('month', [$startMonth, 12])
-            //     ->orWhere('year', $endYear)
-            //     ->whereBetween('month', [1, $endMonth])
-            //     ->orWhere('year', '>');
         } else {
             $query
-                ->whereBetween('month', [$startMonth, $endMonth])
-                ->where('year',  $startYear);
+                ->whereBetween('month', [$dashbourdPeriod->startMonth, $dashbourdPeriod->endMonth])
+                ->where('year',  $dashbourdPeriod->startYear);
         }
         $query->orderBy('year', 'asc')->orderBy('month', 'asc');
     }
 
 
-
-    public function scopeDashboardFilter($query, $startYear, $startMonth, $endYear,  $endMonth)
-    {
-        if ($endYear - $startYear >= 1) {
-            $query->whereRaw(
-                '(((month between ? and 12) and (year = ?))
-                     or ( (month between 1 and ?) and (year =?))
-                     or ((month between 1 and 12) and year > ? and year < ? ) )',
-                [$startMonth, $startYear,  $endMonth,  $endYear, $startYear, $endYear]
-            );
-        } else {
-            $query->whereRaw(
-                '(  ((month between ? and ?) and year = ?) )',
-                [$startMonth, $endMonth, $endYear]
-            );
-        }
-        $query->orderBy('year', 'asc');
-        $query->orderBy('month', 'asc');
-    }
 
     //возвращает выплаты за переданый год и месяц или за последний месяц и год в таблице
     public function scopePaymentOneMonthFilter($query, array $filters)
@@ -119,19 +82,4 @@ class Payment extends Model
                 });
         }
     }
-
-
-
-    // public function scopePeriodPaymentFilter($query, array $filters)
-    // {
-    //     if (isset($filters['year']) && isset($filters['month'])) {
-    //         $query->where('payments.year', $filters['year']);
-    //         $query->where('payments.month', $filters['month']);
-    //     } else {
-    //         $query->whereRaw(
-    //             "month = (select max(`month`) from payments where year = (select max(`year`) from payments))
-    //              AND year = (select max(`year`) from payments)"
-    //         );
-    //     }
-    // }
 }
