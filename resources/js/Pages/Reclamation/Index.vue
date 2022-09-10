@@ -17,7 +17,7 @@ const props = defineProps({
     trashed: String
 });
 
-console.log(props);
+
 
 
 const showForm = ref(false);

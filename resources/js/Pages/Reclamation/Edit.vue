@@ -75,6 +75,10 @@ function updateReclamation () {
 
             <div class=" bg-white flex flex-col gap-4 p-3 rounded-md my-4"
                 :class="reclamation.deleted_at ? 'contrast-50' : ''">
+                <!-- /данные по рекламации -->
+                <div class=" bg-systems-300 mt-0 rounded-md p-2">
+                    <SummaryClient :pasport="props.reclamation?.client.pasport" />
+                </div>
                 <div v-if="reclamation.deleted_at" class=" text-center p-4 font-semibold uppercase">Рекламация в архиве
                 </div>
                 <div v-else class=" text-center p-4 font-semibold uppercase">Данные по рекламации
@@ -99,7 +103,7 @@ function updateReclamation () {
                 </div>
                 <div>
                     <p> <span class=" font-bold "> Отправлена: </span> {{
-                            props.reclamation.user.name
+                    props.reclamation.user.name
                     }} - {{ toLocaleDate(props.reclamation.created_at) }}</p>
                 </div>
                 <div>
@@ -107,19 +111,19 @@ function updateReclamation () {
                 </div>
                 <div>
                     <p> <span class=" font-bold "> Клиент: </span> {{ props.reclamation.client.name }}, {{
-                            props.reclamation.client.pasport
+                    props.reclamation.client.pasport
                     }}</p>
                 </div>
                 <div>
                     <p><span class=" font-bold ">Проект и период оплаты: </span> {{ props.reclamation.project }}, {{
-                            props.reclamation.period
+                    props.reclamation.period
                     }}</p>
                 </div>
                 <div>
                     <p> <span class=" font-bold "> Ответ </span></p>
                     <p v-if="userRole != 'admin'"
                         class="p-2 my-2 border border-systems-900 rounded-t-md rounded-r-md bg-systems-200"> {{
-                                props.reclamation.answer ? props.reclamation.answer : 'Еще не предоставлен'
+                        props.reclamation.answer ? props.reclamation.answer : 'Еще не предоставлен'
                         }}</p>
 
                     <p v-else>
@@ -130,8 +134,8 @@ function updateReclamation () {
                         <button type="submit" :disabled="updateReclamationForm.processing"
                             class="rounded-md px-3 disabled:bg-gray-500/60 h-10  bg-green-600 cursor-pointer text-white  items-center">
                             {{ updateReclamationForm.processing ? `Сохраняю` : props.reclamation.answer ? `Обновить
-                                                        ответ` :
-                                    `Отправить`
+                            ответ` :
+                            `Отправить`
                             }}
                         </button>
                     </form>
@@ -144,7 +148,7 @@ function updateReclamation () {
                         :key="i"
                         :class="comment.role == 'admin' ? 'bg-systems-300 text-right rounded-t-md rounded-l-md' : 'rounded-t-md rounded-r-md'">
                         {{
-                                comment.message
+                        comment.message
                         }} <br> <span class=" text-xs "><b>{{ comment.user }}</b> {{ toLocaleDate(comment.sendedAt) }}
                         </span></p>
                     <form @submit.prevent="updateReclamation"
@@ -159,17 +163,6 @@ function updateReclamation () {
                 </div>
 
             </div>
-
-
-
-            <!-- /данные по рекламации -->
-
-
-
-            <div class=" bg-systems-300 mt-0 rounded-md p-2">
-                <SummaryClient :pasport="props.reclamation?.client.pasport" />
-            </div>
-
         </div>
     </MainLayout>
 </template>

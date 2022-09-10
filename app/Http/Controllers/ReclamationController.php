@@ -43,30 +43,6 @@ class ReclamationController extends Controller
             ->flatten()
             ->sortBy([['updated_at', 'desc']]);
 
-        // $newReclamations = $reclamations->pluck('reclamations')
-        //     ->flatten()
-        //     ->sortBy([['updated_at', 'desc']]);
-
-        //  dd($reclamations);
-
-        // Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
-        //     $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
-        // })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
-        //     ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
-
-        // $reclamations = Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
-        //     $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
-        // })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
-        //     ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
-
-
-
-        // dd($statuseList);
-        // $statuseList = $newReclamations->mapWithKeys(function ($item) {
-        //     return  [$item['status']['title'] => $item['status']['id']];
-        // });
-
-
 
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
@@ -195,7 +171,7 @@ class ReclamationController extends Controller
     {
         // dump(Auth::user()->id);
         //dd($reclamation->user_id);
-        abort_if(Auth::user()->id != $reclamation->user_id, 403);
+        //  abort_if(Auth::user()->id != $reclamation->user_id, 403);
         $reclamation->delete();
         return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Рекламация перенесена в архив"]);
     }
