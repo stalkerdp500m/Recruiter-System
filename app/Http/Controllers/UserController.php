@@ -59,14 +59,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // добавить синхронизацию рекрутеров!!!
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required'],
             'team' => ['nullable', 'exists:teams,id'],
-            'role' => ['required', 'exists:roles,title']
+            'role' => ['required', 'exists:roles,title'],
+            'recruiters_id' => ['array']
         ]);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -75,7 +77,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'email_verified_at' =>  now()
         ]);
-        $user->recruiters()->sync($request->recruiter_id);
+        $user->recruiters()->sync($request->recruiters_id);
         $user->notify(new createUser($request->only(['name', 'email', 'password'])));
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $request->name добавлен"]);
     }

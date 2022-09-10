@@ -20,9 +20,11 @@ const form = useForm({
     name: "",
     email: "",
     role: "user",
-    recruiters: "",
+    recruiters: [],
+    recruiters_id: [],
     team: false,
     password: "",
+
 });
 
 function pasGenerate () {
@@ -52,6 +54,9 @@ function chekEmail () {
 }
 
 const submit = () => {
+    form.recruiters.forEach(recruiter => {
+        form.recruiters_id.push(recruiter.id)
+    });
     form.post(route("control.users.store"), {
         onSuccess: () => {
             form.reset();
@@ -61,7 +66,7 @@ const submit = () => {
 };
 </script>
 
-        <template>
+<template>
     <div v-if="props.showForm" class="  rounded-md p-2 m-4 border">
         <form @submit.prevent="submit" autocomplete="off" class="w-10/12 md:w-1/2 mx-auto">
             <div class="text-center my-4 ">Добавить пользователя</div>
