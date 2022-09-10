@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Reclamation;
 use App\Models\ReclamationStatus;
+use App\Models\Recruiter;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -24,34 +25,53 @@ class ReclamationController extends Controller
     public function index()
     {
 
-        $periodList = Payment::selectRaw('month, year , concat(month,"-", year) as period')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->distinct('period')->get();
-
-        $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
-
-        // $reclamations = User::where('id', Auth::user()->id)->with(['recruiters.reclamations' => function ($query) {
-        //     $query->trashedFilter(Request::only('trashed'))->with('status:id,title');
-        // }, 'recruiters.reclamations.client:id,name,pasport'])->first();
-
-
-
-        $reclamations = Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
-            $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
-        })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
-            ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
-
-        $statuseList = $reclamations->mapWithKeys(function ($item) {
-            return  [$item['status']['title'] => $item['status']['id']];
+        $periodList = Payment::paymentPeriodList()->get()->map(function ($item) {
+            return  ['month' => $item['month'], 'year' => $item['year'], 'period' => $item['month'] . "-" . $item['year']];
         });
+
+        $recruiterList = Recruiter::recruitersAcces(Auth::user())->get();
+
+        $statuseList = ReclamationStatus::select('title', 'id')->get()->mapWithKeys(function ($item) {
+            return  [$item['title'] => $item['id']];
+        });
+
+        $reclamations = Recruiter::recruitersAcces(Auth::user())->with('reclamations', function ($query) {
+            $query->trashedFilter(Request::only('trashed'))
+                ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name');
+        })->get()
+            ->pluck('reclamations')
+            ->flatten()
+            ->sortBy([['updated_at', 'desc']]);
+
+        // $newReclamations = $reclamations->pluck('reclamations')
+        //     ->flatten()
+        //     ->sortBy([['updated_at', 'desc']]);
+
+        //  dd($reclamations);
+
+        // Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
+        //     $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
+        // })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
+        //     ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
+
+        // $reclamations = Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
+        //     $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
+        // })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
+        //     ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
+
+
+
+        // dd($statuseList);
+        // $statuseList = $newReclamations->mapWithKeys(function ($item) {
+        //     return  [$item['status']['title'] => $item['status']['id']];
+        // });
 
 
 
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
             'periodList' => $periodList,
-            'recruiterList' => $recruiterList,
+            'recruiterList' => ["recruiters" => $recruiterList],
             'reclamations' => $reclamations,
             'statuseList' => $statuseList,
             'trashed' => Request::input('trashed', 'no')

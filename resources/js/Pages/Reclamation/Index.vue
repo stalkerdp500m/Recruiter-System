@@ -17,7 +17,7 @@ const props = defineProps({
     trashed: String
 });
 
-
+console.log(props);
 
 
 const showForm = ref(false);
@@ -143,4 +143,5 @@ function selectTrashed () {
     </MainLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
+
 </style>
