@@ -101,6 +101,10 @@ class TeamController extends Controller
                     $team->assistants()->update(['team_id' => null]);
                     User::whereIn('id', $request->assistants)->update(['role' => 'assistant', 'team_id' => $team->id]);
                     break;
+                case 'name':
+                    $massageAction = "навзвание ";
+                    $team->update(['name' => $request['teamName']]);
+                    break;
                 default:
                     return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Действие не определено"]);
             }

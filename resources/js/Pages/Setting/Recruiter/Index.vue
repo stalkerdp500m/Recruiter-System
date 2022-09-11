@@ -113,4 +113,5 @@ function serched (input) {
     </MainLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
+
 </style>
