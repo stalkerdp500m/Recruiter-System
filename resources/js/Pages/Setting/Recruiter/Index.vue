@@ -9,26 +9,39 @@ import { ref } from "vue";
 
 const props = defineProps({
     recruiterList: Object,
-    teamsList: Object
+    teamsList: Object,
+    userList: Object
 });
 
 const showCreateRecruiterForm = ref(false);
 
-
-const updateRecruiterForm = useForm({
-    'userName': '',
+const recruiterTeamForm = useForm({
+    'action': 'team',
+    'recruiterName': '',
     'team_id': '',
+    'teamName': ''
+});
+
+const recutierOwnerForm = useForm({
+    'action': 'owner',
+    'recruiterName': '',
+    'owner_id': '',
     'teamName': ''
 });
 
 
 
 function recruiterTeamUpdate (team, recruiter) {
-
-    updateRecruiterForm.team_id = team.id
-    updateRecruiterForm.teamName = team.name
-    updateRecruiterForm.userName = recruiter.name
-    updateRecruiterForm.put(route('control.recruiters.update', { 'id': recruiter.id }), { preserveScroll: true });
+    recruiterTeamForm.team_id = team.id
+    recruiterTeamForm.teamName = team.name
+    recruiterTeamForm.recruiterName = recruiter.name
+    recruiterTeamForm.put(route('control.recruiters.update', { 'id': recruiter.id }), { preserveScroll: true });
+}
+function recruiterOwnerUpdate (owner, recruiter) {
+    recutierOwnerForm.teamName = owner.name
+    recutierOwnerForm.owner_id = owner.id
+    recutierOwnerForm.recruiterName = recruiter.name
+    recutierOwnerForm.put(route('control.recruiters.update', { 'id': recruiter.id }), { preserveScroll: true });
 }
 
 const filteredRecruiterList = ref(props.recruiterList);
@@ -104,6 +117,17 @@ function serched (input) {
                             <VueMultiselect @update:model-value="recruiterTeamUpdate($event, recruiter)"
                                 :multiple="false" selectLabel="Изменить команду на эту" v-model="recruiter.team"
                                 :options="props.teamsList" label="name" :searchable="true" placeholder="выбор команды">
+                            </VueMultiselect>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <h3 class="flex-1 my-2 ">Владелец</h3>
+                        <div class="   justify-center flex items-center w-11/12">
+                            <VueMultiselect @update:model-value="recruiterOwnerUpdate($event, recruiter)"
+                                :multiple="false" selectLabel="Назначить владельцем рекрутера" track-by="name"
+                                deselectLabel="убрать из этой команды" v-model="recruiter.owner"
+                                :options="props.userList" label="name" :searchable="true"
+                                placeholder="выбор пользователя">
                             </VueMultiselect>
                         </div>
                     </div>

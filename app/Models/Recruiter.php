@@ -49,6 +49,10 @@ class Recruiter extends Model
     {
         return $this->belongsTo(Team::class);
     }
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id', 'id');
+    }
 
     public function scopeRecruitersAcces($query, User $user)
     {

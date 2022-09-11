@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Recruiter;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -18,9 +19,11 @@ class RecruiterController extends Controller
      */
     public function index()
     {
+        //  dd(Recruiter::with('owner')->find(1));
         return Inertia::render('Setting/Recruiter/Index', [
-            'recruiterList' => Recruiter::select('id', 'name', 'team_id')->with('team')->orderBy('created_at', 'desc')->get(),
-            'teamsList' => Team::select('id', 'name')->get()
+            'recruiterList' => Recruiter::select('id', 'name', 'team_id', 'owner_id')->with(['team:id,name', 'owner:id,name'])->orderBy('created_at', 'desc')->get(),
+            'teamsList' => Team::select('id', 'name')->get(),
+            'userList' => User::select('id', 'name')->orderBy('created_at', 'desc')->get(),
         ]);
     }
 
@@ -94,8 +97,25 @@ class RecruiterController extends Controller
      */
     public function update(Request $request, Recruiter $recruiter)
     {
-        $recruiter->update($request->only('team_id'));
-        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => $request['userName'] . " добавлен в команду " . $request['teamName']]);
+
+        switch ($request->action) {
+            case 'team':
+                $massageAction = " новая команда ";
+                $recruiter->update($request->only('team_id'));
+                break;
+            case 'owner':
+                $massageAction = " новый владелец ";
+                $owner = User::find($request->owner_id);
+                $owner->update(['role' => 'owner']);
+                $owner->recruiters()->attach($recruiter->id);
+                $recruiter->update($request->only('owner_id'));
+                break;
+            default:
+                return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Действие не определено"]);
+        }
+
+
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => $request['recruiterName'] . $massageAction . $request['teamName']]);
     }
 
     /**
