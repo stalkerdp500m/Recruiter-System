@@ -17,13 +17,21 @@ const userRole = usePage().props.value.auth.user.role
 //[user.name, user.role] = [...usePage().props.value.auth.user]
 // const userName = usePage().props.value.auth.user.name
 
-// console.log(usePage().props.value.auth.user);
+console.log(props.reclamation);
 const updateReclamationForm = useForm({
     'comments': props.reclamation.comments,
     'status_id': props.reclamation.status.id,
     'answer': props.reclamation.answer
 });
+//const canAnswer = ref(usePage().props.value.auth.user.role == "accountant");
+
+function canAnswer (role) {
+    return role == "accountant";
+}
+
 const newComment = ref('');
+
+
 const statusColors = {
     1: { 'label': 'bg-systems-300', 'bg': 'bg-systems-100' },
     2: { 'label': 'bg-yellow-300', 'bg': 'bg-yellow-100' },
@@ -48,7 +56,6 @@ function updateReclamation () {
 
         })
     }
-    // route('reclamations.restore', { 'id': reclamation.id })
     updateReclamationForm.put(route('reclamations.update', { 'id': props.reclamation.id }), { preserveScroll: true });
     newComment.value = '';
 }
@@ -85,7 +92,7 @@ function updateReclamation () {
                 </div>
                 <div class="w-fit ">
                     <p><span class=" font-bold "> Статус: </span>
-                        <span v-if="userRole != 'admin'" class="px-2 py-1 rounded-sm"
+                        <span v-if="!canAnswer(userRole)" class="px-2 py-1 rounded-sm"
                             :class="statusColors[props.reclamation.status.id].label"> {{ props.reclamation.status.title
                             }}</span>
                         <span v-else :class="statusColors[updateReclamationForm.status_id].label"
@@ -120,8 +127,10 @@ function updateReclamation () {
                     }}</p>
                 </div>
                 <div>
-                    <p> <span class=" font-bold "> Ответ </span></p>
-                    <p v-if="userRole != 'admin'"
+                    <p class="my-2"> <span class=" font-bold "> Ответ: </span> <span
+                            class="mx-2 bg-systems-300 px-2 rounded-md " v-if="props.reclamation.answerer">предоставлен
+                            {{props.reclamation.answerer.name}}</span></p>
+                    <p v-if="!canAnswer(userRole)"
                         class="p-2 my-2 border border-systems-900 rounded-t-md rounded-r-md bg-systems-200"> {{
                         props.reclamation.answer ? props.reclamation.answer : 'Еще не предоставлен'
                         }}</p>
@@ -146,7 +155,7 @@ function updateReclamation () {
                     <p class=" font-bold ">Комментарии</p>
                     <p class="p-2 my-2 border border-systems-600 " v-for="comment, i in props.reclamation.comments"
                         :key="i"
-                        :class="comment.role == 'admin' ? 'bg-systems-300 text-right rounded-t-md rounded-l-md' : 'rounded-t-md rounded-r-md'">
+                        :class="canAnswer(comment.role) ? 'bg-systems-300 text-right rounded-t-md rounded-l-md' : 'rounded-t-md rounded-r-md'">
                         {{
                         comment.message
                         }} <br> <span class=" text-xs "><b>{{ comment.user }}</b> {{ toLocaleDate(comment.sendedAt) }}

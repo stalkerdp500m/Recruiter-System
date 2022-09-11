@@ -47,15 +47,30 @@ Route::get('/payments', [PaymentController::class, 'index'])->middleware(['auth'
 Route::get('/payments/create', [PaymentController::class, 'create'])->middleware(['auth', 'verified'])->name('payments.create');
 Route::post('/payments/create', [PaymentController::class, 'store'])->middleware(['auth', 'verified'])->name('payments.store');
 Route::post('/payments/import', [PaymentController::class, 'import'])->middleware(['auth', 'verified'])->name('payments.import');
-Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth', 'verified'])->name('clients.index');
-//Route::post('/clients', [ClientController::class, 'search'])->middleware(['auth', 'verified'])->name('clients.search');
 
-Route::get('/reclamations', [ReclamationController::class, 'index'])->middleware(['auth', 'verified'])->name('reclamations.index');
-Route::get('/reclamations/{reclamation}/edit', [ReclamationController::class, 'edit'])->middleware(['auth', 'verified'])->name('reclamations.edit');
-Route::put('/reclamations/{reclamation}', [ReclamationController::class, 'update'])->middleware(['auth', 'verified'])->name('reclamations.update');
-Route::post('/reclamations', [ReclamationController::class, 'store'])->middleware(['auth', 'verified'])->name('reclamations.store');
-Route::delete('/reclamations/{reclamation}', [ReclamationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('reclamations.destroy');
-Route::put('reclamations/{reclamation}/restore', [ReclamationController::class, 'restore'])->middleware(['auth', 'verified'])->name('reclamations.restore');
+Route::get('/clients', [ClientController::class, 'index'])->middleware(['auth', 'verified'])->name('clients.index');
+
+
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::group(['as' => 'reclamations.', 'prefix' => 'reclamations', 'controller' => ReclamationController::class], function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{reclamation}/edit', 'edit')->name('edit')->middleware(['can:update,reclamation']);
+        Route::put('/{reclamation}', 'update')->name('update')->middleware(['can:update,reclamation']);
+        Route::post('/', 'store')->name('store');
+        Route::delete('/{reclamation}', 'destroy')->name('destroy')->middleware(['can:delete,reclamation']);
+        Route::put('/{reclamation}/restore', 'restore')->name('restore')->middleware(['can:restore,reclamation']);
+    });
+});
+
+
+
+
+// Route::get('/reclamations', [ReclamationController::class, 'index'])->middleware(['auth', 'verified'])->name('reclamations.index');
+// Route::get('/reclamations/{reclamation}/edit', [ReclamationController::class, 'edit'])->middleware(['auth', 'verified'])->name('reclamations.edit');
+// Route::put('/reclamations/{reclamation}', [ReclamationController::class, 'update'])->middleware(['auth', 'verified'])->name('reclamations.update');
+// Route::post('/reclamations', [ReclamationController::class, 'store'])->middleware(['auth', 'verified'])->name('reclamations.store');
+// Route::delete('/reclamations/{reclamation}', [ReclamationController::class, 'destroy'])->middleware(['auth', 'verified'])->name('reclamations.destroy');
+// Route::put('reclamations/{reclamation}/restore', [ReclamationController::class, 'restore'])->middleware(['auth', 'verified'])->name('reclamations.restore');
 
 Route::get('/imports/payments/', [ImportPaymentController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.index');
 Route::post('/imports/payments/', [ImportPaymentController::class, 'create'])->middleware(['auth', 'verified', 'admin'])->name('imports.payments.create');

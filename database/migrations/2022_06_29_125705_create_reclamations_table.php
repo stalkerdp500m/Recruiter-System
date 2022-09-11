@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('recruiter_id');
+            $table->unsignedBigInteger('answerer_id')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('status_id');
             $table->string('project', 300);
             $table->string('period', 50);
             $table->json('comments')->nullable();
-            // $table->text('comment')->nullable();
             $table->text('answer')->nullable();
             $table->timestamps();
 
@@ -37,6 +37,8 @@ return new class extends Migration
 
             $table->index('status_id', 'status_id_idx');
             $table->foreign('status_id')->on('reclamation_statuses')->references('id');
+
+            $table->foreign('answerer_id')->on('users')->references('id');
 
             $table->softDeletes();
         });
