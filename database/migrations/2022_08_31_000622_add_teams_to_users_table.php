@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedBigInteger('team_id')->nullable()->after('email');
+            $table->index('team_id', 'user_team_idx');
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('SET NULL');
         });
     }

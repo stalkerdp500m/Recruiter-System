@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('year');
             $table->double('summ', 8, 2)->nullable();
             $table->string('type', 100)->nullable();
-            $table->index('recruiter_id', 'recruiter_id_idx');
+            $table->index('recruiter_id', 'add_payments_recruiter_idx');
             $table->foreign('recruiter_id')->on('recruiters')->references('id');
         });
     }

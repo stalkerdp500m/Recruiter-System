@@ -18,9 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('recruiter_id')->nullable();
             $table->timestamps();
-            //  $table->index('user_id', 'user_id_idx');
+            $table->index('user_id', 'recruiter_user_user_idx');
             $table->foreign('user_id')->on('users')->references('id');
-            $table->index('recruiter_id', 'recruiter_id_idx');
+            $table->index('recruiter_id', 'recruiter_user_recruiter_idx');
             $table->foreign('recruiter_id')->on('recruiters')->references('id');
         });
     }
