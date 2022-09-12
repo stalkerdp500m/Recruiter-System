@@ -114,7 +114,7 @@ for (const recruiter in props.recruiterPaymentsCount) {
     const dataRecruiter = {};
     let color = ''
     props.recruiterPaymentsCount[recruiter].payments.map(paym => {
-        dataRecruiter[`${paym.month}-${paym.year}`] = paym.countPaym
+        dataRecruiter[`${paym.month}-${paym.year}`] = Number(paym.countpaym)
     });
     recruitersList.push(props.recruiterPaymentsCount[recruiter].name);
     color = generateColor.next().value;

@@ -33,12 +33,13 @@ class DashboardController extends Controller
             ->with('payments', function ($query) use ($dashbourdPeriod) {
                 $query
                     ->select('month', 'recruiter_id', 'year')
-                    ->selectRaw('count(id) as countPaym')
+                    ->selectRaw('count(id) as countpaym')
                     ->where('bonus', '>', 0)
                     ->PaymentPeriodFilter($dashbourdPeriod)
                     ->groupBy('recruiter_id', 'month', 'year');
             })
             ->get();
+        // dd($recruiterPaymentsCount);
 
         return Inertia::render('Dashboard/Index', [
             'recruiterPaymentsCount' => $recruiterPaymentsCount,

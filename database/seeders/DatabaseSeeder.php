@@ -17,6 +17,7 @@ use App\Models\Role;
 use App\Models\Team;
 use Database\Factories\ReclamationFactory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -65,28 +66,20 @@ class DatabaseSeeder extends Seeder
         foreach ($reclamationStatusesList as $status) {
             ReclamationStatus::firstOrCreate(['title' => $status]);
         }
+        Team::factory(30)->create();
+        error_log('команды добавлены');
+        User::factory(2000)->create();
+        error_log('пользователи добавлены');
 
-
-        // ReclamationStatus::firstOrCreate(
-        //     ['title' => 'Новая']
-        // );
-        // ReclamationStatus::firstOrCreate(
-        //     ['title' => 'В работе']
-        // );
-        // ReclamationStatus::firstOrCreate(
-        //     ['title' => 'Одобрена']
-        // );
-        // ReclamationStatus::firstOrCreate(
-        //     ['title' => 'Отклонена']
-        // );
-        Team::factory(10)->create();
-        User::factory(200)->create();
-        Client::factory(350)->create();
-        Recruiter::factory(40)->create();
-        Salary::factory(600)->create();
-        Payment::factory(700)->create();
-        PaymentUser::factory(300)->create();
-        RecruiterUser::factory(400)->create();
-        Reclamation::factory(200)->create();
+        for ($i = 0; $i < 1000; $i++) {
+            error_log("добавляю $i");
+            Client::factory(200)->create();
+            Recruiter::factory(20)->create();
+            Salary::factory(300)->create();
+            Payment::factory(250)->create();
+            PaymentUser::factory(200)->create();
+            RecruiterUser::factory(150)->create();
+            Reclamation::factory(100)->create();
+        }
     }
 }

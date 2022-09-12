@@ -31,7 +31,7 @@ function recruiterAllSum (recruiter) {
     let count = 0;
     recruiter.payments.forEach(paym => {
         if (paym.bonus > 0) {
-            sumForRecruits += paym.bonus;
+            sumForRecruits += Number(paym.bonus);
             count++
         }
     });

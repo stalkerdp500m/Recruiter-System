@@ -30,9 +30,7 @@ class ReclamationPolicy
     public function update(User $user, Reclamation $reclamation)
     {
         //обновление полей по ролям смотри в контроллере
-        return Recruiter::recruitersAcces($user)->whereExists(function ($query) use ($reclamation) {
-            $query->where('id', $reclamation->recruiter_id);
-        })->get()->isNotEmpty();
+        return Recruiter::recruitersAcces($user)->where('id', $reclamation->recruiter_id)->get('id')->isNotEmpty();
     }
 
     /**
