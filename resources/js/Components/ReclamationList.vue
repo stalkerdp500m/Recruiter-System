@@ -30,7 +30,6 @@ function deleteReclamation (id) {
             }
         })
     }
-
 }
 
 
@@ -81,10 +80,10 @@ function deleteReclamation (id) {
 
                     <div class=" ">{{ reclamation?.recruiter?.name }}</div>
                     <div class=" text-xs pt-2 break-words">отправлена: {{ reclamation.user.name }}<br>{{
-                            toLocaleDate(reclamation.created_at)
+                    toLocaleDate(reclamation.created_at)
                     }}</div>
                     <div class=" text-xs pt-2 break-words">изменена: {{
-                            toLocaleDate(reclamation.updated_at)
+                    toLocaleDate(reclamation.updated_at)
                     }}</div>
 
                 </div>

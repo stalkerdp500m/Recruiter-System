@@ -4,6 +4,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Import\ImportPaymentController;
 use App\Http\Controllers\Import\IndexController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
@@ -35,10 +36,17 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 
 
+    // Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
+
+
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['as' => 'payments.', 'prefix' => 'payments', 'controller' => PaymentController::class], function () {
         Route::get('/', 'index')->name('index');
+    });
+    Route::group(['as' => 'notifications.', 'prefix' => 'notifications', 'controller' => NotificationController::class], function () {
+        Route::get('/', 'index')->name('index');
+        Route::put('/read/{id}', 'read')->name('read');
     });
 
     Route::group(['as' => 'imports.', 'prefix' => 'imports', 'middleware' => ['admin'], 'controller' => ImportPaymentController::class], function () {

@@ -9,6 +9,7 @@ import BreezeResponsiveNavLink from "@/Components/Breeze/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import MainMenu from "@/Components/MainMenu.vue";
 import FlashMessages from "@/Components/FlashMessages.vue";
+import NotificationBage from "@/Components/NotificationBage.vue";
 
 
 const showNaw = ref(false);
@@ -37,7 +38,14 @@ const showSubMenu = ref(false);
         <div class="flex-auto w-4/12">
             <div class="h-16 bg-systems-400 shadow-sm flex justify-between sticky top-0 z-50">
                 <FlashMessages v-if="$page.props.flash" />
-                <SettingDropdown />
+                <div class="flex items-center gap-4 mx-4">
+                    <div>
+                        <SettingDropdown />
+                    </div>
+                    <div>
+                        <NotificationBage />
+                    </div>
+                </div>
             </div>
             <div class="px-2 transition-all flex-none">
                 <slot />

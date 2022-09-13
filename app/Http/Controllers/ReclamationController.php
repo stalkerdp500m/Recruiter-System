@@ -8,6 +8,7 @@ use App\Models\Reclamation;
 use App\Models\ReclamationStatus;
 use App\Models\Recruiter;
 use App\Models\User;
+use App\Notifications\ReclamationUpdate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -24,6 +25,8 @@ class ReclamationController extends Controller
      */
     public function index()
     {
+        // dd(Auth::user()->notifications);
+
         $periodList = Payment::paymentPeriodList()->get()->map(function ($item) {
             return  ['month' => $item['month'], 'year' => $item['year'], 'period' => $item['month'] . "-" . $item['year']];
         });
@@ -129,7 +132,16 @@ class ReclamationController extends Controller
             ]);
             $validatedData['answerer_id'] = Auth::user()->id;
         }
+
         $reclamation->update($validatedData);
+        if ($validatedData['status_id'] > 2 && $reclamation->wasChanged('status_id')) {
+            $updateNotify = (object) [
+                'newStatus' =>  ReclamationStatus::find($validatedData['status_id']),
+                'reclamationId' => $reclamation->id,
+                'reclamationClient' => $reclamation->client
+            ];
+            User::find($reclamation->user_id)->notify(new ReclamationUpdate($updateNotify));
+        }
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация обновлена"]);
     }
 
