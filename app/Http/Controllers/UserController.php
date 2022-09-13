@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
 use App\Notifications\createUser;
+use App\Notifications\Welcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -79,6 +80,7 @@ class UserController extends Controller
         ]);
         $user->recruiters()->sync($request->recruiters_id);
         $user->notify(new createUser($request->only(['name', 'email', 'password'])));
+        $user->notify(new Welcome($user));
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $request->name добавлен"]);
     }
 

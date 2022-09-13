@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Team;
 use App\Models\User;
+use App\Notifications\Welcome;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        $user->notify(new Welcome($user));
 
         return redirect(RouteServiceProvider::HOME);
     }

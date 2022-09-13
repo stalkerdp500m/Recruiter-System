@@ -49,7 +49,7 @@ function markAsRead (notyfy, action = false) {
                     </div>
 
                     <div class="md:w-8/12  flex flex-col mb-3 ml-5 md:mb-0 pl-2 border-l border-systems-700">
-                        <h1 class="text-xl bold">{{notify.data?.title}}</h1>
+                        <h1 class="text-xl ">{{notify.data?.title}}</h1>
                         <div>{{notify.data?.body}}</div>
                     </div>
                     <div class=" cursor-pointer  ">
