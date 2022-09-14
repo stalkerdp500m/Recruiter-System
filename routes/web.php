@@ -32,7 +32,6 @@ use Inertia\Inertia;
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/profile',  [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/create-token',  [ProfileController::class, 'createToken'])->middleware('admin')->name('create-token');
 
@@ -63,7 +62,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::put('/{reclamation}/restore', 'restore')->name('restore')->middleware(['can:restore,reclamation']);
     });
 
-    Route::group(['as' => 'control.', 'prefix' => 'control', 'middleware' => ['admin']], function () {
+    Route::group(['as' => 'control.', 'middleware' => ['admin']], function () {
         Route::group(['as' => 'users.', 'prefix' => 'users', 'controller' => UserController::class], function () {
             Route::get('/', 'index')->name('index');
             Route::put('/{user}', 'update')->name('update');
