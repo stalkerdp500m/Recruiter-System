@@ -10,17 +10,29 @@ import { Link } from "@inertiajs/inertia-vue3";
 import MainMenu from "@/Components/MainMenu.vue";
 import FlashMessages from "@/Components/FlashMessages.vue";
 import NotificationBage from "@/Components/NotificationBage.vue";
+import { Inertia } from '@inertiajs/inertia';
+
 
 
 const showNaw = ref(false);
 const showSubMenu = ref(false);
+const showLoud = ref(false)
+
+Inertia.on('start', (event) => {
+    showLoud.value = true;
+})
+Inertia.on('finish', (event) => {
+    showLoud.value = false;
+})
+
 </script>
 
 <template>
-    <div class="flex  h-full bg-systems-500 min-h-screen  md:max-w-fit md:min-w-full ">
-        <!-- <div class="flex flex-row h-full bg-systems-50 min-h-screen md:max-w-full w-sm "> -->
 
-        <div class="shrink bg-systems-800 transition-all "
+    <div class="flex  h-full bg-systems-500 min-h-screen  md:max-w-fit md:min-w-full ">
+
+
+        <div class="shrink bg-systems-800 transition-all z-50 "
             :class="showSubMenu ? 'w-44 md:w-64' : showNaw ? 'w-44 md:w-12' : 'w-12 md:w-64'">
             <div class="sticky top-0">
                 <div class=" bg-systems-900 text-white h-16 flex  items-center justify-between ">
@@ -38,7 +50,7 @@ const showSubMenu = ref(false);
         <div class="flex-auto w-4/12">
             <div class="h-16 bg-systems-400 shadow-sm flex justify-between sticky top-0 z-50">
                 <FlashMessages v-if="$page.props.flash" />
-                <div class="flex items-center gap-4 mx-4">
+                <div class="flex items-center gap-4 md:mr-20 mr-5">
                     <div>
                         <SettingDropdown />
                     </div>
@@ -47,10 +59,45 @@ const showSubMenu = ref(false);
                     </div>
                 </div>
             </div>
-            <div class="px-2 transition-all flex-none">
+            <!-- лоадер -->
+            <div v-if="showLoud"
+                class="fixed  w-screen  h-screen top-0 right-0  z-40 overflow-hidden bg-systems-700/80  flex flex-col items-center justify-center">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-20 w-20 mb-4 ">
+                </div>
+                <h2 class="text-center text-white text-xl font-semibold"></h2>
+            </div>
+            <!-- /лоадер -->
+            <div :class="{'blur-sm':showLoud}" class="px-2 transition-all flex-none  ">
                 <slot />
             </div>
         </div>
 
     </div>
 </template>
+<style>
+.loader {
+    border-top-color: #3498db;
+    -webkit-animation: spinner 1.5s linear infinite;
+    animation: spinner 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+</style>
