@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
 use App\Http\Controllers\RecruiterController;
+use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
@@ -33,7 +34,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile',  [ProfileController::class, 'index'])->name('profile');
+
     Route::get('/profile/create-token',  [ProfileController::class, 'createToken'])->middleware('admin')->name('create-token');
+    Route::get('/imports/salary',  [SalaryController::class, 'index'])->middleware('admin')->name('imports.salary.index');
 
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 
@@ -47,10 +50,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::put('/read/{id}', 'read')->name('read');
     });
 
-    Route::group(['as' => 'imports.', 'prefix' => 'imports', 'middleware' => ['admin'], 'controller' => ImportPaymentController::class], function () {
-        Route::get('/payments',  'index')->name('payments.index');
-        Route::post('/payments',  'create')->name('payments.create');
-        Route::post('/payments/store/', 'store')->name('payments.store');
+    Route::group(['as' => 'imports.payments.', 'prefix' => 'imports', 'middleware' => ['admin'], 'controller' => ImportPaymentController::class], function () {
+        Route::get('/payments',  'index')->name('index');
+        Route::post('/payments',  'create')->name('create');
+        Route::post('/payments/store/', 'store')->name('store');
     });
 
     Route::group(['as' => 'reclamations.', 'prefix' => 'reclamations', 'controller' => ReclamationController::class], function () {

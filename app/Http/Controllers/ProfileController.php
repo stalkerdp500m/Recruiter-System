@@ -25,7 +25,7 @@ class ProfileController extends Controller
     {
         $request->user()->tokens()->delete();
         $token = $request->user()->createToken($request->token_name, ['salaries:update'])->plainTextToken;
-        dd($token);
+        return response()->json(['token' => $token]);;
     }
 
 

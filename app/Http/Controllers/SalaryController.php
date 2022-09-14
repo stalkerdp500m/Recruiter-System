@@ -8,6 +8,7 @@ use App\Models\Salary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class SalaryController extends Controller
 {
@@ -20,7 +21,11 @@ class SalaryController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Import/Salary', [
+            // 'recruiterList' => Recruiter::select('id', 'name', 'team_id', 'owner_id')->with(['team:id,name', 'owner:id,name'])->orderBy('created_at', 'desc')->get(),
+            // 'teamsList' => Team::select('id', 'name')->get(),
+            // 'userList' => User::select('id', 'name')->orderBy('created_at', 'desc')->get(),
+        ]);
     }
 
     /**
@@ -30,8 +35,8 @@ class SalaryController extends Controller
      */
     public function create()
     {
-
         if ($this->isCan(Request::user(), 'salaries:update')) {
+
             $validator = Validator::make(Request::all(), $this->salaryValidationRules());
 
             if ($validator->passes()) {
