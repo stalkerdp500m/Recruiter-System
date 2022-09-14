@@ -31,15 +31,14 @@ use Inertia\Inertia;
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
-    Route::get('/profile',  [ProfileController::class, 'index'])->middleware(['admin'])->name('profile');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/profile',  [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/create-token',  [ProfileController::class, 'createToken'])->middleware('admin')->name('create-token');
+
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 
 
-    // Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
-
-
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['as' => 'payments.', 'prefix' => 'payments', 'controller' => PaymentController::class], function () {
         Route::get('/', 'index')->name('index');

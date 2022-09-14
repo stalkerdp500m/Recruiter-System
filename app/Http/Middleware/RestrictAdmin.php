@@ -23,6 +23,6 @@ class RestrictAdmin
         if ($request->user()->role === 'admin') {
             return $next($request);
         }
-        return $this->onError(401, 'Invalid action for this role');
+        abort(403);
     }
 }

@@ -98,7 +98,7 @@ class TeamController extends Controller
                     break;
                 case 'assistants':
                     $massageAction = "асистенты";
-                    $team->assistants()->update(['team_id' => null]);
+                    $team->assistants()->update(['team_id' => null, 'role' => 'user']);
                     User::whereIn('id', $request->assistants)->update(['role' => 'assistant', 'team_id' => $team->id]);
                     break;
                 case 'name':
