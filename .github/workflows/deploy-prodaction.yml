@@ -1,4 +1,4 @@
-name: DeployDemo
+name: DeployProduction
 
 # Trigger the workflow on push and
 # pull request events on the production branch
