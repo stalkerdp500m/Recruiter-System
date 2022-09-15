@@ -23,11 +23,11 @@ const userRole = usePage().props.value.auth.user.role
 </script>
 
 <template>
-    <div class="transition-all pl-1  flex flex-col gap-8">
+    <div class="transition-all pl-1  flex flex-col gap-8 mt-20">
 
         <Link :href="route('dashboard')" v-if="userRole != 'accountant'">
         <div :class="isUrl('dashboard') ? 'opacity-100' : 'opacity-40'"
-            class="text-white mt-20 flex flex-row items-center  overflow-x-clip hover:opacity-100 ">
+            class="text-white flex flex-row items-center  overflow-x-clip hover:opacity-100 ">
             <div class="px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">

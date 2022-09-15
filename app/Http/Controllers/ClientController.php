@@ -41,17 +41,6 @@ class ClientController extends Controller
                 'searchResults' => $searchResults
             ];
         }
-        // if (!Request::input('json', false)) {
-        //     return Inertia::render('Client/Index', [
-        //         'searchPasport' => Request::only('pasport'),
-        //         'searchResults' => $searchResults
-        //     ]);
-        // } else {
-        //     return  [
-        //         'searchPasport' => Request::only('pasport'),
-        //         'searchResults' => $searchResults
-        //     ];
-        // }
     }
 
 

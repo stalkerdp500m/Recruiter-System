@@ -44,8 +44,7 @@ class ReclamationUpdate extends Notification
         return (new MailMessage)
             ->subject($this->title)
             ->line($this->title)
-            ->action('перейти к реклмации', url($this->reclamationUrl))
-            ->line('Спасибо, что пользуетесь ' . config('app.name'));
+            ->action('перейти к реклмации', url($this->reclamationUrl));
     }
 
     /**
