@@ -6,7 +6,6 @@ const masages = ref([usePage().props.value.flash]);
 watch(() => usePage().props.value.flash, () => {
     let msgId = masages.value.length
     masages.value.push(usePage().props.value.flash)
-    console.log(masages.value.length);
     setTimeout(() => {
         masages.value[msgId].newFlash = false;
     }, 4000);

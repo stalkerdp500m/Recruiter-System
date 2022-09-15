@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchClientRequest;
 use App\Models\Client;
 use App\Models\Payment;
 //use Illuminate\Http\Request;
@@ -15,11 +16,9 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SearchClientRequest $request)
     {
-
-
-        $searchResults = Client::where('pasport', Request::input('pasport', ''))
+        $searchResults = Client::where('pasport', $request->safe()->only('pasport'))
             ->with(['payments' => function ($query) {
                 $query->orderBy('year', 'DESC')->orderBy('month', 'DESC');
             }, 'payments.recruiter:id,name', 'salaries' => function ($query) {
@@ -30,26 +29,15 @@ class ClientController extends Controller
 
         if (!Request::expectsJson()) {
             return Inertia::render('Client/Index', [
-                'searchPasport' => Request::only('pasport'),
+                'searchPasport' => $request->safe()->only('pasport'),
                 'searchResults' => $searchResults
             ]);
         } else {
             return  [
-                'searchPasport' => Request::only('pasport'),
+                'searchPasport' => $request->safe()->only('pasport'),
                 'searchResults' => $searchResults
             ];
         }
-        // if (!Request::input('json', false)) {
-        //     return Inertia::render('Client/Index', [
-        //         'searchPasport' => Request::only('pasport'),
-        //         'searchResults' => $searchResults
-        //     ]);
-        // } else {
-        //     return  [
-        //         'searchPasport' => Request::only('pasport'),
-        //         'searchResults' => $searchResults
-        //     ];
-        // }
     }
 
 

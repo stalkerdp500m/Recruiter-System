@@ -30,7 +30,6 @@ function deleteReclamation (id) {
             }
         })
     }
-
 }
 
 
@@ -57,7 +56,11 @@ function deleteReclamation (id) {
 
                 <div class="w-1/12 bg-white h-40   rounded-md  flex justify-center  truncate"
                     :class="statusColors[reclamation.status?.id].label">
-                    <div class=" -rotate-90 my-auto ">{{ reclamation.status?.title }}</div>
+
+                    <div class="-rotate-90  my-auto  ">
+                        <span>{{ reclamation.status?.title }}</span>
+                    </div>
+
                 </div>
 
                 <Link :href="route('reclamations.edit', { 'id': reclamation.id })"
@@ -77,10 +80,10 @@ function deleteReclamation (id) {
 
                     <div class=" ">{{ reclamation?.recruiter?.name }}</div>
                     <div class=" text-xs pt-2 break-words">отправлена: {{ reclamation.user.name }}<br>{{
-                            toLocaleDate(reclamation.created_at)
+                    toLocaleDate(reclamation.created_at)
                     }}</div>
                     <div class=" text-xs pt-2 break-words">изменена: {{
-                            toLocaleDate(reclamation.updated_at)
+                    toLocaleDate(reclamation.updated_at)
                     }}</div>
 
                 </div>

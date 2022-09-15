@@ -18,7 +18,7 @@ class Reclamation extends Model
 
     public function resolveRouteBinding($value, $field = null)
     {
-        return $this->where($field ?? 'id', $value)->with('client:id,pasport,name', 'recruiter:id,name', 'status', 'user:id,name')->withTrashed()->firstOrFail();
+        return $this->where($field ?? 'id', $value)->with('client:id,pasport,name', 'recruiter:id,name', 'status', 'user:id,name', 'answerer:id,name')->withTrashed()->firstOrFail();
     }
 
     public function client()
@@ -34,6 +34,10 @@ class Reclamation extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function answerer()
+    {
+        return $this->belongsTo(User::class, 'answerer_id', 'id');
     }
 
     public function status()

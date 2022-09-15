@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\MyResetPass;
+use App\Notifications\MyVerifyMail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,7 +23,19 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'team_id',
+        'role',
+        'email_verified_at'
     ];
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new MyVerifyMail());
+    }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MyResetPass($token));
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -46,5 +60,9 @@ class User extends Authenticatable
     public function recruiters()
     {
         return $this->belongsToMany(Recruiter::class)->orderBy('name');
+    }
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

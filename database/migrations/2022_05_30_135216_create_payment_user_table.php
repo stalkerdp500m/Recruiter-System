@@ -18,9 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('payment_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
-            $table->index('payment_id', 'payment_id_idx');
+            $table->index('payment_id', 'payment_user_payment_idx');
             $table->foreign('payment_id')->on('payments')->references('id');
-            $table->index('user_id', 'user_id_idx');
+            $table->index('user_id', 'payment_user_user_idx');
             $table->foreign('user_id')->on('users')->references('id');
         });
     }

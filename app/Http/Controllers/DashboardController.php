@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Recruiter;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -13,45 +12,39 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $periodList = Payment::selectRaw('month, year , concat(month,"-", year) as period')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->distinct('period')->get();
-        $endPeriod = $periodList->take(6)->first() ?? ["year" => 0, "month" => 0];;
-        $startPeriod = $periodList->take(6)->last() ?? ["year" => 1, "month" => 1];
-        $queryFilter = Request::only('start', 'end');
-
-
-        $startYear = isset($queryFilter['start']) ? explode("-", $queryFilter['start'])[1] : $startPeriod['year'];
-        $startMonth = isset($queryFilter['start']) ? explode("-", $queryFilter['start'])[0] : $startPeriod['month'];
-        $endYear = isset($queryFilter['end']) ? explode("-", $queryFilter['end'])[1] : $endPeriod['year'];
-        $endMonth = isset($queryFilter['end']) ? explode("-", $queryFilter['end'])[0] : $endPeriod['month'];
-
-
-
-        $paymentData = Payment::whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'))
-            ->selectRaw('count(id) as countRecrutation, month, recruiter_id, year')
-            ->where('bonus', '>', 0)
-            ->groupBy('recruiter_id', 'month', 'year')
-            ->dashboardFilter($startYear, $startMonth, $endYear,  $endMonth)
-            ->with('recruiter:id,name')
-            ->get();
-
-
-        $paymentCouns = $paymentData->mapToGroups(function ($item) {
-            //echo $item;
-            return  [$item['recruiter_id'] =>  array(
-                'rucruiterName' => $item['recruiter']['name'],
-                'countPaym' => $item['countRecrutation'],
-                'month' => $item['month'] . '-' . $item['year']
-            )];
+        $periodList = Payment::paymentPeriodList()->get()->map(function ($item) {
+            return  ['month' => $item['month'], 'year' => $item['year'], 'period' => $item['month'] . "-" . $item['year']];
         });
+
+        $queryFilter = Request::only('start', 'end');
+        if (!isset($queryFilter['start']) || !isset($queryFilter['end'])) {
+            $queryFilter['start'] = $periodList->take(6)->last()['period'] ?? "0-0";
+            $queryFilter['end'] = $periodList->take(6)->first()['period'] ?? "1-1";
+        }
+
+        $dashbourdPeriod  = (object) [
+            'startYear' =>  explode("-", $queryFilter['start'])[1],
+            'startMonth' =>  explode("-", $queryFilter['start'])[0],
+            'endYear' => explode("-", $queryFilter['end'])[1],
+            'endMonth' => explode("-", $queryFilter['end'])[0]
+        ];
+
+        $recruiterPaymentsCount = Recruiter::recruitersAcces(Auth::user())
+            ->with('payments', function ($query) use ($dashbourdPeriod) {
+                $query
+                    ->select('month', 'recruiter_id', 'year')
+                    ->selectRaw('count(id) as countpaym')
+                    ->where('bonus', '>', 0)
+                    ->PaymentPeriodFilter($dashbourdPeriod)
+                    ->groupBy('recruiter_id', 'month', 'year');
+            })
+            ->get();
+        // dd($recruiterPaymentsCount);
+
         return Inertia::render('Dashboard/Index', [
-            'filters' => Request::only('start', 'end'),
-            'paymentCouns' => $paymentCouns,
+            'recruiterPaymentsCount' => $recruiterPaymentsCount,
             'periodList' => $periodList,
-            'autoStartPeriod' => $startPeriod,
-            'autoEndPeriod' => $endPeriod,
+            'queryFilter' => $queryFilter
         ]);
     }
 }

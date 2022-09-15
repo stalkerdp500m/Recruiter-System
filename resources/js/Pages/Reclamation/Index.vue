@@ -84,7 +84,7 @@ function selectTrashed () {
 
 
         <div class="py-2 md:w-full  mx-auto">
-            <div class="flex h-20 items-center px-10">
+            <!-- <div class="flex h-20 items-center px-10">
                 <div @click="showForm = true"
                     class="bg-systems-800 rounded-md text-white shadow-md px-4 py-2  text-center cursor-pointer flex">
                     Добавить рекламацию
@@ -94,12 +94,25 @@ function selectTrashed () {
                             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-            </div>
+            </div> -->
             <!-- Фильтры
             поиск, фильтр статусы, архивные
             -->
-            <div class=" my-4  rounded-md w-full gap-2  flex items-center md:justify-center justify-evenly flex-wrap">
-                <div class=" md:w-2/6 justify-center flex items-center w-11/12 ">
+            <div class=" my-4  rounded-md w-full gap-2  flex items-center  justify-evenly flex-wrap">
+
+                <div class="flex h-20 items-center ">
+                    <div @click="showForm = true"
+                        class="bg-systems-800 rounded-md text-white shadow-md px-4 py-2  text-center cursor-pointer flex">
+                        Добавить рекламацию
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3 " fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class=" md:w-2/7 justify-center flex items-center w-fit ">
                     <VueMultiselect @update:model-value="selectedStatus" :multiple="true"
                         selectLabel="добавить в фильтр" deselectLabel="убрать из фильтра" v-model="statuseShortList"
                         track-by="title" :options="statuses" label="title" :searchable="false"
@@ -143,4 +156,5 @@ function selectTrashed () {
     </MainLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
+
 </style>

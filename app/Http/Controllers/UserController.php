@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recruiter;
+use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
+use App\Notifications\createUser;
+use App\Notifications\Welcome;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -17,12 +23,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $userList = User::with('recruiters:id,name')->orderBy('name')->get();
-        $recruiterList = Recruiter::select('id', 'name')->get();
-
-        return Inertia::render('User/Index', [
-            'userList' => $userList,
-            'recruiterList' => $recruiterList
+        return Inertia::render('Setting/User/Index', [
+            'userList' => User::with(['recruiters:id,name', 'team'])->orderBy('created_at', 'desc')->get(),
+            'recruiterList' => Recruiter::select('id', 'name')->get(),
+            'roleList' => Role::select('title')->get()->pluck('title'),
+            'teamsList' => Team::select('id', 'name')->get()
         ]);
     }
 
@@ -31,9 +36,20 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        return Inertia::render('Setting/User/Create', [
+            'recruiterList' => Recruiter::select('id', 'name')->get(),
+            'roleList' => Role::select('title')->get()->pluck('title'),
+            'teamsList' => Team::select('id', 'name')->get()
+        ]);
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $validator = Validator::make($request->only('email'), ['email' => 'required|string|email|max:255|unique:users']);
+        return $validator->errors();
     }
 
     /**
@@ -44,7 +60,28 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // добавить синхронизацию рекрутеров!!!
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => ['required'],
+            'team' => ['nullable', 'exists:teams,id'],
+            'role' => ['required', 'exists:roles,title'],
+            'recruiters_id' => ['array']
+        ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'team_id' => $request->team,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+            'email_verified_at' =>  now()
+        ]);
+        $user->recruiters()->sync($request->recruiters_id);
+        $user->notify(new createUser($request->only(['name', 'email', 'password'])));
+        $user->notify(new Welcome($user));
+        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $request->name добавлен"]);
     }
 
     /**
@@ -78,8 +115,22 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->recruiters()->sync($request->recruiter_id);
-        return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $user->name обновлен"]);
+
+
+        switch ($request->action) {
+            case 'role':
+                $user->update($request->only('role'));
+                return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "новая роль у $user->name $request->role"]);
+            case 'recruitersList':
+                $user->recruiters()->sync($request->recruiter_id);
+                return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Список рекрутеров у $user->name обновлен"]);
+            case 'team':
+                $user->update($request->only('team_id'));
+                return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Команда пользователя $user->name обновлена"]);
+            default:
+                return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Действие не определено"]);
+                break;
+        }
     }
 
     /**

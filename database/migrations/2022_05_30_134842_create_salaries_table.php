@@ -24,7 +24,7 @@ return new class extends Migration
             $table->double('rate', 8, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->index('client_id', 'client_id_idx');
+            $table->index('client_id', 'salary_client_idx');
             $table->foreign('client_id')->on('clients')->references('id');
         });
     }

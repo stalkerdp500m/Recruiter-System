@@ -11,29 +11,23 @@ import { number } from "tailwindcss/lib/util/dataTypes";
 
 
 const props = defineProps({
-    paymentCouns: Object,
+    recruiterPaymentsCount: Object,
     periodList: Object,
-    autoStartPeriod: Object,
-    autoEndPeriod: Object,
-    filters: Object
+    queryFilter: Object
 });
+
 
 const recruitersData = ref([]);
 const recruitersShortList = ref([]);
-const currenStart = props.filters.start ? props.filters.start : props.autoStartPeriod?.period// последний ключь-год
-const currenEnd = props.filters.end ? props.filters.end : props.autoEndPeriod?.period
+
 
 const periodModel = reactive(
     {
-        'start': currenStart,
-        'end': currenEnd,
+        'start': props.queryFilter.start,
+        'end': props.queryFilter.end,
     }
 )
 const recruitersList = [];
-
-
-
-
 
 function* generateColorFunc () {
     const collorSet = [
@@ -59,8 +53,6 @@ function* generateColorFunc () {
 }
 const generateColor = generateColorFunc();
 
-
-
 function randColor () {
     const randomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -70,12 +62,6 @@ function randColor () {
     let l = randomInt(40, 90);
     return `hsl(${h},${s}%,${l}%)`;
 }
-
-
-
-
-
-
 
 
 function selectedPeriod () {
@@ -92,7 +78,6 @@ function selectedRecruiter (list) {
     })
 }
 
-
 function deleteRecruiterFromLegends (e, item) {
     if (recruitersShortList.value.length != 0) {
         recruitersShortList.value = recruitersShortList.value.filter(recrut => {
@@ -105,9 +90,6 @@ function deleteRecruiterFromLegends (e, item) {
 }
 
 function hoverRecruiterLegends (e, item) {
-    console.log(item);
-    console.log(e);
-    // Доделать всплытие линни на первый слой
     recruitersData.value.map((recrut) => {
         if (recrut.label == item.text) {
             recrut.borderWidth = 10
@@ -128,33 +110,28 @@ function leavHoverRecruiterLegends () {
 }
 
 
-
-
-let color = ''
-for (const paymCount in props.paymentCouns) {
-
+for (const recruiter in props.recruiterPaymentsCount) {
     const dataRecruiter = {};
-    props.paymentCouns[paymCount].map(month => {
-        //dataRecruiter.push(month.countPaym)
-        dataRecruiter[month.month] = month.countPaym
+    let color = ''
+    props.recruiterPaymentsCount[recruiter].payments.map(paym => {
+        dataRecruiter[`${paym.month}-${paym.year}`] = Number(paym.countpaym)
     });
-    recruitersList.push(props.paymentCouns[paymCount][0].rucruiterName);
+    recruitersList.push(props.recruiterPaymentsCount[recruiter].name);
     color = generateColor.next().value;
     recruitersData.value.push({
-        label: props.paymentCouns[paymCount][0].rucruiterName,
+        label: props.recruiterPaymentsCount[recruiter].name,
         borderColor: color,
         data: dataRecruiter,
         backgroundColor: color,
         tension: 0.1,
         borderWidth: 5,
-        //  тут добавить толщину линии в зависимости от кол-ва рекрутаций
     })
 }
+
 
 const chartData = computed(() => ({
     'datasets': recruitersData.value
 }))
-
 
 
 Chart.register(...registerables);
@@ -241,7 +218,6 @@ const options = {
 }
 
 
-
 const { lineChartProps, linetChartRef } = useLineChart({
     'chartData': {
         'datasets': recruitersData.value
@@ -254,7 +230,7 @@ const { lineChartProps, linetChartRef } = useLineChart({
 
 <template>
 
-    <Head title="Dashboard" />
+    <Head title="Аналитика" />
 
     <MainLayout>
         <template #header>
@@ -295,42 +271,8 @@ const { lineChartProps, linetChartRef } = useLineChart({
                         :options="recruitersList" placeholder="Выберите рекрутеров">
                     </VueMultiselect>
                 </div>
-                <!-- <div class="bg-white flex items-center justify-start   shadow-md rounded-md py-1 ">
-                    <label for="month" class="px-4 border-r border-systems-900/20">Конец</label>
-                    <div class=" ">
-                        <select v-model="periodModel.end" @change="selectedPeriod" id="end" name="end"
-                            class="cursor-pointer form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
-                            <option v-for="period in props.periodList">{{ period.period }}</option>
-                        </select>
-                    </div>
-                </div> -->
             </div>
             <!-- /Фильтры -->
-            <!-- Фильтры -->
-            <!-- <div
-                class="py-5   grid gap-2 md:grid-flow-col  md:justify-start md:gap-4  justify-center  items-center md:w-2/3  ">
-                <div class="bg-white  flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit ">
-                    <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Начало</label>
-                    <div class="md:mb-3 ">
-                        <select id="start" v-model="periodModel.start" @change="selectedPeriod"
-                            class=" form-select cursor-pointer focus:ring-0 ring-0 border-0 mr-5 bg-transparent "
-                            aria-label="year">
-                            <option v-for="period in props.periodList">{{ period.period }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="bg-white flex items-baseline justify-start  pt-2 shadow-md rounded-md w-11/12 md:w-fit">
-                    <label for="month" class="px-4 border-r border-systems-900/20">Конец</label>
-                    <div class="md:mb-3 ">
-                        <select v-model="periodModel.end" @change="selectedPeriod" id="end" name="end"
-                            class="cursor-pointer form-select focus:ring-0 ring-0 border-0 mr-5 bg-transparent">
-                            <option v-for="period in props.periodList">{{ period.period }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div> -->
-            <!-- /Фильтры -->
-
             <div class="  ">
                 <div class="bg-white overflow-hidden shadow-sm rounded-md">
                     <div class="p-4 bg-white border-b border-gray-200">
@@ -342,5 +284,6 @@ const { lineChartProps, linetChartRef } = useLineChart({
     </MainLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
+
 </style>
 

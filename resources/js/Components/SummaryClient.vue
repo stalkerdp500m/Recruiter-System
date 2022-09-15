@@ -68,7 +68,7 @@ function agregate (clientData) {
         clientData.salaries.map((salary) => {
             let dateSalary = new Date(salary.year, salary.month - 1);
             countWorks.value++;
-            sumHours.value += salary.hours;
+            sumHours.value += Number(salary.hours);
             if (dateSalary > maxWorkDate.value) {
                 maxWorkDate.value = dateSalary;
             }
@@ -112,7 +112,7 @@ function toLocaleDate (date) {
             Данные по этому паспорту отсутсвуют в системе</div>
         <div v-else>
             <div v-if="countPayments || countWorks" class=" text-center p-4 font-bold uppercase">Данные по <b>{{
-                    name
+            name
             }}</b>
             </div>
             <div v-else class=" text-center p-4 font-semibold uppercase">часы и выплаты по клиенту не найдены</div>
@@ -123,7 +123,7 @@ function toLocaleDate (date) {
             <div v-if="countWorks" class=" text-center px-4 font-bold">
                 Работал(а) {{ countWorks }} месяца,
                 последний {{ toLocaleDate(maxWorkDate) }}, ⏰ часов всего {{
-                        sumHours
+                sumHours
                 }}</div>
             <div v-if="countWorks" class=" text-center px-4 ">
                 <div v-for="(period, kay) in sequencePeriods">

@@ -6,7 +6,9 @@ use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Reclamation;
 use App\Models\ReclamationStatus;
+use App\Models\Recruiter;
 use App\Models\User;
+use App\Notifications\ReclamationUpdate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -23,50 +25,36 @@ class ReclamationController extends Controller
      */
     public function index()
     {
+        // dd(Auth::user()->notifications);
 
-        $periodList = Payment::selectRaw('month, year , concat(month,"-", year) as period')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->distinct('period')->get();
-
-        $recruiterList = User::select('name', 'id')->where('id', Auth::user()->id)->with('recruiters:id,name')->first()->only('recruiters');
-
-        // $reclamations = User::where('id', Auth::user()->id)->with(['recruiters.reclamations' => function ($query) {
-        //     $query->trashedFilter(Request::only('trashed'))->with('status:id,title');
-        // }, 'recruiters.reclamations.client:id,name,pasport'])->first();
-
-
-
-        $reclamations = Reclamation::when(Auth::user()->role !== 'admin', function ($query) {
-            $query->whereIn('recruiter_id', Auth::user()->recruiters->pluck('id'));
-        })->trashedFilter(Request::only('trashed'))->orderBy('updated_at', 'desc')
-            ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name')->get();
-
-        $statuseList = $reclamations->mapWithKeys(function ($item) {
-            return  [$item['status']['title'] => $item['status']['id']];
+        $periodList = Payment::paymentPeriodList()->get()->map(function ($item) {
+            return  ['month' => $item['month'], 'year' => $item['year'], 'period' => $item['month'] . "-" . $item['year']];
         });
 
+        $recruiterList = Recruiter::recruitersAcces(Auth::user())->get();
 
+        $statuseList = ReclamationStatus::select('title', 'id')->get()->mapWithKeys(function ($item) {
+            return  [$item['title'] => $item['id']];
+        });
+
+        $reclamations = Recruiter::recruitersAcces(Auth::user())->with('reclamations', function ($query) {
+            $query->trashedFilter(Request::only('trashed'))
+                ->with('status:id,title', 'client:id,name,pasport', 'recruiter:id,name', 'user:id,name');
+        })->get()
+            ->pluck('reclamations')
+            ->flatten()
+            ->sortBy([['updated_at', 'desc']]);
 
         return Inertia::render('Reclamation/Index', [
             'searchPasport' => Request::only('pasport'),
             'periodList' => $periodList,
-            'recruiterList' => $recruiterList,
+            'recruiterList' => ["recruiters" => $recruiterList],
             'reclamations' => $reclamations,
             'statuseList' => $statuseList,
             'trashed' => Request::input('trashed', 'no')
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -76,7 +64,6 @@ class ReclamationController extends Controller
      */
     public function store()
     {
-
         $validatedData = Request::validate([
             'project' => ['required', 'max:255'],
             'client_name' => ['required', 'max:255'],
@@ -104,21 +91,10 @@ class ReclamationController extends Controller
                 'status_id' => 1,
             ]
         );
-
-        // return Redirect::route('reclamations.index');
-        return redirect()->action([ReclamationController::class, 'index'])->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация Создана"]);;
+        return redirect()->action([ReclamationController::class, 'index'])->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация Создана"]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -128,7 +104,6 @@ class ReclamationController extends Controller
      */
     public function edit(Reclamation $reclamation)
     {
-        abort_if(Auth::user()->role !== 'admin'  && !Auth::user()->recruiters->pluck('id')->contains($reclamation->recruiter_id), 403);
         $statuseList = ReclamationStatus::select('id', 'title')->get();
         return Inertia::render('Reclamation/Edit', [
             'reclamation' => $reclamation,
@@ -145,22 +120,27 @@ class ReclamationController extends Controller
      */
     public function update(Reclamation $reclamation)
     {
-        abort_if(Auth::user()->role !== 'admin'  && !Auth::user()->recruiters->pluck('id')->contains($reclamation->recruiter_id), 403);
-
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'accountant') {
             $validatedData = Request::validate([
-                'comments' => ['required', 'array'],
-                'status_id' => ['required', 'integer'],
-                'answer' => ['nullable', 'string'],
+                'comments' => ['required', 'array']
             ]);
-            $reclamation->update($validatedData);
         } else {
             $validatedData = Request::validate([
                 'comments' => ['required', 'array'],
                 'status_id' => ['required', 'integer'],
                 'answer' => ['nullable', 'string'],
             ]);
-            $reclamation->update($validatedData);
+            $validatedData['answerer_id'] = Auth::user()->id;
+        }
+
+        $reclamation->update($validatedData);
+        if ($validatedData['status_id'] > 2 && $reclamation->wasChanged('status_id')) {
+            $updateNotify = (object) [
+                'newStatus' =>  ReclamationStatus::find($validatedData['status_id']),
+                'reclamationId' => $reclamation->id,
+                'reclamationClient' => $reclamation->client
+            ];
+            User::find($reclamation->user_id)->notify(new ReclamationUpdate($updateNotify));
         }
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация обновлена"]);
     }
@@ -173,9 +153,6 @@ class ReclamationController extends Controller
      */
     public function destroy(Reclamation $reclamation)
     {
-        // dump(Auth::user()->id);
-        //dd($reclamation->user_id);
-        abort_if(Auth::user()->id != $reclamation->user_id, 403);
         $reclamation->delete();
         return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Рекламация перенесена в архив"]);
     }
@@ -184,7 +161,6 @@ class ReclamationController extends Controller
 
     public function restore(Reclamation $reclamation)
     {
-        abort_if(Auth::user()->id != $reclamation->user_id, 403);
         $reclamation->restore();
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация востановлена из архива"]);
     }
