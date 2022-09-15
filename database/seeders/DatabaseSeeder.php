@@ -15,9 +15,7 @@ use App\Models\User;
 use App\Models\RecruiterUser;
 use App\Models\Role;
 use App\Models\Team;
-use Database\Factories\ReclamationFactory;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,34 +26,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        User::firstOrCreate(
-            ['email' => 'user@gmail.com'],
-            [
-                'name' => 'Test User',
-                'email_verified_at' => now(),
-                'password' => bcrypt('123'),
-            ]
-        );
-        User::firstOrCreate(
-            ['email' => 'another@gmail.com'],
-            [
-                'name' => 'Another User',
-                'email_verified_at' => now(),
-                'password' => bcrypt('123'),
-            ]
-        );
-        User::firstOrCreate(
-            ['email' => 'admin@gmail.com'],
-            [
-                'name' => 'Test Admin',
-                'email_verified_at' => now(),
-                'password' => bcrypt('123'),
-                'role' => 'admin'
-            ]
-        );
-
         $roleList = ['user', 'assistant', 'owner', 'accountant', 'admin'];
         $reclamationStatusesList = ['Новая', 'В работе', 'Одобрена', 'Отклонена'];
 
@@ -66,18 +36,42 @@ class DatabaseSeeder extends Seeder
         foreach ($reclamationStatusesList as $status) {
             ReclamationStatus::firstOrCreate(['title' => $status]);
         }
-        Team::factory(30)->create();
-        error_log('команды добавлены');
-        User::factory(2000)->create();
-        error_log('пользователи добавлены');
 
-        for ($i = 0; $i < 1000; $i++) {
-            error_log("добавляю $i");
+
+        if (config('app.is_demo')) {
+
+            User::firstOrCreate(
+                ['email' => 'user@gmail.com'],
+                [
+                    'name' => 'Test User',
+                    'email_verified_at' => now(),
+                    'password' => bcrypt('123'),
+                ]
+            );
+            User::firstOrCreate(
+                ['email' => 'another@gmail.com'],
+                [
+                    'name' => 'Another User',
+                    'email_verified_at' => now(),
+                    'password' => bcrypt('123'),
+                ]
+            );
+            User::firstOrCreate(
+                ['email' => 'admin@gmail.com'],
+                [
+                    'name' => 'Test Admin',
+                    'email_verified_at' => now(),
+                    'password' => bcrypt('123'),
+                    'role' => 'admin'
+                ]
+            );
+            Team::factory(30)->create();
+            User::factory(1000)->create();
             Client::factory(200)->create();
             Recruiter::factory(20)->create();
-            Salary::factory(300)->create();
-            Payment::factory(250)->create();
-            PaymentUser::factory(200)->create();
+            Salary::factory(700)->create();
+            Payment::factory(650)->create();
+            PaymentUser::factory(600)->create();
             RecruiterUser::factory(150)->create();
             Reclamation::factory(100)->create();
         }
