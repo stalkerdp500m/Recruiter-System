@@ -35,4 +35,6 @@ php artisan migrate --force
 # Exit maintenance mode
 php artisan up
 
+pm2 restart  worker/pm2-laravel-queue.yml
+
 echo "Deployment finished!"
