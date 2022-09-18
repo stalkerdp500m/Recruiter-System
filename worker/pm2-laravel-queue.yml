@@ -1,5 +1,5 @@
 apps:
-  - name: laravel-queue
+  - name: rs-queue-prod
     script: artisan
     exec_mode: fork
     interpreter: php
