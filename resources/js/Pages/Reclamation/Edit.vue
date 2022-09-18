@@ -13,17 +13,14 @@ const props = defineProps({
 });
 const userName = usePage().props.value.auth.user.name
 const userRole = usePage().props.value.auth.user.role
-//const user = [...usePage().props.value.auth.user]
-//[user.name, user.role] = [...usePage().props.value.auth.user]
-// const userName = usePage().props.value.auth.user.name
 
-console.log(props.reclamation);
+
+//console.log(props.reclamation);
 const updateReclamationForm = useForm({
     'comments': props.reclamation.comments,
     'status_id': props.reclamation.status.id,
     'answer': props.reclamation.answer
 });
-//const canAnswer = ref(usePage().props.value.auth.user.role == "accountant");
 
 function canAnswer (role) {
     return role == "accountant";

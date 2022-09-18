@@ -14,7 +14,7 @@ const props = defineProps({
     teamsList: Object
 });
 
-console.log(props);
+//console.log(props);
 
 
 const searchUserQuery = ref('');
@@ -138,7 +138,7 @@ function teamUpdate (team) {
                     <div :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
                         class=" text-sm overflow-x-clip absolute mx-3 -mt-12 md:mr-14 md:-mt-5 right-0  h-fit rounded-sm px-1">
                         {{
-                                user.role
+                        user.role
                         }}</div>
                 </div>
                 <div v-if="user.id == curentUserId"
@@ -181,4 +181,5 @@ function teamUpdate (team) {
     </MainLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
+
 </style>

@@ -5,7 +5,7 @@ import { Head, useForm } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 
 
-const host = window.location.hostname;
+const host = `${window.location.protocol}//${window.location.hostname}`;
 const token = ref(false);
 
 
