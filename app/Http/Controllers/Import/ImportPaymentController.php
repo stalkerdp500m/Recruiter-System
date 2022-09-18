@@ -45,11 +45,6 @@ class ImportPaymentController extends Controller
 
     public function store()
     {
-
-        //   ТУТ ВСЕ ОБЯЗАТЕЛЬНО ЗАВЕРНУТЬ В ТРАНЗАКЦИИ !!
-
-
-
         $listaTableSettings = [
             'sheatName' => 'Lista',
             'RowStart' => 6

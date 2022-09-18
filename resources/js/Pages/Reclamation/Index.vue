@@ -47,7 +47,7 @@ function selectedStatus (list) {
 
 function serched () {
     let pasport = searchPasport.value.toUpperCase();
-    console.log(pasport);
+    // console.log(pasport);
     if (searchPasport.value.length >= 3) {
         props.reclamations.map((reclamation) => {
             if (reclamation.client.pasport.toUpperCase().indexOf(pasport) != -1) {

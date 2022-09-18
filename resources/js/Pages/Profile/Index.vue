@@ -7,7 +7,7 @@ import { ref } from "vue";
 const props = defineProps({
     userData: Object,
 });
-console.log(props);
+//console.log(props);
 
 const showForm = ref(false);
 

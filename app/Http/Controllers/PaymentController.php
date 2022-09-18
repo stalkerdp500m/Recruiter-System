@@ -42,7 +42,7 @@ class PaymentController extends Controller
             return Inertia::render('Payment/Index', [
                 'ranges' => $monthAnYears,
                 'filters' => Request::only('month', 'year', 'recruiter'),
-                'payments' => ["recruiters" => $payments]
+                'payments' => $payments
             ]);
         } else {
             return Inertia::render('EmptyDataPage');
