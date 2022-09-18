@@ -28,15 +28,7 @@ class TeamController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -56,27 +48,6 @@ class TeamController extends Controller
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Команда $request->name добавлена"]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Team  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Team $team)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Team  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Team $team)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -114,16 +85,5 @@ class TeamController extends Controller
             DB::rollBack();
             return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Ошибка, операция не выполнена"]);
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Team  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Team $team)
-    {
-        //
     }
 }
