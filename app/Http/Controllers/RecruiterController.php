@@ -67,28 +67,6 @@ class RecruiterController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Recruiter  $recruiter
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Recruiter $recruiter)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Recruiter  $recruiter
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Recruiter $recruiter)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -116,16 +94,5 @@ class RecruiterController extends Controller
 
 
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => $request['recruiterName'] . $massageAction . $request['teamName']]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Recruiter  $recruiter
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Recruiter $recruiter)
-    {
-        //
     }
 }

@@ -30,8 +30,6 @@ class SalaryController extends Controller
     public function create()
     {
         if ($this->isCan(Request::user(), 'salaries:update')) {
-            //  return $this->onSuccess("Валидация пройдена, задание добавлено в очередь ", 'Finish job');
-
             $validator = Validator::make(Request::all(), $this->salaryValidationRules());
 
             if ($validator->passes()) {

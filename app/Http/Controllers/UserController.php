@@ -84,27 +84,6 @@ class UserController extends Controller
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Пользователь $request->name добавлен"]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -131,16 +110,5 @@ class UserController extends Controller
                 return Redirect::back()->with(['newFlash' => true, "type" => "danger", "massage" => "Действие не определено"]);
                 break;
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

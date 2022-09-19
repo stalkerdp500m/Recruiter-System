@@ -12,11 +12,8 @@ use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,25 +29,24 @@ use Inertia\Inertia;
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/profile',  [ProfileController::class, 'index'])->name('profile');
 
-    Route::get('/profile/create-token',  [ProfileController::class, 'createToken'])->middleware('admin')->name('create-token');
-    Route::get('/imports/salary',  [SalaryController::class, 'index'])->middleware('admin')->name('imports.salary.index');
+    Route::get('/profile/create-token',  [ProfileController::class, 'createToken'])->middleware('accountant')->name('create-token');
+    Route::get('/imports/salary',  [SalaryController::class, 'index'])->middleware('accountant')->name('imports.salary.index');
 
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 
 
 
-    Route::group(['as' => 'payments.', 'prefix' => 'payments', 'controller' => PaymentController::class], function () {
-        Route::get('/', 'index')->name('index');
-    });
     Route::group(['as' => 'notifications.', 'prefix' => 'notifications', 'controller' => NotificationController::class], function () {
         Route::get('/', 'index')->name('index');
         Route::put('/read/{id}', 'read')->name('read');
     });
 
-    Route::group(['as' => 'imports.payments.', 'prefix' => 'imports', 'middleware' => ['admin'], 'controller' => ImportPaymentController::class], function () {
+    Route::group(['as' => 'imports.payments.', 'prefix' => 'imports', 'middleware' => ['accountant'], 'controller' => ImportPaymentController::class], function () {
         Route::get('/payments',  'index')->name('index');
         Route::post('/payments',  'create')->name('create');
         Route::post('/payments/store/', 'store')->name('store');

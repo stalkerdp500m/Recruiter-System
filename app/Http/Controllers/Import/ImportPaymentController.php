@@ -75,15 +75,15 @@ class ImportPaymentController extends Controller
                             'month' =>  $month,
                             'year' => $year,
                             'client_id' => $client->id,
-                            'project' => trim($payment['proj_nazwa']),
+                            'project' => trim($payment['proj_nazwa'] ?? null),
                         ],
                         [
                             'recruiter_id' => $recruiter->id,
-                            'hours' => $payment['godziny_uop_enova'],
-                            'category' => trim($payment['projrek_kategoriaprojektudopremii']),
-                            'bonus' => $payment['premrek_kwotapremii_brutto'],
-                            'status' => trim($payment['status_wyplaty']),
-                            'syncroner_id' => trim($payment['prac_synchronerid']),
+                            'hours' => $payment['godziny_uop_enova'] ?? null,
+                            'category' => trim($payment['projrek_kategoriaprojektudopremii'] ?? null),
+                            'bonus' => $payment['premrek_kwotapremii_brutto'] ?? null,
+                            'status' => trim($payment['status_wyplaty'] ?? null),
+                            'syncroner_id' => trim($payment['prac_synchronerid'] ?? null),
                         ]
                     );
                 }

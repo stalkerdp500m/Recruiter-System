@@ -39,7 +39,6 @@ class DashboardController extends Controller
                     ->groupBy('recruiter_id', 'month', 'year');
             })
             ->get();
-        // dd($recruiterPaymentsCount);
 
         return Inertia::render('Dashboard/Index', [
             'recruiterPaymentsCount' => $recruiterPaymentsCount,

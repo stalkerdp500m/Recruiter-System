@@ -1,25 +1,19 @@
-<!-- <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://demo.recruiter-system.ml/" target="_blank"><img src="https://demo.recruiter-system.ml/storage/logo.png"   width="700"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p> -->
 
-## About Laravel
+## Recruiter System
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Система управлления выплатами для распределенных команд рекрутеров
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Центральная точка системы - рекрутер, к нему привязываются выплаты и рекламации.
+Пользователь получив доступ к рекрутеру - получает доступ на просмотр всех связанных с ним объектов.
+У каждого пользователя может быть доступ к от 0 до любого количества рекрутеров.
+Также для выделенных ролей предусмотрены специфические доступы.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+accountant (бухгалтер) - доступ ко всем рекрутерам системы
+assistant (ассистент) - доступ ко всем рекрутерам которые входят в ту же команду что и сам пользователь
+
+Роли может назначать пользователь с ролью admin
 
 ## Роли пользователей
 
@@ -32,40 +26,69 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 * Accountant
 > Имеет доступ ко всем cущностям системы
 * Admin
-> Имеет доступ ко всем cущностям системы + может назначать роли и рекрутеров пользователям
+> Имеет доступ к назначеным ему рекрутерам но может открыватьб доступ к рекрутерма пользователям и назначать роли пользователей
 
-## Laravel Sponsors
+## Сущности системы
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**Recruiter** - центральная сущность для привязки различных объектов системы.
+Recruiter имеет необязательно привязку к команде (team_id) и управляющему (owner_id).
+Это не пользователь и не роль! Эту сущность также можно рассматривать как группу доступа для пользователей.
+##### Основные поля
+- team_id - Привязкуа к команде
+- owner_id - привязка к пользователю (управляющий)
+- name - имя рекрутера (группы)
+- email - почта
+---
 
-### Premium Partners
+**Payment** - выплата. Объект выплаты за конкретную рекрутацию, имеет привязку к клиенту (тому за кого выплата получена) и рекрутеру (группа получившая выплату).
+##### Основные поля
+- client_id  - привязка к клиенту
+- recruiter_id - привязка к рекрутеру (группе)
+- category - категория выплаты
+- status - статус выплаты
+- year - год в котором была выплата
+- bonus - размер выплаты
+- hours - количество часов работы клиента
+- project - проект на котором работал клиент
+---
+**AddPayment** - дополнительная выплата.  Объект дополнительных выплат или штрафов. Имеет привязку к рекрутеру
+##### Основные поля
+- recruiter_id  - привязка к рекрутеру (группе)
+- month - месяц в котором была выплата
+- year - год в котором была выплата
+- summ - размер доп выплаты
+- type - причина доп выплаты
+---
+**Salary** - отработка, объект который содержит данные за конкретный отработанный месяц клиента
+Имеет привязку к клиенту (тому кто работал)
+##### Основные поля
+- client_id  - привязка к клиенту
+- hours - количество часов работы клиента
+- project - проект на котором работал клиент
+---
+**Client** - клиент (кандидат за которого начисляется выплата)
+Привязка клиента к выплатам и отработкам происходит по номеру паспорта
+##### Основные поля
+- name  - имя клиента
+- pasport - номер паспорта
+---
+**Reclamation** - рекламация, заявка на пересмотр выплаты за клиента, привязана к клиенту (если на момент создания рекламации клиента с таким паспортом в системе нет - он будет создан), рекрутеру  и пользователям
+##### Основные поля
+- user_id - тот кто создал рекламацию
+- answerer_id - тот кто предоставил последний ответ на рекламацию (может пользователь с ролью accountant)
+- client_id  привязка к клиенту
+- period - месяц и год за который подаётся рекламация
+- status_id  - привязка к таблице статуса рекламаций
+- project - проект на котором работал кандидат
+- comments - комментарии к рекламации
+- answer - ответ на рекламацию
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Отправлять рекламацию в архив или восстановить из архива может только тот кто ее создал (или бухгалтер)
+---
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Демо [https://demo.recruiter-system.ml/](https://demo.recruiter-system.ml/)
+логин - admin@gmail.com
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+пароль - 123
