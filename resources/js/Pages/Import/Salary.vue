@@ -16,7 +16,7 @@ function getToken () {
         .then((response) => {
             if (response.status == "200") {
                 if (response.data.token) {
-                    token.value = response.data?.token.slice(2);
+                    token.value = response.data?.token.split('|')[1];
                 }
             }
         });
