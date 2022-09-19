@@ -22,7 +22,7 @@ const rangeModel = {
 }
 
 function selectedRange () {
-    Inertia.get('/payments', rangeModel)
+    Inertia.get(route('payments.index'), rangeModel)
 }
 
 function serched (input) {
