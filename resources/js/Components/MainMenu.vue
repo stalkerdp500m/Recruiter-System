@@ -82,7 +82,8 @@ const userRole = usePage().props.value.auth.user.role
         </div>
         </Link>
         <!-- Загрузки -->
-        <BreezeDropdown align="bottom" width="54" v-if="userRole === 'admin'" @click="$emit('clickSubMenu')">
+        <BreezeDropdown align="bottom" width="54" v-if="userRole === 'admin'||userRole === 'accountant'"
+            @click="$emit('clickSubMenu')">
             <template #trigger>
                 <div :class="isUrl('imports', true) ? 'opacity-100' : 'opacity-40'"
                     class="text-white flex flex-row items-center justify-start overflow-x-clip cursor-pointer hover:opacity-100 ">

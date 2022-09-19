@@ -17,7 +17,8 @@ const form = useForm({
     month: new Date().getMonth(),
     year: new Date().getFullYear(),
     file: null
-})
+});
+const host = `${window.location.protocol}//${window.location.hostname}`;
 
 function getExampl () {
     form.post('./payments')
@@ -74,7 +75,12 @@ function createExempl (rawData) {
             <!-- Фильтры -->
             <form @submit.prevent="getExampl" class="">
                 <div class="flex gap-2 flex-wrap justify-center overflow-clip">
-
+                    <div class="w-full text-center  my-4">
+                        <h1 class="text-xl ">Загрузка в систему xlsx файла с выплатами
+                            <a class=" text-blue-800 bg-white p-1 rounded-md"
+                                :href="`${host}/storage/exemple-payments.xlsx`">(пример)</a>
+                        </h1>
+                    </div>
                     <div
                         class="flex-auto md:w-1/5 w-1/3  h-14 flex items-baseline   pt-2 shadow-md rounded-md bg-white ">
                         <label for="year" name="year" class="px-4 border-r border-systems-900/20 ">Год</label>
