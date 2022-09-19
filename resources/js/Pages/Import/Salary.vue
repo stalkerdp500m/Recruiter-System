@@ -106,8 +106,8 @@ let raw = JSON.stringify({
   "data": [
     {
       "salary": "сумма (double)",
-      "year": "год выплаты (namber)",
-      "month": "месц выплаты (namber)",
+      "year": "год выплаты (number)",
+      "month": "месц выплаты (number)",
       "client_name": "имя и фамилия клиента (string)",
       "client_pasport": "номер паспорта клиента (string)",
       "project": "навзвание проекта (string)",
