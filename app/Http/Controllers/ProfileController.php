@@ -17,6 +17,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        dd(session()->has('exit_admin_id'));
         $user = Auth::user();
         $userData = User::select('id', 'name', 'email', 'team_id', 'role')->with('recruiters:id,name', 'team:id,name')->find($user->id);
         return Inertia::render('Profile/Index', ['userData' => $userData]);
