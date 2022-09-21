@@ -40,16 +40,11 @@ class HandleInertiaRequests extends Middleware
                 if ($authUser) {
                     return [
                         'user' => $authUser->only('id', 'name', 'email', 'role'),
-                        'notifiCount' => $authUser->unreadNotifications->count()
+                        'notifiCount' => $authUser->unreadNotifications->count(),
+                        'returnAdmin' => session()->has('exit_admin_id'),
                     ];
                 }
             },
-            // 'auth' => [
-            //     'user' => fn () => $request->user()
-            //         ? $request->user()->only('id', 'name', 'email')
-            //         : null,
-            //     'notifications' => $request->user()->unreadNotifications
-            // ],
             'ziggy' => function () {
                 return (new Ziggy)->toArray();
             },

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\createUser;
 use App\Notifications\Welcome;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -50,6 +51,20 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->only('email'), ['email' => 'required|string|email|max:255|unique:users']);
         return $validator->errors();
+    }
+
+
+    public function authAsUser(User $user)
+    {
+        session()->put('exit_admin_id', Auth::guard('web')->id());
+        Auth::guard('web')->loginUsingId($user->id);
+        return redirect()->route('payments.index');
+    }
+    public function returnAsAdmin()
+    {
+        $adminId = session()->pull('exit_admin_id');
+        Auth::guard('web')->loginUsingId($adminId);
+        return redirect()->route('control.users.index');
     }
 
     /**

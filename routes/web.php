@@ -39,6 +39,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 
+    Route::get('/return_admin', [UserController::class, 'returnAsAdmin'])->name('return-admin');
+
 
 
     Route::group(['as' => 'notifications.', 'prefix' => 'notifications', 'controller' => NotificationController::class], function () {
@@ -64,6 +66,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['as' => 'control.', 'middleware' => ['admin']], function () {
         Route::group(['as' => 'users.', 'prefix' => 'users', 'controller' => UserController::class], function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/login_as/{user}', 'authAsUser')->name('auth-as');
             Route::put('/{user}', 'update')->name('update');
             Route::post('/check-email',  'checkEmail')->name('checkEmail');
             Route::post('/store',  'store')->name('store');
