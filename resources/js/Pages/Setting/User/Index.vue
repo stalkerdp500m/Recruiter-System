@@ -69,6 +69,15 @@ function teamUpdate (team) {
     updateUserForm.put(route('control.users.update', { 'id': curentUserId.value }), { preserveScroll: true });
 }
 
+function loginAs (userID) {
+    useForm().get(route('control.users.auth-as', { 'user': userID }), {
+        preserveScroll: true,
+        onSuccess: () => {
+        }
+    })
+}
+
+
 
 
 </script>
@@ -128,13 +137,25 @@ function teamUpdate (team) {
 
             <div :class="user.id == curentUserId ? 'bg-systems-300 border-2 border-white' : ''"
                 class="bg-white my-2 p-3 rounded-md shadow-md   " v-for="(user, i) in filteredUserList" :key="i">
-                <div class="flex justify-start cursor-pointer items-center h-12 " @click="curentUserId = user.id">
+                <div class="flex justify-start  items-center h-12 ">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="h-5 w-5 mx-2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <h3 class="text-xl">{{ user.name }} <span class="text-base"> {{ user.email }}</span> </h3>
+                    <h3 @click="curentUserId = user.id" class="text-xl cursor-pointer">{{ user.name }}
+                        <span class="text-base"> {{ user.email }}</span>
+                    </h3>
+                    <div>
+                        <svg @click="loginAs(user.id)" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            class="w-6 h-6 md:mx-3 cursor-pointer">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                        </svg>
+                    </div>
+
+
                     <div :class="user.role == 'admin' ? 'bg-green-600' : 'bg-systems-600 text-white'"
                         class=" text-sm overflow-x-clip absolute mx-3 -mt-12 md:mr-14 md:-mt-5 right-0  h-fit rounded-sm px-1">
                         {{
