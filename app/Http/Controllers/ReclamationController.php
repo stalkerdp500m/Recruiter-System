@@ -124,6 +124,7 @@ class ReclamationController extends Controller
             $validatedData = Request::validate([
                 'comments' => ['required', 'array']
             ]);
+            $reclamation->update($validatedData);
         } else {
             $validatedData = Request::validate([
                 'comments' => ['required', 'array'],
@@ -131,17 +132,17 @@ class ReclamationController extends Controller
                 'answer' => ['nullable', 'string'],
             ]);
             $validatedData['answerer_id'] = Auth::user()->id;
+            $reclamation->update($validatedData);
+            if ($validatedData['status_id'] > 2 && $reclamation->wasChanged('status_id')) {
+                $updateNotify = (object) [
+                    'newStatus' =>  ReclamationStatus::find($validatedData['status_id']),
+                    'reclamationId' => $reclamation->id,
+                    'reclamationClient' => $reclamation->client
+                ];
+                User::find($reclamation->user_id)->notify(new ReclamationUpdate($updateNotify));
+            }
         }
 
-        $reclamation->update($validatedData);
-        if ($validatedData['status_id'] > 2 && $reclamation->wasChanged('status_id')) {
-            $updateNotify = (object) [
-                'newStatus' =>  ReclamationStatus::find($validatedData['status_id']),
-                'reclamationId' => $reclamation->id,
-                'reclamationClient' => $reclamation->client
-            ];
-            User::find($reclamation->user_id)->notify(new ReclamationUpdate($updateNotify));
-        }
         return Redirect::back()->with(['newFlash' => true, "type" => "success", "massage" => "Рекламация обновлена"]);
     }
 
