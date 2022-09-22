@@ -65,7 +65,7 @@ function randColor () {
 
 
 function selectedPeriod () {
-    Inertia.get('/', periodModel)
+    Inertia.get(route('dashboard'), periodModel)
 }
 
 function selectedRecruiter (list) {
