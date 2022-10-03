@@ -40,10 +40,25 @@ class DashboardController extends Controller
             })
             ->get();
 
-        return Inertia::render('Dashboard/Index', [
-            'recruiterPaymentsCount' => $recruiterPaymentsCount,
-            'periodList' => $periodList,
-            'queryFilter' => $queryFilter
-        ]);
+        if (!Request::expectsJson()) {
+
+            // dd([
+            //     'recruiterPaymentsCount' => $recruiterPaymentsCount,
+            //     'periodList' => $periodList,
+            //     'queryFilter' => $queryFilter
+            // ]);
+
+            return Inertia::render('Dashboard/Index', [
+                'recruiterPaymentsCount' => $recruiterPaymentsCount,
+                'periodList' => $periodList,
+                'queryFilter' => $queryFilter
+            ]);
+        } else {
+            return  [
+                'recruiterPaymentsCount' => $recruiterPaymentsCount,
+                'periodList' => $periodList,
+                'queryFilter' => $queryFilter
+            ];
+        }
     }
 }
