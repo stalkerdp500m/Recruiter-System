@@ -55,6 +55,7 @@ class PaymentTest extends TestCase
                         'recruiterPaymentsCount.0',
                         function ($json) {
                             $json
+                                ->where('id', 1)
                                 ->where('name', $this->recruiters[0]['name'])
                                 ->where('payments.0', [
                                     'month' => '12',
@@ -66,8 +67,9 @@ class PaymentTest extends TestCase
                     )->has(
                         'recruiterPaymentsCount.4',
                         function ($json) {
-                            Log::debug($json);
+                            // Log::debug($json);
                             $json
+                                ->where('id', 5)
                                 ->where('name', $this->recruiters[4]['name'])
                                 ->where('payments.0', [
                                     'month' => '1',

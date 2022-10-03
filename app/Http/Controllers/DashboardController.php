@@ -29,7 +29,7 @@ class DashboardController extends Controller
             'endMonth' => explode("-", $queryFilter['end'])[0]
         ];
 
-        $recruiterPaymentsCount = Recruiter::recruitersAcces(Auth::user())
+        $recruiterPaymentsCount = Recruiter::recruitersAcces(Auth::user())->select(['id', 'name'])
             ->with('payments', function ($query) use ($dashbourdPeriod) {
                 $query
                     ->select('month', 'recruiter_id', 'year')
@@ -41,13 +41,6 @@ class DashboardController extends Controller
             ->get();
 
         if (!Request::expectsJson()) {
-
-            // dd([
-            //     'recruiterPaymentsCount' => $recruiterPaymentsCount,
-            //     'periodList' => $periodList,
-            //     'queryFilter' => $queryFilter
-            // ]);
-
             return Inertia::render('Dashboard/Index', [
                 'recruiterPaymentsCount' => $recruiterPaymentsCount,
                 'periodList' => $periodList,
